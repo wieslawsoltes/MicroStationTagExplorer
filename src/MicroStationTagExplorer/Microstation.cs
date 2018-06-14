@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using MicroStationTagExplorer.Model;
 using BCOM = MicroStationDGN;
 
@@ -43,14 +44,14 @@ namespace MicroStationTagExplorer
 
         public static IList<TagSet> GetTagSets(BCOM.DesignFile designFile)
         {
-            var tagSets = new List<TagSet>();
+            var tagSets = new ObservableCollection<TagSet>();
 
             foreach (BCOM.TagSet ts in designFile.TagSets)
             {
                 var tagSet = new TagSet()
                 {
                     Name = ts.Name,
-                    TagDefinitions = new List<TagDefinition>()
+                    TagDefinitions = new ObservableCollection<TagDefinition>()
                 };
                 tagSets.Add(tagSet);
 
@@ -76,7 +77,7 @@ namespace MicroStationTagExplorer
             BCOM.ElementEnumerator ee = model.Scan(sc);
             Array elements = ee.BuildArrayFromContents();
 
-            var tags = new List<Tag>();
+            var tags = new ObservableCollection<Tag>();
 
             foreach (BCOM.Element element in elements)
             {

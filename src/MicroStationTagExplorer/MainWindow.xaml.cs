@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
@@ -40,7 +41,8 @@ namespace MicroStationTagExplorer
                 }
                 else
                 {
-                    files = new List<File>();
+                    files = new ObservableCollection<File>();
+                    DataGridFiles.DataContext = files;
                 }
 
                 foreach (var fileName in dlg.FileNames)
@@ -51,9 +53,6 @@ namespace MicroStationTagExplorer
                     };
                     files.Add(file);
                 }
-
-                DataGridFiles.DataContext = null;
-                DataGridFiles.DataContext = files;
             }
         }
 
