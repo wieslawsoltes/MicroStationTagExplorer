@@ -13,6 +13,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="8"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
@@ -30,56 +31,62 @@
         <DataGrid x:Name="DataGridFiles" 
                   ItemsSource="{Binding}" 
                   AutoGenerateColumns="False" CanUserAddRows="False"
-                  Margin="4" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
+                  Margin="3" Grid.Row="1">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Path" Binding="{Binding Path}"/>
             </DataGrid.Columns>
         </DataGrid>
-        <Grid Grid.Row="2">
+        <GridSplitter ResizeDirection="Rows" Grid.Row="2" Background="Transparent" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
+        <Grid Grid.Row="3">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="8"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <DataGrid x:Name="DataGridTags" 
                       DataContext="{Binding ElementName=DataGridFiles, Path=SelectedItem.Tags}" 
                       ItemsSource="{Binding}" 
                       AutoGenerateColumns="False" CanUserAddRows="False"
-                      Margin="4" Grid.Column="0">
+                      Margin="3" Grid.Column="0">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="TagSetName" Binding="{Binding TagSetName}"/>
                     <DataGridTextColumn Header="TagDefinitionName" Binding="{Binding TagDefinitionName}"/>
                     <DataGridTextColumn Header="Value" Binding="{Binding Value}"/>
                     <DataGridTextColumn Header="ID" Binding="{Binding ID}"/>
                     <DataGridTextColumn Header="HostID" Binding="{Binding HostID}"/>
+                    <DataGridTextColumn Header="Path" Binding="{Binding Path}"/>
                 </DataGrid.Columns>
             </DataGrid>
-            <Grid Grid.Column="1">
+            <GridSplitter ResizeDirection="Columns" Grid.Column="1" Background="Transparent" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
+            <Grid Grid.Column="2">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
+                    <RowDefinition Height="8"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
                 <DataGrid x:Name="DataGridTagSets" 
                           DataContext="{Binding ElementName=DataGridFiles, Path=SelectedItem.TagSets}" 
                           ItemsSource="{Binding}" 
                           AutoGenerateColumns="False" CanUserAddRows="False"
-                          Margin="4" Grid.Row="0">
+                          Margin="3" Grid.Row="0">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Name" Binding="{Binding Name}"/>
                     </DataGrid.Columns>
                 </DataGrid>
+                <GridSplitter ResizeDirection="Rows" Grid.Row="1" Background="Transparent" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
                 <DataGrid x:Name="DataGridTagDefinitions" 
                           DataContext="{Binding ElementName=DataGridTagSets, Path=SelectedItem.TagDefinitions}" 
                           ItemsSource="{Binding}" 
                           AutoGenerateColumns="False" CanUserAddRows="False"
-                          Margin="4" Grid.Row="1">
+                          Margin="3" Grid.Row="2">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Name" Binding="{Binding Name}"/>
                     </DataGrid.Columns>
                 </DataGrid>
             </Grid>
         </Grid>
-        <Grid Grid.Row="3">
-            <TextBox x:Name="TextBoxStatus" Text="" TextWrapping="NoWrap" IsReadOnly="True" Margin="4" Padding="4"/>
+        <Grid Grid.Row="4">
+            <TextBox x:Name="TextBoxStatus" Text="" TextWrapping="NoWrap" IsReadOnly="True" Margin="3"/>
         </Grid>
     </Grid>
 </Window>
