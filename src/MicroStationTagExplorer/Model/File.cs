@@ -2,7 +2,7 @@
 
 namespace MicroStationTagExplorer.Model
 {
-    public class DgnFile
+    public class File
     {
         public string Path { get; set; }
         public IList<TagSet> TagSets { get; set; }

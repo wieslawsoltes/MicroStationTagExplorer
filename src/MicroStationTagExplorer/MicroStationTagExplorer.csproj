@@ -54,7 +54,7 @@
       <Generator>MSBuild:Compile</Generator>
     </ApplicationDefinition>
     <Compile Include="Microstation.cs" />
-    <Compile Include="Model\DgnFile.cs" />
+    <Compile Include="Model\File.cs" />
     <Compile Include="Model\Tag.cs" />
     <Compile Include="Model\TagDefinition.cs" />
     <Compile Include="Model\TagSet.cs" />

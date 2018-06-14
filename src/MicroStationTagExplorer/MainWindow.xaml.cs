@@ -26,26 +26,26 @@ namespace MicroStationTagExplorer
             var result = dlg.ShowDialog(this);
             if (result == true)
             {
-                IList<DgnFile> dgnFiles = null;
+                IList<File> files = null;
                 if (DataGridFiles.DataContext != null)
                 {
-                    dgnFiles = DataGridFiles.DataContext as IList<DgnFile>;
+                    files = DataGridFiles.DataContext as IList<File>;
                 }
                 else
                 {
-                    dgnFiles = new List<DgnFile>();
+                    files = new List<File>();
                 }
 
                 foreach (var fileName in dlg.FileNames)
                 {
-                    var dgnFile = new DgnFile()
+                    var file = new File()
                     {
                         Path = fileName
                     };
-                    dgnFiles.Add(dgnFile);
+                    files.Add(file);
                 }
 
-                DataGridFiles.DataContext = dgnFiles;
+                DataGridFiles.DataContext = files;
             }
         }
 
@@ -54,18 +54,21 @@ namespace MicroStationTagExplorer
             if (DataGridFiles.DataContext != null)
             {
                 int selectedIndex = DataGridFiles.SelectedIndex;
-                IList<DgnFile> dgnFiles = DataGridFiles.DataContext as IList<DgnFile>;
-                if (dgnFiles != null)
+                IList<File> files = DataGridFiles.DataContext as IList<File>;
+                if (files != null)
                 {
                     MainMenu.IsEnabled = false;
-                    TextBlockStatus.Text = "";
+                    TextBoxStatus.Text = "";
                     Task.Factory.StartNew(() =>
                     {
                         try
                         {
-                            foreach (var dgnFile in dgnFiles)
+                            foreach (var dgnFile in files)
                             {
-                                Dispatcher.Invoke(() => TextBlockStatus.Text = dgnFile.Path);
+                                Dispatcher.Invoke(() =>
+                                {
+                                    TextBoxStatus.Text = System.IO.Path.GetFileName(dgnFile.Path);
+                                });
                                 Microstation.GetTagData(dgnFile);
                             }
                         }
@@ -77,7 +80,7 @@ namespace MicroStationTagExplorer
 
                         Dispatcher.Invoke(() =>
                         {
-                            TextBlockStatus.Text = "";
+                            TextBoxStatus.Text = "";
                             MainMenu.IsEnabled = true;
                         });
                     });

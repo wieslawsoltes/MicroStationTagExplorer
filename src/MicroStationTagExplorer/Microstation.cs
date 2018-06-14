@@ -7,12 +7,12 @@ namespace MicroStationTagExplorer
 {
     public static class Microstation
     {
-        public static void GetTagData(DgnFile dgnFile)
+        public static void GetTagData(File file)
         {
             BCOM.Application app = Utilities.CreateObject<BCOM.Application>("MicroStationDGN.Application");
             app.Visible = true;
 
-            BCOM.DesignFile designFile = app.OpenDesignFile(dgnFile.Path);
+            BCOM.DesignFile designFile = app.OpenDesignFile(file.Path);
 
             foreach (BCOM.ModelReference model in designFile.Models)
             {
@@ -23,8 +23,8 @@ namespace MicroStationTagExplorer
                 }
             }
 
-            dgnFile.TagSets = GetTagSets(designFile);
-            dgnFile.Tags = GetTags(app.ActiveModelReference);
+            file.TagSets = GetTagSets(designFile);
+            file.Tags = GetTags(app.ActiveModelReference);
         }
 
         public static IList<TagSet> GetTagSets(BCOM.DesignFile designFile)
