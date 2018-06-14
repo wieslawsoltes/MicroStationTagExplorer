@@ -26,7 +26,14 @@
                 <MenuItem x:Name="FileExportTags" Header="_Export Tags..." Click="FileExportTags_Click"/>
             </MenuItem>
         </Menu>
-        <DataGrid x:Name="DataGridFiles" ItemsSource="{Binding}" Margin="4" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"/>
+        <DataGrid x:Name="DataGridFiles" 
+                  ItemsSource="{Binding}" 
+                  AutoGenerateColumns="False" CanUserAddRows="False"
+                  Margin="4" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Path" Binding="{Binding Path}"/>
+            </DataGrid.Columns>
+        </DataGrid>
         <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
@@ -35,7 +42,16 @@
             <DataGrid x:Name="DataGridTags" 
                       DataContext="{Binding ElementName=DataGridFiles, Path=SelectedItem.Tags}" 
                       ItemsSource="{Binding}" 
-                      Margin="4" Grid.Column="0"/>
+                      AutoGenerateColumns="False" CanUserAddRows="False"
+                      Margin="4" Grid.Column="0">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="TagSetName" Binding="{Binding TagSetName}"/>
+                    <DataGridTextColumn Header="TagDefinitionName" Binding="{Binding TagDefinitionName}"/>
+                    <DataGridTextColumn Header="Value" Binding="{Binding Value}"/>
+                    <DataGridTextColumn Header="ID" Binding="{Binding ID}"/>
+                    <DataGridTextColumn Header="HostID" Binding="{Binding HostID}"/>
+                </DataGrid.Columns>
+            </DataGrid>
             <Grid Grid.Column="1">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
@@ -44,15 +60,25 @@
                 <DataGrid x:Name="DataGridTagSets" 
                           DataContext="{Binding ElementName=DataGridFiles, Path=SelectedItem.TagSets}" 
                           ItemsSource="{Binding}" 
-                          Margin="4" Grid.Row="0"/>
+                          AutoGenerateColumns="False" CanUserAddRows="False"
+                          Margin="4" Grid.Row="0">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Name" Binding="{Binding Name}"/>
+                    </DataGrid.Columns>
+                </DataGrid>
                 <DataGrid x:Name="DataGridTagDefinitions" 
                           DataContext="{Binding ElementName=DataGridTagSets, Path=SelectedItem.TagDefinitions}" 
                           ItemsSource="{Binding}" 
-                          Margin="4" Grid.Row="1"/>
+                          AutoGenerateColumns="False" CanUserAddRows="False"
+                          Margin="4" Grid.Row="1">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Name" Binding="{Binding Name}"/>
+                    </DataGrid.Columns>
+                </DataGrid>
             </Grid>
         </Grid>
         <Grid Grid.Row="3">
-            <TextBlock x:Name="TextBlockStatus" TextTrimming="CharacterEllipsis" HorizontalAlignment="Right" Margin="4" Padding="4"/>
+            <TextBox x:Name="TextBoxStatus" Text="" TextWrapping="NoWrap" IsReadOnly="True" Margin="4" Padding="4"/>
         </Grid>
     </Grid>
 </Window>
