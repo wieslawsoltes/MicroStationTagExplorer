@@ -1,4 +1,4 @@
-﻿using BCOM = MicroStationDGN;
+﻿using System;
 
 namespace MicroStationTagExplorer.Model
 {
@@ -7,7 +7,8 @@ namespace MicroStationTagExplorer.Model
         public string TagSetName { get; set; }
         public string TagDefinitionName { get; set; }
         public object Value { get; set; }
-        public BCOM.DLong ID { get; set; }
-        public BCOM.DLong HostID { get; set; }
+        public Int64 ID { get; set; }
+        public Int64 HostID { get; set; }
+        public string Path { get; set; }
     }
 }

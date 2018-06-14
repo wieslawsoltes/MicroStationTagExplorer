@@ -7,6 +7,20 @@ namespace MicroStationTagExplorer
 {
     public static class Microstation
     {
+        public static Int64 ToInt64(BCOM.DLong value)
+        {
+            return (Int64)value.High << 32 | (Int64)(UInt32)value.Low;
+        }
+
+        public static BCOM.DLong ToInt64(Int64 value)
+        {
+            return new BCOM.DLong()
+            {
+                High = (Int32)(value & UInt32.MaxValue),
+                Low = (Int32)(value >> 32)
+            };
+        }
+
         public static void GetTagData(File file)
         {
             BCOM.Application app = Utilities.CreateObject<BCOM.Application>("MicroStationDGN.Application");
@@ -24,7 +38,7 @@ namespace MicroStationTagExplorer
             }
 
             file.TagSets = GetTagSets(designFile);
-            file.Tags = GetTags(app.ActiveModelReference);
+            file.Tags = GetTags(app.ActiveModelReference, file.Path);
         }
 
         public static IList<TagSet> GetTagSets(BCOM.DesignFile designFile)
@@ -53,7 +67,7 @@ namespace MicroStationTagExplorer
             return tagSets;
         }
 
-        public static IList<Tag> GetTags(BCOM.ModelReference model)
+        public static IList<Tag> GetTags(BCOM.ModelReference model, string path)
         {
             BCOM.ElementScanCriteria sc = Utilities.CreateObject<BCOM.ElementScanCriteria>("MicroStationDGN.ElementScanCriteria");
             sc.ExcludeAllTypes();
@@ -73,8 +87,9 @@ namespace MicroStationTagExplorer
                     TagSetName = te.TagSetName,
                     TagDefinitionName = te.TagDefinitionName,
                     Value = te.Value,
-                    ID = te.ID,
-                    HostID = te.BaseElement != null ? te.BaseElement.ID : new BCOM.DLong(),
+                    ID = ToInt64(te.ID),
+                    HostID = ToInt64(te.BaseElement != null ? te.BaseElement.ID : new BCOM.DLong()),
+                    Path = path
                 };
                 tags.Add(tag);
             }

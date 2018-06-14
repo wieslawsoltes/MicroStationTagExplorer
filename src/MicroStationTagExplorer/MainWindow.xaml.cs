@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -76,10 +77,11 @@ namespace MicroStationTagExplorer
 
                 Task.Factory.StartNew(() =>
                 {
-                    Token.ThrowIfCancellationRequested();
                     try
                     {
-                        foreach (var dgnFile in files)
+                        Token.ThrowIfCancellationRequested();
+
+                        foreach (var file in files)
                         {
                             if (Token.IsCancellationRequested)
                             {
@@ -89,10 +91,10 @@ namespace MicroStationTagExplorer
 
                             Dispatcher.Invoke(() =>
                             {
-                                TextBoxStatus.Text = System.IO.Path.GetFileName(dgnFile.Path);
+                                TextBoxStatus.Text = System.IO.Path.GetFileName(file.Path);
                             });
 
-                            Microstation.GetTagData(dgnFile);
+                            Microstation.GetTagData(file);
                         }
                     }
                     catch (Exception ex)
@@ -126,11 +128,56 @@ namespace MicroStationTagExplorer
 
         private void ExportTags()
         {
-            Excel.Application app = Utilities.CreateObject<Excel.Application>("Excel.Application");
-            app.Visible = true;
+            if (DataGridFiles.DataContext == null)
+                return;
 
-            Excel.Workbook wb = app.Workbooks.Add();
-            Excel.Worksheet ws = wb.Worksheets.Add();
+            if (IsRunning == false)
+            {
+                int selectedIndex = DataGridFiles.SelectedIndex;
+                IList<File> files = DataGridFiles.DataContext as IList<File>;
+                if (files == null)
+                    return;
+
+                try
+                {
+                    var tags = files.SelectMany(f => f.Tags).ToArray();
+                    var values = new object[tags.Length + 1, 6];
+
+                    values[0, 0] = "TagSetName";
+                    values[0, 1] = "TagDefinitionName";
+                    values[0, 2] = "Value";
+                    values[0, 3] = "ID";
+                    values[0, 4] = "HostID";
+                    values[0, 5] = "Path";
+
+                    for (int i = 0; i < tags.Length; i++)
+                    {
+                        values[i + 1, 0] = tags[i].TagSetName;
+                        values[i + 1, 1] = tags[i].TagDefinitionName;
+                        values[i + 1, 2] = tags[i].Value.ToString();
+                        values[i + 1, 3] = tags[i].ID.ToString();
+                        values[i + 1, 4] = tags[i].HostID.ToString();
+                        values[i + 1, 5] = tags[i].Path;
+                    }
+
+                    Excel.Application app = Utilities.CreateObject<Excel.Application>("Excel.Application");
+                    app.Visible = true;
+
+                    Excel.Workbook wb = app.Workbooks.Add();
+                    Excel.Worksheet ws = wb.Worksheets.Add();
+
+                    Excel.Range start = ws.Cells[1, 1];
+                    Excel.Range end = ws.Cells[tags.Length + 1, 6];
+                    Excel.Range range = ws.Range[start, end];
+
+                    range.Value = values;
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex.Message);
+                    Debug.WriteLine(ex.StackTrace);
+                }
+            }
         }
 
         private void Window_PreviewKeyDown(object sender, KeyEventArgs e)
