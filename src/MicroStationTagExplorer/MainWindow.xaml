@@ -13,27 +13,46 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <Menu>
-            <MenuItem Header="_File">
-                <MenuItem x:Name="FileAdd" Header="Add..." Click="FileAdd_Click"/>
+        <Menu x:Name="MainMenu" Background="Transparent" Grid.Row="0">
+            <MenuItem x:Name="FileMenu" Header="_File">
+                <MenuItem x:Name="FileAddFiles" Header="_Add Files..." Click="FileAddFiles_Click"/>
+                <Separator/>
+                <MenuItem x:Name="FileGetTags" Header="_Get Tags" Click="FileGetTags_Click"/>
+                <Separator/>
+                <MenuItem x:Name="FileImportTags" Header="_Import Tags..." Click="FileImportTags_Click"/>
+                <Separator/>
+                <MenuItem x:Name="FileExportTags" Header="_Export Tags..." Click="FileExportTags_Click"/>
             </MenuItem>
         </Menu>
-
-        <DataGrid x:Name="DataGridFiles" ItemsSource="{Binding}" Margin="4" Grid.Row="1"/>
-        <DataGrid x:Name="DataGridTags" DataContext="{Binding ElementName=DataGridFiles, Path=SelectedItem.Tags}" ItemsSource="{Binding}" Margin="4" Grid.Row="2"/>
-        <DataGrid x:Name="DataGridTagSets" DataContext="{Binding ElementName=DataGridFiles, Path=SelectedItem.TagSets}" ItemsSource="{Binding}" Margin="4" Grid.Row="3"/>
-        <Grid Grid.Row="4">
+        <DataGrid x:Name="DataGridFiles" ItemsSource="{Binding}" Margin="4" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"/>
+        <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <TextBlock x:Name="TextBlockStatus" TextTrimming="CharacterEllipsis" Grid.Column="0" Margin="4" Padding="4"/>
-            <Button x:Name="ButtonGetData" Content="Get Data" Grid.Column="1" Margin="4" Padding="4" Click="ButtonGetData_Click"/>
-            <Button x:Name="ButtonExportData" Content="Export Data" Grid.Column="2" Margin="4" Padding="4" Click="ButtonExportData_Click"/>
+            <DataGrid x:Name="DataGridTags" 
+                      DataContext="{Binding ElementName=DataGridFiles, Path=SelectedItem.Tags}" 
+                      ItemsSource="{Binding}" 
+                      Margin="4" Grid.Column="0"/>
+            <Grid Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <DataGrid x:Name="DataGridTagSets" 
+                          DataContext="{Binding ElementName=DataGridFiles, Path=SelectedItem.TagSets}" 
+                          ItemsSource="{Binding}" 
+                          Margin="4" Grid.Row="0"/>
+                <DataGrid x:Name="DataGridTagDefinitions" 
+                          DataContext="{Binding ElementName=DataGridTagSets, Path=SelectedItem.TagDefinitions}" 
+                          ItemsSource="{Binding}" 
+                          Margin="4" Grid.Row="1"/>
+            </Grid>
+        </Grid>
+        <Grid Grid.Row="3">
+            <TextBlock x:Name="TextBlockStatus" TextTrimming="CharacterEllipsis" HorizontalAlignment="Right" Margin="4" Padding="4"/>
         </Grid>
     </Grid>
 </Window>
