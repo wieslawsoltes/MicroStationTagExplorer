@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace MicroStationTagExplorer.Model
+namespace MicroStationTagExplorer
 {
     public class File
     {

@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using MicroStationTagExplorer.Model;
 using BCOM = MicroStationDGN;
 
 namespace MicroStationTagExplorer
 {
-    public static class Microstation
+    public static class MicrostationInterop
     {
         public static Int64 ToInt64(BCOM.DLong value)
         {

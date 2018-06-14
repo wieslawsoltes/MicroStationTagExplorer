@@ -5,6 +5,10 @@ VisualStudioVersion = 15.0.27703.2026
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MicroStationTagExplorer", "src\MicroStationTagExplorer\MicroStationTagExplorer.csproj", "{59F5B5F5-2569-4263-9E94-D53DA097FCAD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MicroStationTagExplorerInterop", "src\MicroStationTagExplorerInterop\MicroStationTagExplorerInterop.csproj", "{CDDC9304-E54C-4E6C-A647-4C6FC78DB2A6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MicroStationTagExplorerModel", "src\MicroStationTagExplorerModel\MicroStationTagExplorerModel.csproj", "{E75B1451-B4EA-4806-87BA-11C596EB6B3E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,14 @@ Global
 		{59F5B5F5-2569-4263-9E94-D53DA097FCAD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{59F5B5F5-2569-4263-9E94-D53DA097FCAD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{59F5B5F5-2569-4263-9E94-D53DA097FCAD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CDDC9304-E54C-4E6C-A647-4C6FC78DB2A6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CDDC9304-E54C-4E6C-A647-4C6FC78DB2A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CDDC9304-E54C-4E6C-A647-4C6FC78DB2A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CDDC9304-E54C-4E6C-A647-4C6FC78DB2A6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E75B1451-B4EA-4806-87BA-11C596EB6B3E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E75B1451-B4EA-4806-87BA-11C596EB6B3E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E75B1451-B4EA-4806-87BA-11C596EB6B3E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E75B1451-B4EA-4806-87BA-11C596EB6B3E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

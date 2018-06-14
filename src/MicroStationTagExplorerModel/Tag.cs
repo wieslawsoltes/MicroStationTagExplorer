@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MicroStationTagExplorer.Model
+namespace MicroStationTagExplorer
 {
     public class Tag
     {
