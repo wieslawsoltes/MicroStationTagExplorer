@@ -7,7 +7,8 @@
         mc:Ignorable="d"
         Title="MicroStation Tag Explorer" Height="650" Width="1000"
         WindowStartupLocation="CenterScreen" WindowState="Normal"
-        UseLayoutRounding="True" TextOptions.TextFormattingMode="Display" SnapsToDevicePixels="True">
+        UseLayoutRounding="True" TextOptions.TextFormattingMode="Display" SnapsToDevicePixels="True"
+        PreviewKeyDown="Window_PreviewKeyDown">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -17,13 +18,13 @@
         </Grid.RowDefinitions>
         <Menu x:Name="MainMenu" Background="Transparent" Grid.Row="0">
             <MenuItem x:Name="FileMenu" Header="_File">
-                <MenuItem x:Name="FileAddFiles" Header="_Add Files..." Click="FileAddFiles_Click"/>
+                <MenuItem x:Name="FileAddFiles" Header="_Add Files..." InputGestureText="Ctrl+O" Click="FileAddFiles_Click"/>
                 <Separator/>
-                <MenuItem x:Name="FileGetTags" Header="_Get Tags" Click="FileGetTags_Click"/>
+                <MenuItem x:Name="FileGetTags" Header="_Get Tags" InputGestureText="F5" Click="FileGetTags_Click"/>
                 <Separator/>
-                <MenuItem x:Name="FileImportTags" Header="_Import Tags..." Click="FileImportTags_Click"/>
+                <MenuItem x:Name="FileImportTags" Header="_Import Tags..." InputGestureText="Ctrl+I" Click="FileImportTags_Click"/>
                 <Separator/>
-                <MenuItem x:Name="FileExportTags" Header="_Export Tags..." Click="FileExportTags_Click"/>
+                <MenuItem x:Name="FileExportTags" Header="_Export Tags..." InputGestureText="Ctrl+E" Click="FileExportTags_Click"/>
             </MenuItem>
         </Menu>
         <DataGrid x:Name="DataGridFiles" 
