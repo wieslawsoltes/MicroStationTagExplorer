@@ -39,7 +39,7 @@
             </MenuItem>
         </Menu>
         <DataGrid x:Name="DataGridFiles" 
-                  ItemsSource="{Binding}" 
+                  ItemsSource="{Binding Files}" 
                   AutoGenerateColumns="False" CanUserAddRows="False"
                   Margin="3" Grid.Row="1">
             <DataGrid.Columns>

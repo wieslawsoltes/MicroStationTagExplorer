@@ -23,26 +23,29 @@ namespace MicroStationTagExplorer
             InitializeComponent();
         }
 
-        private ObservableCollection<File> GetFiles()
+        private Project GetProject()
         {
-            ObservableCollection<File> files = null;
+            Project project = null;
 
             if (DataGridFiles.DataContext != null)
             {
-                files = DataGridFiles.DataContext as ObservableCollection<File>;
+                project = DataGridFiles.DataContext as Project;
             }
             else
             {
-                files = new ObservableCollection<File>();
-                DataGridFiles.DataContext = files;
+                project = new Project()
+                {
+                    Files = new ObservableCollection<File>()
+                };
+                DataGridFiles.DataContext = project;
             }
 
-            return files;
+            return project;
         }
 
-        private void SetFiles(ObservableCollection<File> files)
+        private void SetProject(Project project)
         {
-            DataGridFiles.DataContext = files;
+            DataGridFiles.DataContext = project;
         }
 
         private void AddFiles()
@@ -55,7 +58,7 @@ namespace MicroStationTagExplorer
             var result = dlg.ShowDialog(this);
             if (result == true)
             {
-                ObservableCollection<File> files = GetFiles();
+                Project project = GetProject();
 
                 foreach (var fileName in dlg.FileNames)
                 {
@@ -63,14 +66,14 @@ namespace MicroStationTagExplorer
                     {
                         Path = fileName
                     };
-                    files.Add(file);
+                    project.Files.Add(file);
                 }
             }
         }
 
         private void AddPaths(string[] paths)
         {
-            ObservableCollection<File> files = GetFiles();
+            Project project = GetProject();
 
             foreach (var path in paths)
             {
@@ -85,7 +88,7 @@ namespace MicroStationTagExplorer
                         {
                             Path = fileName
                         };
-                        files.Add(file);
+                        project.Files.Add(file);
                     }
                 }
                 else
@@ -96,7 +99,7 @@ namespace MicroStationTagExplorer
                         {
                             Path = path
                         };
-                        files.Add(file);
+                        project.Files.Add(file);
                     }
                 }
             }
@@ -104,7 +107,10 @@ namespace MicroStationTagExplorer
 
         private void NewProject()
         {
-            SetFiles(new ObservableCollection<File>());
+            SetProject(new Project()
+            {
+                Files = new ObservableCollection<File>()
+            });
         }
 
         private void OpenProject()
@@ -119,9 +125,9 @@ namespace MicroStationTagExplorer
             {
                 using (var reader = new System.IO.StreamReader(dlg.FileName))
                 {
-                    var serializer = new XmlSerializer(typeof(ObservableCollection<File>));
-                    ObservableCollection<File> files = (ObservableCollection<File>)serializer.Deserialize(reader);
-                    SetFiles(files);
+                    var serializer = new XmlSerializer(typeof(Project));
+                    Project project = (Project)serializer.Deserialize(reader);
+                    SetProject(project);
                 }
             }
         }
@@ -131,17 +137,17 @@ namespace MicroStationTagExplorer
             var dlg = new SaveFileDialog
             {
                 Filter = "Supported Files (*.xml)|*.xml|All Files (*.*)|*.*",
-                FileName = "tags"
+                FileName = "project"
             };
             var result = dlg.ShowDialog(this);
             if (result == true)
             {
-                ObservableCollection<File> files = GetFiles();
+                Project project = GetProject();
 
                 using (var writer = new System.IO.StreamWriter(dlg.FileName))
                 {
-                    var serializer = new XmlSerializer(typeof(ObservableCollection<File>));
-                    serializer.Serialize(writer, files);
+                    var serializer = new XmlSerializer(typeof(Project));
+                    serializer.Serialize(writer, project);
                 }
             }
         }
@@ -163,7 +169,7 @@ namespace MicroStationTagExplorer
                 TokenSource = new CancellationTokenSource();
                 Token = TokenSource.Token;
 
-                ObservableCollection<File> files = GetFiles();
+                Project project = GetProject();
 
                 Task.Factory.StartNew(() =>
                 {
@@ -171,10 +177,10 @@ namespace MicroStationTagExplorer
                     {
                         Token.ThrowIfCancellationRequested();
 
-                        int count = files.Count;
-                        for (int i = 0; i < files.Count; i++)
+                        int count = project.Files.Count;
+                        for (int i = 0; i < project.Files.Count; i++)
                         {
-                            var file = files[i];
+                            var file = project.Files[i];
                             if (Token.IsCancellationRequested)
                             {
                                 Token.ThrowIfCancellationRequested();
@@ -269,12 +275,12 @@ namespace MicroStationTagExplorer
         {
             if (IsRunning == false)
             {
-                ObservableCollection<File> files = GetFiles();
+                Project project = GetProject();
 
                 try
                 {
                     object[,] values;
-                    Tag[] tags = files.SelectMany(f => f.Tags).ToArray();
+                    Tag[] tags = project.Files.SelectMany(f => f.Tags).ToArray();
                     ToValues(tags, out values);
                     using (var excel = new Excelnterop())
                     {
