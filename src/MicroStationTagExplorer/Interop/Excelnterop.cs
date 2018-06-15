@@ -13,6 +13,7 @@ namespace MicroStationTagExplorer
         {
             _application = ComUtilities.CreateObject<Excel.Application>("Excel.Application");
             _application.Visible = true;
+            _application.ErrorCheckingOptions.NumberAsText = false;
 
             _workbook = _application.Workbooks.Add();
             _worksheet = _workbook.Worksheets.Add();
@@ -21,6 +22,7 @@ namespace MicroStationTagExplorer
             Excel.Range end = _worksheet.Cells[rows, columns];
             Excel.Range range = _worksheet.Range[start, end];
 
+            range.NumberFormat = "@";
             range.Value = values;
 
             _worksheet.Rows["2:2"].Select();
