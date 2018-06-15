@@ -78,8 +78,10 @@ namespace MicroStationTagExplorer
                     {
                         Token.ThrowIfCancellationRequested();
 
-                        foreach (var file in files)
+                        int count = files.Count;
+                        for (int i = 0; i < files.Count; i++)
                         {
+                            var file = files[i];
                             if (Token.IsCancellationRequested)
                             {
                                 Token.ThrowIfCancellationRequested();
@@ -88,7 +90,7 @@ namespace MicroStationTagExplorer
 
                             Dispatcher.Invoke(() =>
                             {
-                                TextBoxStatus.Text = System.IO.Path.GetFileName(file.Path);
+                                TextBoxStatus.Text = "[" + i + "/" + count + "] " + System.IO.Path.GetFileName(file.Path);
                             });
 
                             MicrostationInterop.GetTagData(file);
