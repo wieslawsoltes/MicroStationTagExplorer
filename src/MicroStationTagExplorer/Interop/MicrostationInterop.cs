@@ -50,7 +50,7 @@ namespace MicroStationTagExplorer
             }
         }
 
-        public IList<TagSet> GetTagSets()
+        public ObservableCollection<TagSet> GetTagSets()
         {
             var tagSets = new ObservableCollection<TagSet>();
 
@@ -76,7 +76,7 @@ namespace MicroStationTagExplorer
             return tagSets;
         }
 
-        public IList<Tag> GetTags()
+        public ObservableCollection<Tag> GetTags()
         {
             var tags = new ObservableCollection<Tag>();
 

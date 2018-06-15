@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using System.Xml.Serialization;
 using Microsoft.Win32;
 
 namespace MicroStationTagExplorer
@@ -22,13 +23,13 @@ namespace MicroStationTagExplorer
             InitializeComponent();
         }
 
-        private IList<File> GetFiles()
+        private ObservableCollection<File> GetFiles()
         {
-            IList<File> files = null;
+            ObservableCollection<File> files = null;
 
             if (DataGridFiles.DataContext != null)
             {
-                files = DataGridFiles.DataContext as IList<File>;
+                files = DataGridFiles.DataContext as ObservableCollection<File>;
             }
             else
             {
@@ -37,6 +38,11 @@ namespace MicroStationTagExplorer
             }
 
             return files;
+        }
+
+        private void SetFiles(ObservableCollection<File> files)
+        {
+            DataGridFiles.DataContext = files;
         }
 
         private void AddFiles()
@@ -49,7 +55,7 @@ namespace MicroStationTagExplorer
             var result = dlg.ShowDialog(this);
             if (result == true)
             {
-                IList<File> files = GetFiles();
+                ObservableCollection<File> files = GetFiles();
 
                 foreach (var fileName in dlg.FileNames)
                 {
@@ -64,7 +70,7 @@ namespace MicroStationTagExplorer
 
         private void AddPaths(string[] paths)
         {
-            IList<File> files = GetFiles();
+            ObservableCollection<File> files = GetFiles();
 
             foreach (var path in paths)
             {
@@ -96,6 +102,55 @@ namespace MicroStationTagExplorer
             }
         }
 
+        private void NewProject()
+        {
+            SetFiles(new ObservableCollection<File>());
+        }
+
+        private void OpenProject()
+        {
+            var dlg = new OpenFileDialog
+            {
+                Filter = "Supported Files (*.xml)|*.xml|All Files (*.*)|*.*",
+                Multiselect = false
+            };
+            var result = dlg.ShowDialog(this);
+            if (result == true)
+            {
+                using (var reader = new System.IO.StreamReader(dlg.FileName))
+                {
+                    var serializer = new XmlSerializer(typeof(ObservableCollection<File>));
+                    ObservableCollection<File> files = (ObservableCollection<File>)serializer.Deserialize(reader);
+                    SetFiles(files);
+                }
+            }
+        }
+
+        private void SaveProject()
+        {
+            var dlg = new SaveFileDialog
+            {
+                Filter = "Supported Files (*.xml)|*.xml|All Files (*.*)|*.*",
+                FileName = "tags"
+            };
+            var result = dlg.ShowDialog(this);
+            if (result == true)
+            {
+                ObservableCollection<File> files = GetFiles();
+
+                using (var writer = new System.IO.StreamWriter(dlg.FileName))
+                {
+                    var serializer = new XmlSerializer(typeof(ObservableCollection<File>));
+                    serializer.Serialize(writer, files);
+                }
+            }
+        }
+
+        private void Exit()
+        {
+            Close();
+        }
+
         private void GetTags()
         {
             if (IsRunning == false)
@@ -108,7 +163,7 @@ namespace MicroStationTagExplorer
                 TokenSource = new CancellationTokenSource();
                 Token = TokenSource.Token;
 
-                IList<File> files = GetFiles();
+                ObservableCollection<File> files = GetFiles();
 
                 Task.Factory.StartNew(() =>
                 {
@@ -214,7 +269,7 @@ namespace MicroStationTagExplorer
         {
             if (IsRunning == false)
             {
-                IList<File> files = GetFiles();
+                ObservableCollection<File> files = GetFiles();
 
                 try
                 {
@@ -247,9 +302,21 @@ namespace MicroStationTagExplorer
             }
             else if (bControl)
             {
-                if (e.Key == Key.O)
+                if (e.Key == Key.L)
                 {
                     AddFiles();
+                }
+                else if(e.Key == Key.N)
+                {
+                    NewProject();
+                }
+                else if (e.Key == Key.O)
+                {
+                    OpenProject();
+                }
+                else if (e.Key == Key.S)
+                {
+                    SaveProject();
                 }
                 else if (e.Key == Key.I)
                 {
@@ -285,6 +352,26 @@ namespace MicroStationTagExplorer
         private void FileAddFiles_Click(object sender, RoutedEventArgs e)
         {
             AddFiles();
+        }
+
+        private void FileNewProject_Click(object sender, RoutedEventArgs e)
+        {
+            NewProject();
+        }
+
+        private void FileOpenProject_Click(object sender, RoutedEventArgs e)
+        {
+            OpenProject();
+        }
+
+        private void FileSaveProject_Click(object sender, RoutedEventArgs e)
+        {
+            SaveProject();
+        }
+
+        private void FileExit_Click(object sender, RoutedEventArgs e)
+        {
+            Exit();
         }
 
         private void TagsGet_Click(object sender, RoutedEventArgs e)

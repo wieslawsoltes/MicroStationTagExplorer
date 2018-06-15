@@ -20,7 +20,15 @@
         </Grid.RowDefinitions>
         <Menu x:Name="MainMenu" Background="Transparent" Grid.Row="0">
             <MenuItem x:Name="FileMenu" Header="_File">
-                <MenuItem x:Name="FileAddFiles" Header="_Add Files..." InputGestureText="Ctrl+O" Click="FileAddFiles_Click"/>
+                <MenuItem x:Name="FileAddFiles" Header="Add _Files..." InputGestureText="Ctrl+L" Click="FileAddFiles_Click"/>
+                <Separator/>
+                <MenuItem x:Name="FileNewProject" Header="_New Project..." InputGestureText="Ctrl+N" Click="FileNewProject_Click"/>
+                <Separator/>
+                <MenuItem x:Name="FileOpenProject" Header="_Open Project..." InputGestureText="Ctrl+O" Click="FileOpenProject_Click"/>
+                <Separator/>
+                <MenuItem x:Name="FileSaveProject" Header="_Save Project..." InputGestureText="Ctrl+S" Click="FileSaveProject_Click"/>
+                <Separator/>
+                <MenuItem x:Name="FileExit" Header="E_xit" InputGestureText="Alt+F4" Click="FileExit_Click"/>
             </MenuItem>
             <MenuItem x:Name="TagsMenu" Header="_Tags">
                 <MenuItem x:Name="TagsGet" Header="_Get" InputGestureText="F5" Click="TagsGet_Click"/>
