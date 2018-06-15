@@ -123,6 +123,27 @@ namespace MicroStationTagExplorer
         {
         }
 
+        private void ToValues(Tag[] tags, out object[,] values)
+        {
+            values = new object[tags.Length + 1, 6];
+            values[0, 0] = "TagSetName";
+            values[0, 1] = "TagDefinitionName";
+            values[0, 2] = "Value";
+            values[0, 3] = "ID";
+            values[0, 4] = "HostID";
+            values[0, 5] = "Path";
+
+            for (int i = 0; i < tags.Length; i++)
+            {
+                values[i + 1, 0] = tags[i].TagSetName;
+                values[i + 1, 1] = tags[i].TagDefinitionName;
+                values[i + 1, 2] = tags[i].Value.ToString();
+                values[i + 1, 3] = tags[i].ID.ToString();
+                values[i + 1, 4] = tags[i].HostID.ToString();
+                values[i + 1, 5] = tags[i].Path;
+            }
+        }
+
         private void ExportTags()
         {
             if (DataGridFiles.DataContext == null)
@@ -137,26 +158,9 @@ namespace MicroStationTagExplorer
 
                 try
                 {
-                    var tags = files.SelectMany(f => f.Tags).ToArray();
-                    var values = new object[tags.Length + 1, 6];
-
-                    values[0, 0] = "TagSetName";
-                    values[0, 1] = "TagDefinitionName";
-                    values[0, 2] = "Value";
-                    values[0, 3] = "ID";
-                    values[0, 4] = "HostID";
-                    values[0, 5] = "Path";
-
-                    for (int i = 0; i < tags.Length; i++)
-                    {
-                        values[i + 1, 0] = tags[i].TagSetName;
-                        values[i + 1, 1] = tags[i].TagDefinitionName;
-                        values[i + 1, 2] = tags[i].Value.ToString();
-                        values[i + 1, 3] = tags[i].ID.ToString();
-                        values[i + 1, 4] = tags[i].HostID.ToString();
-                        values[i + 1, 5] = tags[i].Path;
-                    }
-
+                    object[,] values;
+                    Tag[] tags = files.SelectMany(f => f.Tags).ToArray();
+                    ToValues(tags, out values);
                     Excelnterop.ExportTags(values, tags.Length + 1, 6);
                 }
                 catch (Exception ex)
