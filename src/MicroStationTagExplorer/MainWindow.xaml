@@ -8,7 +8,8 @@
         Title="MicroStation Tag Explorer" Height="650" Width="1000"
         WindowStartupLocation="CenterScreen" WindowState="Normal"
         UseLayoutRounding="True" TextOptions.TextFormattingMode="Display" SnapsToDevicePixels="True"
-        PreviewKeyDown="Window_PreviewKeyDown">
+        PreviewKeyDown="Window_PreviewKeyDown"
+        AllowDrop="True" Drop="Window_Drop" DragEnter="Window_DragEnter">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>

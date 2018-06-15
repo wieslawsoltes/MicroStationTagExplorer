@@ -201,6 +201,65 @@ namespace MicroStationTagExplorer
             }
         }
 
+        private void Window_Drop(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                var data = e.Data.GetData(DataFormats.FileDrop);
+                if (data != null && data is string[])
+                {
+                    IList<File> files = null;
+                    if (DataGridFiles.DataContext != null)
+                    {
+                        files = DataGridFiles.DataContext as IList<File>;
+                    }
+                    else
+                    {
+                        files = new ObservableCollection<File>();
+                        DataGridFiles.DataContext = files;
+                    }
+
+                    var droppedFiles = data as string[];
+                    foreach (var droppedFile in droppedFiles)
+                    {
+                        System.IO.FileAttributes attributes = System.IO.File.GetAttributes(droppedFile);
+                        if (attributes.HasFlag(System.IO.FileAttributes.Directory))
+                        {
+                            var allFiles = System.IO.Directory.EnumerateFiles(droppedFile, "*.*", System.IO.SearchOption.AllDirectories)
+                                                              .Where(s => s.EndsWith(".dwg") || s.EndsWith(".dgn")); ;
+                            foreach (var allFile in allFiles)
+                            {
+                                var file = new File()
+                                {
+                                    Path = allFile
+                                };
+                                files.Add(file);
+                            }
+                        }
+                        else
+                        {
+                            if (droppedFile.EndsWith(".dwg") || droppedFile.EndsWith(".dgn"))
+                            {
+                                var file = new File()
+                                {
+                                    Path = droppedFile
+                                };
+                                files.Add(file);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        private void Window_DragEnter(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                e.Effects = DragDropEffects.All;
+            }
+        }
+
         private void FileAddFiles_Click(object sender, RoutedEventArgs e)
         {
             AddFiles();
