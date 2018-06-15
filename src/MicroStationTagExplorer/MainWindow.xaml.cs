@@ -26,7 +26,7 @@ namespace MicroStationTagExplorer
         {
             var dlg = new OpenFileDialog
             {
-                Filter = "All Files (*.*)|*.*",
+                Filter = "Supported Files (*.dwg;*dgn)|*.dwg;*dgn|All Files (*.*)|*.*",
                 Multiselect = true
             };
             var result = dlg.ShowDialog(this);
