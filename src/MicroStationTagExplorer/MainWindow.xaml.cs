@@ -157,7 +157,7 @@ namespace MicroStationTagExplorer
                         values[i + 1, 5] = tags[i].Path;
                     }
 
-                    //Excelnterop.ExportTags(values, tags.Length + 1, 6);
+                    Excelnterop.ExportTags(values, tags.Length + 1, 6);
                 }
                 catch (Exception ex)
                 {

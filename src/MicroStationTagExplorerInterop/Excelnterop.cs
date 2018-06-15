@@ -1,4 +1,4 @@
-﻿/*using System;
+﻿using System;
 using Excel = Microsoft.Office.Interop.Excel;
 
 namespace MicroStationTagExplorer
@@ -36,4 +36,3 @@ namespace MicroStationTagExplorer
         }
     }
 }
-*/
