@@ -5,14 +5,18 @@ using BCOM = MicroStationDGN;
 
 namespace MicroStationTagExplorer
 {
-    public static class MicrostationInterop
+    internal class MicrostationInterop : IDisposable
     {
-        public static Int64 ToInt64(BCOM.DLong value)
+        private string _path;
+        private BCOM.Application _application;
+        private BCOM.DesignFile _designFile;
+
+        private static Int64 ToInt64(BCOM.DLong value)
         {
             return (Int64)value.High << 32 | (Int64)(UInt32)value.Low;
         }
 
-        public static BCOM.DLong ToInt64(Int64 value)
+        private static BCOM.DLong ToInt64(Int64 value)
         {
             return new BCOM.DLong()
             {
@@ -21,14 +25,22 @@ namespace MicroStationTagExplorer
             };
         }
 
-        public static void GetTagData(File file)
+        public MicrostationInterop(string path)
         {
-            BCOM.Application app = Utilities.CreateObject<BCOM.Application>("MicroStationDGN.Application");
-            app.Visible = true;
+            Initialize(path);
+        }
 
-            BCOM.DesignFile designFile = app.OpenDesignFile(file.Path);
+        private void Initialize(string path)
+        {
+            _path = path;
+            _application = ComUtilities.CreateObject<BCOM.Application>("MicroStationDGN.Application");
+            _application.Visible = true;
+            _designFile = _application.OpenDesignFile(_path);
+        }
 
-            foreach (BCOM.ModelReference model in designFile.Models)
+        public void SetNormalActiveModel()
+        {
+            foreach (BCOM.ModelReference model in _designFile.Models)
             {
                 if (model.Type == BCOM.MsdModelType.msdModelTypeNormal)
                 {
@@ -36,16 +48,13 @@ namespace MicroStationTagExplorer
                     break;
                 }
             }
-
-            file.TagSets = GetTagSets(designFile);
-            file.Tags = GetTags(app.ActiveModelReference, file.Path);
         }
 
-        public static IList<TagSet> GetTagSets(BCOM.DesignFile designFile)
+        public IList<TagSet> GetTagSets()
         {
             var tagSets = new ObservableCollection<TagSet>();
 
-            foreach (BCOM.TagSet ts in designFile.TagSets)
+            foreach (BCOM.TagSet ts in _designFile.TagSets)
             {
                 var tagSet = new TagSet()
                 {
@@ -67,16 +76,16 @@ namespace MicroStationTagExplorer
             return tagSets;
         }
 
-        public static IList<Tag> GetTags(BCOM.ModelReference model, string path)
+        public IList<Tag> GetTags()
         {
-            BCOM.ElementScanCriteria sc = Utilities.CreateObject<BCOM.ElementScanCriteria>("MicroStationDGN.ElementScanCriteria");
+            var tags = new ObservableCollection<Tag>();
+
+            BCOM.ElementScanCriteria sc = ComUtilities.CreateObject<BCOM.ElementScanCriteria>("MicroStationDGN.ElementScanCriteria");
             sc.ExcludeAllTypes();
             sc.IncludeType(BCOM.MsdElementType.msdElementTypeTag);
 
-            BCOM.ElementEnumerator ee = model.Scan(sc);
+            BCOM.ElementEnumerator ee = _application.ActiveModelReference.Scan(sc);
             Array elements = ee.BuildArrayFromContents();
-
-            var tags = new ObservableCollection<Tag>();
 
             foreach (BCOM.Element element in elements)
             {
@@ -89,12 +98,26 @@ namespace MicroStationTagExplorer
                     Value = te.Value,
                     ID = ToInt64(te.ID),
                     HostID = ToInt64(te.BaseElement != null ? te.BaseElement.ID : new BCOM.DLong()),
-                    Path = path
+                    Path = _path
                 };
                 tags.Add(tag);
             }
 
             return tags;
+        }
+
+        public void Dispose()
+        {
+            ComUtilities.ReleaseComObject(_designFile);
+            _designFile = null;
+
+            //if (_application != null)
+            //{
+            //    _application.Quit();
+            //}
+
+            ComUtilities.ReleaseComObject(_application);
+            _application = null;
         }
     }
 }

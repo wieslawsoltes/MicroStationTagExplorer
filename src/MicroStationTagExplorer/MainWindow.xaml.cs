@@ -93,7 +93,12 @@ namespace MicroStationTagExplorer
                                 TextBoxStatus.Text = "[" + i + "/" + count + "] " + System.IO.Path.GetFileName(file.Path);
                             });
 
-                            MicrostationInterop.GetTagData(file);
+                            using (var microstation = new MicrostationInterop(file.Path))
+                            {
+                                microstation.SetNormalActiveModel();
+                                file.TagSets = microstation.GetTagSets();
+                                file.Tags = microstation.GetTags();
+                            }
                         }
                     }
                     catch (Exception ex)
@@ -163,7 +168,10 @@ namespace MicroStationTagExplorer
                     object[,] values;
                     Tag[] tags = files.SelectMany(f => f.Tags).ToArray();
                     ToValues(tags, out values);
-                    Excelnterop.ExportTags(values, tags.Length + 1, 6);
+                    using (var excel = new Excelnterop())
+                    {
+                        excel.ExportTags(values, tags.Length + 1, 6);
+                    }
                 }
                 catch (Exception ex)
                 {

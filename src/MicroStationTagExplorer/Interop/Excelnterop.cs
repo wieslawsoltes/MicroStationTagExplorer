@@ -3,36 +3,57 @@ using Excel = Microsoft.Office.Interop.Excel;
 
 namespace MicroStationTagExplorer
 {
-    public static class Excelnterop
+    internal class Excelnterop : IDisposable
     {
-        public static void ExportTags(object[,] values, int rows, int columns)
+        private Excel.Application _application;
+        private Excel.Workbook _workbook;
+        private Excel.Worksheet _worksheet;
+
+        public void ExportTags(object[,] values, int rows, int columns)
         {
-            Excel.Application app = Utilities.CreateObject<Excel.Application>("Excel.Application");
-            app.Visible = true;
+            _application = ComUtilities.CreateObject<Excel.Application>("Excel.Application");
+            _application.Visible = true;
 
-            Excel.Workbook wb = app.Workbooks.Add();
-            Excel.Worksheet ws = wb.Worksheets.Add();
+            _workbook = _application.Workbooks.Add();
+            _worksheet = _workbook.Worksheets.Add();
 
-            Excel.Range start = ws.Cells[1, 1];
-            Excel.Range end = ws.Cells[rows, columns];
-            Excel.Range range = ws.Range[start, end];
+            Excel.Range start = _worksheet.Cells[1, 1];
+            Excel.Range end = _worksheet.Cells[rows, columns];
+            Excel.Range range = _worksheet.Range[start, end];
 
             range.Value = values;
 
-            ws.Rows["2:2"].Select();
-            app.ActiveWindow.SplitColumn = 0;
-            app.ActiveWindow.SplitRow = 1;
-            app.ActiveWindow.FreezePanes = true;
+            _worksheet.Rows["2:2"].Select();
+            _application.ActiveWindow.SplitColumn = 0;
+            _application.ActiveWindow.SplitRow = 1;
+            _application.ActiveWindow.FreezePanes = true;
 
-            ws.Range[ws.Cells[1, 1], ws.Cells[1, 1]].CurrentRegion.Select();
-            app.Selection.AutoFilter();
+            _worksheet.Range[_worksheet.Cells[1, 1], _worksheet.Cells[1, 1]].CurrentRegion.Select();
+            _application.Selection.AutoFilter();
 
-            ws.Columns[1].Resize(Type.Missing, 6).Select();
-            ws.Columns[1].Resize(Type.Missing, 6).EntireColumn.AutoFit();
+            _worksheet.Columns[1].Resize(Type.Missing, 6).Select();
+            _worksheet.Columns[1].Resize(Type.Missing, 6).EntireColumn.AutoFit();
 
-            ws.ListObjects.AddEx(Excel.XlListObjectSourceType.xlSrcRange, range, null, Excel.XlYesNoGuess.xlYes).Name = "Tags";
+            _worksheet.ListObjects.AddEx(Excel.XlListObjectSourceType.xlSrcRange, range, null, Excel.XlYesNoGuess.xlYes).Name = "Tags";
 
-            ws.Range["A1"].Select();
+            _worksheet.Range["A1"].Select();
+        }
+
+        public void Dispose()
+        {
+            ComUtilities.ReleaseComObject(_worksheet);
+            _worksheet = null;
+
+            ComUtilities.ReleaseComObject(_workbook);
+            _workbook = null;
+
+            //if (_application != null)
+            //{
+            //    _application.Quit();
+            //}
+
+            ComUtilities.ReleaseComObject(_application);
+            _application = null;
         }
     }
 }

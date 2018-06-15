@@ -82,7 +82,7 @@
     </Compile>
     <Compile Include="Interop\Excelnterop.cs" />
     <Compile Include="Interop\MicrostationInterop.cs" />
-    <Compile Include="Interop\Utilities.cs" />
+    <Compile Include="Interop\ComUtilities.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
