@@ -21,12 +21,13 @@
         <Menu x:Name="MainMenu" Background="Transparent" Grid.Row="0">
             <MenuItem x:Name="FileMenu" Header="_File">
                 <MenuItem x:Name="FileAddFiles" Header="_Add Files..." InputGestureText="Ctrl+O" Click="FileAddFiles_Click"/>
+            </MenuItem>
+            <MenuItem x:Name="TagsMenu" Header="_Tags">
+                <MenuItem x:Name="TagsGet" Header="_Get" InputGestureText="F5" Click="TagsGet_Click"/>
                 <Separator/>
-                <MenuItem x:Name="FileGetTags" Header="_Get Tags" InputGestureText="F5" Click="FileGetTags_Click"/>
+                <MenuItem x:Name="TagsImport" Header="_Import..." InputGestureText="Ctrl+I" Click="TagsImport_Click"/>
                 <Separator/>
-                <MenuItem x:Name="FileImportTags" Header="_Import Tags..." InputGestureText="Ctrl+I" Click="FileImportTags_Click"/>
-                <Separator/>
-                <MenuItem x:Name="FileExportTags" Header="_Export Tags..." InputGestureText="Ctrl+E" Click="FileExportTags_Click"/>
+                <MenuItem x:Name="TagsExport" Header="_Export..." InputGestureText="Ctrl+E" Click="TagsExport_Click"/>
             </MenuItem>
         </Menu>
         <DataGrid x:Name="DataGridFiles" 

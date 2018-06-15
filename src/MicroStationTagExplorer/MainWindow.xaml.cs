@@ -22,6 +22,23 @@ namespace MicroStationTagExplorer
             InitializeComponent();
         }
 
+        private IList<File> GetFiles()
+        {
+            IList<File> files = null;
+
+            if (DataGridFiles.DataContext != null)
+            {
+                files = DataGridFiles.DataContext as IList<File>;
+            }
+            else
+            {
+                files = new ObservableCollection<File>();
+                DataGridFiles.DataContext = files;
+            }
+
+            return files;
+        }
+
         private void AddFiles()
         {
             var dlg = new OpenFileDialog
@@ -32,16 +49,7 @@ namespace MicroStationTagExplorer
             var result = dlg.ShowDialog(this);
             if (result == true)
             {
-                IList<File> files = null;
-                if (DataGridFiles.DataContext != null)
-                {
-                    files = DataGridFiles.DataContext as IList<File>;
-                }
-                else
-                {
-                    files = new ObservableCollection<File>();
-                    DataGridFiles.DataContext = files;
-                }
+                IList<File> files = GetFiles();
 
                 foreach (var fileName in dlg.FileNames)
                 {
@@ -54,23 +62,53 @@ namespace MicroStationTagExplorer
             }
         }
 
+        private void AddPaths(string[] paths)
+        {
+            IList<File> files = GetFiles();
+
+            foreach (var path in paths)
+            {
+                System.IO.FileAttributes attributes = System.IO.File.GetAttributes(path);
+                if (attributes.HasFlag(System.IO.FileAttributes.Directory))
+                {
+                    var fileNames = System.IO.Directory.EnumerateFiles(path, "*.*", System.IO.SearchOption.AllDirectories)
+                                                       .Where(s => s.EndsWith(".dwg") || s.EndsWith(".dgn")); ;
+                    foreach (var fileName in fileNames)
+                    {
+                        var file = new File()
+                        {
+                            Path = fileName
+                        };
+                        files.Add(file);
+                    }
+                }
+                else
+                {
+                    if (path.EndsWith(".dwg") || path.EndsWith(".dgn"))
+                    {
+                        var file = new File()
+                        {
+                            Path = path
+                        };
+                        files.Add(file);
+                    }
+                }
+            }
+        }
+
         private void GetTags()
         {
-            if (DataGridFiles.DataContext == null)
-                return;
-
             if (IsRunning == false)
             {
-                int selectedIndex = DataGridFiles.SelectedIndex;
-                IList<File> files = DataGridFiles.DataContext as IList<File>;
-                if (files == null)
-                    return;
-
                 IsRunning = true;
-                FileGetTags.Header = "S_top";
-                TextBoxStatus.Text = "";
+
+                DisableWindow();
+                UpdateStatus("");
+
                 TokenSource = new CancellationTokenSource();
                 Token = TokenSource.Token;
+
+                IList<File> files = GetFiles();
 
                 Task.Factory.StartNew(() =>
                 {
@@ -90,7 +128,7 @@ namespace MicroStationTagExplorer
 
                             Dispatcher.Invoke(() =>
                             {
-                                TextBoxStatus.Text = "[" + i + "/" + count + "] " + System.IO.Path.GetFileName(file.Path);
+                                UpdateStatus("[" + i + "/" + count + "] " + System.IO.Path.GetFileName(file.Path));
                             });
 
                             using (var microstation = new MicrostationInterop(file.Path))
@@ -109,8 +147,8 @@ namespace MicroStationTagExplorer
 
                     Dispatcher.Invoke(() =>
                     {
-                        FileGetTags.Header = "_Get Tags";
-                        TextBoxStatus.Text = "";
+                        EnableWindow();
+                        UpdateStatus("");
                     });
 
                     TokenSource.Dispose();
@@ -121,9 +159,30 @@ namespace MicroStationTagExplorer
             {
                 TokenSource.Cancel();
                 TokenSource.Dispose();
-                FileGetTags.Header = "_Get Tags";
-                TextBoxStatus.Text = "";
+                EnableWindow();
+                UpdateStatus("");
             }
+        }
+
+        private void UpdateStatus(string message)
+        {
+            TextBoxStatus.Text = message;
+        }
+
+        private void EnableWindow()
+        {
+            FileMenu.IsEnabled = true;
+            TagsImport.IsEnabled = true;
+            TagsExport.IsEnabled = true;
+            TagsGet.Header = "_Get";
+        }
+
+        private void DisableWindow()
+        {
+            FileMenu.IsEnabled = false;
+            TagsImport.IsEnabled = false;
+            TagsExport.IsEnabled = false;
+            TagsGet.Header = "S_top";
         }
 
         private void ImportTags()
@@ -153,15 +212,9 @@ namespace MicroStationTagExplorer
 
         private void ExportTags()
         {
-            if (DataGridFiles.DataContext == null)
-                return;
-
             if (IsRunning == false)
             {
-                int selectedIndex = DataGridFiles.SelectedIndex;
-                IList<File> files = DataGridFiles.DataContext as IList<File>;
-                if (files == null)
-                    return;
+                IList<File> files = GetFiles();
 
                 try
                 {
@@ -216,46 +269,7 @@ namespace MicroStationTagExplorer
                 var data = e.Data.GetData(DataFormats.FileDrop);
                 if (data != null && data is string[])
                 {
-                    IList<File> files = null;
-                    if (DataGridFiles.DataContext != null)
-                    {
-                        files = DataGridFiles.DataContext as IList<File>;
-                    }
-                    else
-                    {
-                        files = new ObservableCollection<File>();
-                        DataGridFiles.DataContext = files;
-                    }
-
-                    var droppedFiles = data as string[];
-                    foreach (var droppedFile in droppedFiles)
-                    {
-                        System.IO.FileAttributes attributes = System.IO.File.GetAttributes(droppedFile);
-                        if (attributes.HasFlag(System.IO.FileAttributes.Directory))
-                        {
-                            var allFiles = System.IO.Directory.EnumerateFiles(droppedFile, "*.*", System.IO.SearchOption.AllDirectories)
-                                                              .Where(s => s.EndsWith(".dwg") || s.EndsWith(".dgn")); ;
-                            foreach (var allFile in allFiles)
-                            {
-                                var file = new File()
-                                {
-                                    Path = allFile
-                                };
-                                files.Add(file);
-                            }
-                        }
-                        else
-                        {
-                            if (droppedFile.EndsWith(".dwg") || droppedFile.EndsWith(".dgn"))
-                            {
-                                var file = new File()
-                                {
-                                    Path = droppedFile
-                                };
-                                files.Add(file);
-                            }
-                        }
-                    }
+                    AddPaths(data as string[]);
                 }
             }
         }
@@ -273,17 +287,17 @@ namespace MicroStationTagExplorer
             AddFiles();
         }
 
-        private void FileGetTags_Click(object sender, RoutedEventArgs e)
+        private void TagsGet_Click(object sender, RoutedEventArgs e)
         {
             GetTags();
         }
 
-        private void FileImportTags_Click(object sender, RoutedEventArgs e)
+        private void TagsImport_Click(object sender, RoutedEventArgs e)
         {
             ImportTags();
         }
 
-        private void FileExportTags_Click(object sender, RoutedEventArgs e)
+        private void TagsExport_Click(object sender, RoutedEventArgs e)
         {
             ExportTags();
         }
