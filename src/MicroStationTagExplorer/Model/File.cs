@@ -26,5 +26,8 @@ namespace MicroStationTagExplorer
 
         [XmlIgnore]
         public IEnumerable<Error> Errors { get; set; }
+
+        [XmlIgnore]
+        public bool HasErrors { get; set; }
     }
 }

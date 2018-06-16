@@ -60,6 +60,8 @@ namespace MicroStationTagExplorer
                                                  .SelectMany(e => e);
 
                 file.Errors = ValidateTags(file);
+
+                file.HasErrors = file.Errors.Count() > 0;
             }
         }
 
@@ -75,7 +77,7 @@ namespace MicroStationTagExplorer
                 {
                     yield return new Error()
                     {
-                        Message = "Missing tags from: " + tagSet.Name,
+                        Message = "Missing Tags: " + tagSet.Name,
                         Element = element,
                         TagSet = tagSet
                     };
@@ -98,7 +100,7 @@ namespace MicroStationTagExplorer
                     {
                         yield return new Error()
                         {
-                            Message = "Missing tag in element: " + tagDef.Name + ", from: " + tagSet.Name,
+                            Message = "Missing Tag: " + tagDef.Name + " [" + tagSet.Name + "]",
                             Element = element,
                             TagSet = tagSet
                         };
@@ -122,7 +124,7 @@ namespace MicroStationTagExplorer
                     {
                         yield return new Error()
                         {
-                            Message = "Invalid tag in element: " + tag.TagDefinitionName + ", from: " + tagSet.Name,
+                            Message = "Invalid Tag: " + tag.TagDefinitionName + " [" + tagSet.Name + "]",
                             Element = element,
                             TagSet = tagSet
                         };
