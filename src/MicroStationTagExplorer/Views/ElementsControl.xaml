@@ -1,0 +1,36 @@
+﻿<UserControl x:Class="MicroStationTagExplorer.Views.ElementsControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MicroStationTagExplorer.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="35*"/>
+            <ColumnDefinition Width="8"/>
+            <ColumnDefinition Width="65*"/>
+        </Grid.ColumnDefinitions>
+        <DataGrid x:Name="DataGridElements" 
+                    DataContext="{Binding}" 
+                    ItemsSource="{Binding}" 
+                    AutoGenerateColumns="False" 
+                    CanUserAddRows="False" CanUserDeleteRows="False"
+                    Margin="3" Grid.Column="0">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Key" Binding="{Binding Key}" IsReadOnly="True"/>
+                <DataGridCheckBoxColumn Header="HasErrors" Binding="{Binding HasErrors}" IsReadOnly="True"/>
+            </DataGrid.Columns>
+        </DataGrid>
+        <GridSplitter ResizeDirection="Columns" Grid.Column="1" Background="Transparent" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
+        <TabControl Grid.Column="2">
+            <TabItem Header="Tags">
+                <local:TagsControl DataContext="{Binding ElementName=DataGridElements, Path=SelectedItem.Tags}"/>
+            </TabItem>
+            <TabItem Header="Errors">
+                <local:ErrorsControl DataContext="{Binding ElementName=DataGridElements, Path=SelectedItem.Errors}"/>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</UserControl>

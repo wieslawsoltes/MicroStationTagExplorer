@@ -1,0 +1,69 @@
+﻿<UserControl x:Class="MicroStationTagExplorer.Views.ProjectControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MicroStationTagExplorer.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="8"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Column="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="8"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <TabControl Grid.Column="0">
+                <TabItem Header="Files">
+                    <DataGrid x:Name="DataGridFiles" 
+                              DataContext="{Binding Files}" 
+                              ItemsSource="{Binding}" 
+                              AutoGenerateColumns="False" 
+                              CanUserAddRows="False" CanUserDeleteRows="True"
+                              Margin="3">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True"/>
+                            <DataGridCheckBoxColumn Header="HasErrors" Binding="{Binding HasErrors}" IsReadOnly="True"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </TabItem>
+            </TabControl>
+            <GridSplitter ResizeDirection="Columns" Grid.Column="1" Background="Transparent" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
+            <TabControl Grid.Column="2">
+                <TabItem Header="Elements by TagSet">
+                    <local:ElementsControl DataContext="{Binding ElementName=DataGridFiles, Path=SelectedItem.ElementsByTagSet}"/>
+                </TabItem>
+                <TabItem Header="Elements by HostID">
+                    <local:ElementsControl DataContext="{Binding ElementName=DataGridFiles, Path=SelectedItem.ElementsByHostID}"/>
+                </TabItem>
+                <TabItem Header="Errors">
+                    <local:ErrorsControl DataContext="{Binding ElementName=DataGridFiles, Path=SelectedItem.Errors}"/>
+                </TabItem>
+            </TabControl>
+        </Grid>
+        <GridSplitter ResizeDirection="Rows" Grid.Row="1" Background="Transparent" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="50*"/>
+                <ColumnDefinition Width="8"/>
+                <ColumnDefinition Width="50*"/>
+            </Grid.ColumnDefinitions>
+            <TabControl Grid.Column="0">
+                <TabItem Header="Tags">
+                    <local:TagsControl DataContext="{Binding ElementName=DataGridFiles, Path=SelectedItem.Tags}"/>
+                </TabItem>
+            </TabControl>
+            <GridSplitter ResizeDirection="Columns" Grid.Column="1" Background="Transparent" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
+            <TabControl Grid.Column="2">
+                <TabItem Header="TagSets">
+                    <local:TagSetsControl DataContext="{Binding ElementName=DataGridFiles, Path=SelectedItem.TagSets}"/>
+                </TabItem>
+            </TabControl>
+        </Grid>
+    </Grid>
+</UserControl>
