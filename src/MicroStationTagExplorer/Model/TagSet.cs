@@ -1,16 +1,19 @@
-﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
+using System.Runtime.Serialization;
 using System.Xml.Serialization;
 
 namespace MicroStationTagExplorer
 {
-    [XmlRoot("TagSet")]
+    [DataContract(IsReference = true, Name = "TagSet"), XmlRoot("TagSet")]
     public class TagSet
     {
-        [XmlAttribute("Path")]
+        [DataMember(Name = "Name"), XmlAttribute("Name")]
         public string Name { get; set; }
 
-        [XmlArray("TagDefinitions")]
+        [DataMember(Name = "TagDefinitions"), XmlArray("TagDefinitions")]
         public ObservableCollection<TagDefinition> TagDefinitions { get; set; }
+
+        [DataMember(Name = "File"), XmlAttribute("Name")]
+        public File File { get; set; }
     }
 }

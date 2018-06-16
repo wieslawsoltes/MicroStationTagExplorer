@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.Serialization;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
-using System.Xml.Serialization;
+using System.Xml;
 using Microsoft.Win32;
 
 namespace MicroStationTagExplorer
@@ -133,6 +135,16 @@ namespace MicroStationTagExplorer
             }
         }
 
+        private void AddFile(Project project, string path)
+        {
+            var file = new File()
+            {
+                Name = System.IO.Path.GetFileName(path),
+                Path = path
+            };
+            project.Files.Add(file);
+        }
+
         private void AddFiles()
         {
             var dlg = new OpenFileDialog
@@ -147,11 +159,7 @@ namespace MicroStationTagExplorer
 
                 foreach (var fileName in dlg.FileNames)
                 {
-                    var file = new File()
-                    {
-                        Path = fileName
-                    };
-                    project.Files.Add(file);
+                    AddFile(project, fileName);
                 }
             }
         }
@@ -169,22 +177,14 @@ namespace MicroStationTagExplorer
                                                        .Where(s => s.EndsWith(".dwg") || s.EndsWith(".dgn")); ;
                     foreach (var fileName in fileNames)
                     {
-                        var file = new File()
-                        {
-                            Path = fileName
-                        };
-                        project.Files.Add(file);
+                        AddFile(project, fileName);
                     }
                 }
                 else
                 {
                     if (path.EndsWith(".dwg") || path.EndsWith(".dgn"))
                     {
-                        var file = new File()
-                        {
-                            Path = path
-                        };
-                        project.Files.Add(file);
+                        AddFile(project, path);
                     }
                 }
             }
@@ -210,11 +210,21 @@ namespace MicroStationTagExplorer
             var result = dlg.ShowDialog(this);
             if (result == true)
             {
-                using (var reader = new System.IO.StreamReader(dlg.FileName))
+                using (var stream = new System.IO.StreamReader(dlg.FileName))
                 {
-                    var serializer = new XmlSerializer(typeof(Project));
-                    Project project = (Project)serializer.Deserialize(reader);
-                    SetProject(project);
+                    var settings = new XmlReaderSettings();
+                    using (var reader = XmlReader.Create(stream, settings))
+                    {
+                        var serializer = new DataContractSerializer(typeof(Project), null, int.MaxValue, false, true, null);
+                        Project project = (Project)serializer.ReadObject(reader);
+
+                        foreach (var file in project.Files)
+                        {
+                            file.Name = System.IO.Path.GetFileName(file.Path);
+                        }
+
+                        SetProject(project);
+                    }
                 }
             }
         }
@@ -231,10 +241,19 @@ namespace MicroStationTagExplorer
             {
                 Project project = GetProject();
 
-                using (var writer = new System.IO.StreamWriter(dlg.FileName))
+                using (var stream = new System.IO.StreamWriter(dlg.FileName))
                 {
-                    var serializer = new XmlSerializer(typeof(Project));
-                    serializer.Serialize(writer, project);
+                    var settings = new XmlWriterSettings()
+                    {
+                        Indent = true,
+                        IndentChars = "    ",
+                        Encoding = Encoding.UTF8,
+                    };
+                    using (var writer = XmlWriter.Create(stream, settings))
+                    {
+                        var serializer = new DataContractSerializer(typeof(Project), null, int.MaxValue, false, true, null);
+                        serializer.WriteObject(writer, project);
+                    }
                 }
             }
         }
@@ -282,8 +301,19 @@ namespace MicroStationTagExplorer
                             using (var microstation = new MicrostationInterop(file.Path))
                             {
                                 microstation.SetNormalActiveModel();
+
                                 file.TagSets = microstation.GetTagSets();
                                 file.Tags = microstation.GetTags();
+                                
+                                foreach (var tagSet in file.TagSets)
+                                {
+                                    tagSet.File = file;
+                                }
+
+                                foreach (var tag in file.Tags)
+                                {
+                                    tag.File = file;
+                                }
                             }
                         }
                         SetElements(project);
@@ -356,7 +386,7 @@ namespace MicroStationTagExplorer
                 values[i + 1, 2] = tags[i].Value.ToString();
                 values[i + 1, 3] = tags[i].ID.ToString();
                 values[i + 1, 4] = tags[i].HostID.ToString();
-                values[i + 1, 5] = tags[i].Path;
+                values[i + 1, 5] = tags[i].File.Path;
             }
         }
 

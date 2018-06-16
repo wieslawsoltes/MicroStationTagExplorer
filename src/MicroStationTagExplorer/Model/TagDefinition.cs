@@ -1,12 +1,12 @@
-﻿
+﻿using System.Runtime.Serialization;
 using System.Xml.Serialization;
 
 namespace MicroStationTagExplorer
 {
-    [XmlRoot("TagDefinition")]
+    [DataContract(IsReference = true, Name = "TagDefinition"), XmlRoot("TagDefinition")]
     public class TagDefinition
     {
-        [XmlAttribute("Name")]
+        [DataMember(Name = "Name"), XmlAttribute("Name")]
         public string Name { get; set; }
     }
 }

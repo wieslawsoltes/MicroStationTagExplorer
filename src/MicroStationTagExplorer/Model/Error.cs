@@ -1,18 +1,19 @@
 ﻿using System.Linq;
+using System.Runtime.Serialization;
 using System.Xml.Serialization;
 
 namespace MicroStationTagExplorer
 {
-    [XmlRoot("Error")]
+    [DataContract(IsReference = true, Name = "Error"), XmlRoot("Error")]
     public class Error
     {
-        [XmlIgnore]
+        [DataMember(Name = "Message"), XmlAttribute("Message")]
         public string Message { get; set; }
 
-        [XmlIgnore]
+        [IgnoreDataMember, XmlIgnore]
         public IGrouping<string, Tag> Element { get; set; }
 
-        [XmlIgnore]
+        [DataMember(Name = "TagSet"), XmlAttribute("TagSet")]
         public TagSet TagSet { get; set; }
     }
 }

@@ -97,8 +97,7 @@ namespace MicroStationTagExplorer
                     TagDefinitionName = te.TagDefinitionName,
                     Value = te.Value,
                     ID = ToInt64(te.ID),
-                    HostID = ToInt64(te.BaseElement != null ? te.BaseElement.ID : new BCOM.DLong()),
-                    Path = _path
+                    HostID = ToInt64(te.BaseElement != null ? te.BaseElement.ID : new BCOM.DLong())
                 };
                 tags.Add(tag);
             }

@@ -51,9 +51,16 @@
                       CanUserAddRows="False" CanUserDeleteRows="True"
                       Margin="3" Grid.Column="0">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Path" Binding="{Binding Path}" IsReadOnly="True"/>
+                    <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True"/>
                     <DataGridCheckBoxColumn Header="HasErrors" Binding="{Binding HasErrors}" IsReadOnly="True"/>
                 </DataGrid.Columns>
+                <!--
+                <DataGrid.RowDetailsTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Path}"/>
+                    </DataTemplate>
+                </DataGrid.RowDetailsTemplate>
+                -->
             </DataGrid>
             <GridSplitter ResizeDirection="Columns" Grid.Column="1" Background="Transparent" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
             <TabControl Grid.Column="2">
@@ -89,7 +96,7 @@
                                 <DataGridTextColumn Header="Value" Binding="{Binding Value}"/>
                                 <DataGridTextColumn Header="ID" Binding="{Binding ID}" IsReadOnly="True"/>
                                 <DataGridTextColumn Header="HostID" Binding="{Binding HostID}" IsReadOnly="True"/>
-                                <DataGridTextColumn Header="Path" Binding="{Binding Path}" IsReadOnly="True"/>
+                                <DataGridTextColumn Header="File" Binding="{Binding File.Name}" IsReadOnly="True"/>
                             </DataGrid.Columns>
                         </DataGrid>
                     </Grid>
@@ -126,7 +133,7 @@
                                 <DataGridTextColumn Header="Value" Binding="{Binding Value}"/>
                                 <DataGridTextColumn Header="ID" Binding="{Binding ID}" IsReadOnly="True"/>
                                 <DataGridTextColumn Header="HostID" Binding="{Binding HostID}" IsReadOnly="True"/>
-                                <DataGridTextColumn Header="Path" Binding="{Binding Path}" IsReadOnly="True"/>
+                                <DataGridTextColumn Header="File" Binding="{Binding File.Name}" IsReadOnly="True"/>
                             </DataGrid.Columns>
                         </DataGrid>
                     </Grid>
@@ -149,6 +156,7 @@
                                 <DataGridTextColumn Header="Message" Binding="{Binding Message}" IsReadOnly="True"/>
                                 <DataGridTextColumn Header="Element" Binding="{Binding Element.Key}" IsReadOnly="True"/>
                                 <DataGridTextColumn Header="TagSet" Binding="{Binding TagSet.Name}" IsReadOnly="True"/>
+                                <DataGridTextColumn Header="File" Binding="{Binding File.Name}" IsReadOnly="True"/>
                             </DataGrid.Columns>
                         </DataGrid>
                         <GridSplitter ResizeDirection="Rows" Grid.Row="1" Background="Transparent" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
@@ -171,7 +179,7 @@
                                     <DataGridTextColumn Header="Value" Binding="{Binding Value}"/>
                                     <DataGridTextColumn Header="ID" Binding="{Binding ID}" IsReadOnly="True"/>
                                     <DataGridTextColumn Header="HostID" Binding="{Binding HostID}" IsReadOnly="True"/>
-                                    <DataGridTextColumn Header="Path" Binding="{Binding Path}" IsReadOnly="True"/>
+                                    <DataGridTextColumn Header="File" Binding="{Binding File.Name}" IsReadOnly="True"/>
                                 </DataGrid.Columns>
                             </DataGrid>
                             <GridSplitter ResizeDirection="Columns" Grid.Column="1" Background="Transparent" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
@@ -184,6 +192,7 @@
                                       Margin="3" Grid.Column="2">
                                 <DataGrid.Columns>
                                     <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True"/>
+                                    <DataGridTextColumn Header="File" Binding="{Binding File.Name}" IsReadOnly="True"/>
                                 </DataGrid.Columns>
                             </DataGrid>
                         </Grid>
@@ -211,7 +220,7 @@
                     <DataGridTextColumn Header="Value" Binding="{Binding Value}"/>
                     <DataGridTextColumn Header="ID" Binding="{Binding ID}" IsReadOnly="True"/>
                     <DataGridTextColumn Header="HostID" Binding="{Binding HostID}" IsReadOnly="True"/>
-                    <DataGridTextColumn Header="Path" Binding="{Binding Path}" IsReadOnly="True"/>
+                    <DataGridTextColumn Header="File" Binding="{Binding File.Name}" IsReadOnly="True"/>
                 </DataGrid.Columns>
             </DataGrid>
             <GridSplitter ResizeDirection="Columns" Grid.Column="1" Background="Transparent" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
@@ -230,6 +239,7 @@
                           Margin="3" Grid.Row="0">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True"/>
+                        <DataGridTextColumn Header="File" Binding="{Binding File.Name}" IsReadOnly="True"/>
                     </DataGrid.Columns>
                 </DataGrid>
                 <GridSplitter ResizeDirection="Rows" Grid.Row="1" Background="Transparent" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>

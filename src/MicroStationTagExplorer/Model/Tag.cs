@@ -1,27 +1,28 @@
 ﻿using System;
+using System.Runtime.Serialization;
 using System.Xml.Serialization;
 
 namespace MicroStationTagExplorer
 {
-    [XmlRoot("Tag")]
+    [DataContract(IsReference = true, Name = "Tag"), XmlRoot("Tag")]
     public class Tag
     {
-        [XmlAttribute("TagSetName")]
+        [DataMember(Name = "TagSetName"), XmlAttribute("TagSetName")]
         public string TagSetName { get; set; }
 
-        [XmlAttribute("TagDefinitionName")]
+        [DataMember(Name = "TagDefinitionName"), XmlAttribute("TagDefinitionName")]
         public string TagDefinitionName { get; set; }
 
-        [XmlElement]
+        [DataMember(Name = "Value"), XmlElement("Value")]
         public object Value { get; set; }
 
-        [XmlAttribute("ID")]
+        [DataMember(Name = "ID"), XmlAttribute("ID")]
         public Int64 ID { get; set; }
 
-        [XmlAttribute("HostID")]
+        [DataMember(Name = "HostID"), XmlAttribute("HostID")]
         public Int64 HostID { get; set; }
 
-        [XmlAttribute("Path")]
-        public string Path { get; set; }
+        [DataMember(Name = "File"), XmlAttribute("File")]
+        public File File { get; set; }
     }
 }
