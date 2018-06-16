@@ -44,7 +44,6 @@
                 <ColumnDefinition Width="8"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <!-- Files -->
             <TabControl Grid.Column="0">
                 <TabItem Header="Files">
                     <DataGrid x:Name="DataGridFiles" 
@@ -56,13 +55,6 @@
                             <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True"/>
                             <DataGridCheckBoxColumn Header="HasErrors" Binding="{Binding HasErrors}" IsReadOnly="True"/>
                         </DataGrid.Columns>
-                        <!--
-                        <DataGrid.RowDetailsTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding Path}"/>
-                            </DataTemplate>
-                        </DataGrid.RowDetailsTemplate>
-                        -->
                     </DataGrid>
                 </TabItem>
             </TabControl>
@@ -75,7 +67,6 @@
                             <RowDefinition Height="8"/>
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
-                        <!-- Elements -->
                         <DataGrid x:Name="DataGridElementsByTagSet" 
                                   DataContext="{Binding ElementName=DataGridFiles, Path=SelectedItem.ElementsByTagSet}" 
                                   ItemsSource="{Binding}" 
@@ -87,7 +78,6 @@
                             </DataGrid.Columns>
                         </DataGrid>
                         <GridSplitter ResizeDirection="Rows" Grid.Row="1" Background="Transparent" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
-                        <!-- Element -->
                         <DataGrid x:Name="DataGridTagsByTagSet" 
                                   DataContext="{Binding ElementName=DataGridElementsByTagSet, Path=SelectedItem}" 
                                   ItemsSource="{Binding}" 
@@ -112,7 +102,6 @@
                             <RowDefinition Height="8"/>
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
-                        <!-- Elements -->
                         <DataGrid x:Name="DataGridElementsByHostID" 
                                   DataContext="{Binding ElementName=DataGridFiles, Path=SelectedItem.ElementsByHostID}" 
                                   ItemsSource="{Binding}" 
@@ -124,7 +113,6 @@
                             </DataGrid.Columns>
                         </DataGrid>
                         <GridSplitter ResizeDirection="Rows" Grid.Row="1" Background="Transparent" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
-                        <!-- Element -->
                         <DataGrid x:Name="DataGridTagsByHostID" 
                                   DataContext="{Binding ElementName=DataGridElementsByHostID, Path=SelectedItem}" 
                                   ItemsSource="{Binding}" 
@@ -149,7 +137,6 @@
                             <RowDefinition Height="8"/>
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
-                        <!-- Errors -->
                         <DataGrid x:Name="DataGridErrors" 
                                   DataContext="{Binding ElementName=DataGridFiles, Path=SelectedItem.Errors}" 
                                   ItemsSource="{Binding}" 
@@ -170,7 +157,6 @@
                                 <ColumnDefinition Width="8"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <!-- Element -->
                             <DataGrid x:Name="DataGridErrorElement" 
                                       DataContext="{Binding ElementName=DataGridErrors, Path=SelectedItem}" 
                                       ItemsSource="{Binding Element}" 
@@ -187,7 +173,6 @@
                                 </DataGrid.Columns>
                             </DataGrid>
                             <GridSplitter ResizeDirection="Columns" Grid.Column="1" Background="Transparent" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
-                            <!-- TagDefinitions -->
                             <DataGrid x:Name="DataGridErrorTagDefinitions" 
                                       DataContext="{Binding ElementName=DataGridErrors, Path=SelectedItem}" 
                                       ItemsSource="{Binding TagSet.TagDefinitions}" 
@@ -207,11 +192,12 @@
         <GridSplitter ResizeDirection="Rows" Grid.Row="2" Background="Transparent" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
         <Grid Grid.Row="3">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="50*"/>
                 <ColumnDefinition Width="8"/>
-                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="25*"/>
+                <ColumnDefinition Width="8"/>
+                <ColumnDefinition Width="25*"/>
             </Grid.ColumnDefinitions>
-            <!-- Tags -->
             <TabControl Grid.Column="0">
                 <TabItem Header="Tags">
                     <DataGrid x:Name="DataGridTags" 
@@ -232,44 +218,36 @@
                 </TabItem>
             </TabControl>
             <GridSplitter ResizeDirection="Columns" Grid.Column="1" Background="Transparent" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
-            <Grid Grid.Column="2">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="8"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
-                <TabControl Grid.Row="0">
-                    <TabItem Header="TagSets">
-                        <DataGrid x:Name="DataGridTagSets" 
-                                  DataContext="{Binding ElementName=DataGridFiles, Path=SelectedItem.TagSets}" 
-                                  ItemsSource="{Binding}" 
-                                  AutoGenerateColumns="False"
-                                  CanUserAddRows="False" CanUserDeleteRows="False"
-                                  Margin="3">
-                            <DataGrid.Columns>
-                                <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True"/>
-                                <DataGridTextColumn Header="File" Binding="{Binding File.Name}" IsReadOnly="True"/>
-                            </DataGrid.Columns>
-                        </DataGrid>
-                    </TabItem>
-                </TabControl>
-                <GridSplitter ResizeDirection="Rows" Grid.Row="1" Background="Transparent" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
-                <TabControl Grid.Row="2">
-                    <TabItem Header="TagDefinitions">
-                        <DataGrid x:Name="DataGridTagDefinitions" 
-                                  DataContext="{Binding ElementName=DataGridTagSets, Path=SelectedItem.TagDefinitions}" 
-                                  ItemsSource="{Binding}" 
-                                  AutoGenerateColumns="False"
-                                  CanUserAddRows="False" CanUserDeleteRows="False"
-                                  Margin="3">
-                            <DataGrid.Columns>
-                                <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True"/>
-                            </DataGrid.Columns>
-                        </DataGrid>
-                    </TabItem>
-                </TabControl>
-
-            </Grid>
+            <TabControl Grid.Column="2">
+                <TabItem Header="TagSets">
+                    <DataGrid x:Name="DataGridTagSets" 
+                              DataContext="{Binding ElementName=DataGridFiles, Path=SelectedItem.TagSets}" 
+                              ItemsSource="{Binding}" 
+                              AutoGenerateColumns="False"
+                              CanUserAddRows="False" CanUserDeleteRows="False"
+                              Margin="3">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True"/>
+                            <DataGridTextColumn Header="File" Binding="{Binding File.Name}" IsReadOnly="True"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </TabItem>
+            </TabControl>
+            <GridSplitter ResizeDirection="Columns" Grid.Column="3" Background="Transparent" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
+            <TabControl Grid.Column="4">
+                <TabItem Header="TagDefinitions">
+                    <DataGrid x:Name="DataGridTagDefinitions" 
+                              DataContext="{Binding ElementName=DataGridTagSets, Path=SelectedItem.TagDefinitions}" 
+                              ItemsSource="{Binding}" 
+                              AutoGenerateColumns="False"
+                              CanUserAddRows="False" CanUserDeleteRows="False"
+                              Margin="3">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </TabItem>
+            </TabControl>
         </Grid>
         <Grid Grid.Row="4">
             <TextBox x:Name="TextBoxStatus" Text="" TextWrapping="NoWrap" IsReadOnly="True" Margin="3" BorderBrush="{x:Null}" BorderThickness="0"/>
