@@ -46,9 +46,7 @@ namespace MicroStationTagExplorer
         {
             _worksheet = _workbook.Worksheets.Add();
 
-            Excel.Range start = _worksheet.Cells[1, 1];
-            Excel.Range end = _worksheet.Cells[nRows, nColumns];
-            Excel.Range range = _worksheet.Range[start, end];
+            Excel.Range range = _worksheet.Range[_worksheet.Cells[1, 1], _worksheet.Cells[nRows, nColumns]];
 
             range.NumberFormat = "@";
             range.Value = values;
