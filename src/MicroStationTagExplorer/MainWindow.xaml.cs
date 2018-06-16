@@ -24,125 +24,132 @@ namespace MicroStationTagExplorer
         private volatile bool IsRunning = false;
         private CancellationTokenSource TokenSource;
         private CancellationToken Token;
+        private Project _project;
 
         public MainWindow()
         {
             InitializeComponent();
-        }
-
-        private Project GetProject()
-        {
-            Project project = null;
-
-            if (DataGridFiles.DataContext != null)
-            {
-                project = DataGridFiles.DataContext as Project;
-            }
-            else
-            {
-                project = new Project()
-                {
-                    Files = new ObservableCollection<File>()
-                };
-                DataGridFiles.DataContext = project;
-            }
-
-            return project;
-        }
-
-        private void SetProject(Project project)
-        {
-            UpdateProject(project);
-            DataGridFiles.DataContext = project;
+            NewProject();
         }
 
         private void UpdateProject(Project project)
         {
             foreach (var file in project.Files)
             {
-                foreach (var tagSet in file.TagSets)
-                {
-                    tagSet.File = file;
-                }
-
-                foreach (var tag in file.Tags)
-                {
-                    tag.File = file;
-                }
-
-                file.ElementsByHostID = file.Tags.GroupBy(t => t.HostID);
-                file.ElementsByTagSet = file.Tags.GroupBy(t => t.HostID)
-                                                 .Select(e => e.GroupBy(t => t.TagSetName))
-                                                 .SelectMany(e => e);
-                file.Errors = ValidateTags(file);
-                file.HasErrors = file.Errors.Count() > 0;
+                ValidateFile(file);
             }
+        }
+
+        private void ValidateFile(File file)
+        {
+            foreach (var tagSet in file.TagSets)
+            {
+                tagSet.File = file;
+            }
+
+            foreach (var tag in file.Tags)
+            {
+                tag.File = file;
+            }
+
+            var elementsByHostID = file.Tags.GroupBy(t => t.HostID)
+                                             .Select(g => new Element<Int64>()
+                                             {
+                                                 Key = g.Key,
+                                                 Tags = new ObservableCollection<Tag>(g)
+                                             });
+
+            var elementsByTagSet = file.Tags.GroupBy(t => t.HostID)
+                                             .Select(e => e.GroupBy(t => t.TagSetName))
+                                             .SelectMany(e => e)
+                                             .Select(g => new Element<string>()
+                                             {
+                                                 Key = g.Key,
+                                                 Tags = new ObservableCollection<Tag>(g)
+                                             });
+
+            file.ElementsByHostID = new ObservableCollection<Element<Int64>>(elementsByHostID);
+            file.ElementsByTagSet = new ObservableCollection<Element<string>>(elementsByTagSet);
+            file.Errors = new ObservableCollection<Error>(ValidateTags(file));
+            file.HasErrors = file.Errors.Count > 0;
         }
 
         private IEnumerable<Error> ValidateTags(File file)
         {
             foreach (var element in file.ElementsByTagSet)
             {
-                var first = element.First();
-                bool isSameTagSet = element.All(e => e.TagSetName == first.TagSetName);
-                TagSet tagSet = file.TagSets.FirstOrDefault(ts => ts.Name == element.Key);
+                var tagSet = file.TagSets.FirstOrDefault(ts => ts.Name == element.Key);
+                var errors = ValidateTags(element, tagSet);
+                element.Errors = new ObservableCollection<Error>(errors);
+                element.HasErrors = element.Errors.Count > 0;
+                foreach (var error in element.Errors)
+                {
+                    error.File = file;
+                    yield return error;
+                }
+            }
+        }
 
-                if (element.Count() != tagSet.TagDefinitions.Count)
+        private IEnumerable<Error> ValidateTags(Element element, TagSet tagSet)
+        {
+            var first = element.Tags.First();
+            bool isSameTagSet = element.Tags.All(e => e.TagSetName == first.TagSetName);
+
+            if (element.Tags.Count() != tagSet.TagDefinitions.Count)
+            {
+                yield return new Error()
+                {
+                    Message = "Missing Tags: " + tagSet.Name,
+                    Element = element,
+                    TagSet = tagSet
+                };
+            }
+
+            // check for missing tags from tag set
+
+            foreach (var tagDef in tagSet.TagDefinitions)
+            {
+                bool isValidTag = false;
+
+                foreach (var tag in element.Tags)
+                {
+                    if (tag.TagDefinitionName == tagDef.Name)
+                    {
+                        isValidTag = true;
+                    }
+                }
+                if (isValidTag == false)
                 {
                     yield return new Error()
                     {
-                        Message = "Missing Tags: " + tagSet.Name,
+                        Message = "Missing Tag: " + tagDef.Name + " [" + tagSet.Name + "]",
                         Element = element,
                         TagSet = tagSet
                     };
                 }
+            }
 
-                // check for missing tags from tag set
+            // check for invalid tags in element
+
+            foreach (var tag in element.Tags)
+            {
+                bool isValidElement = false;
 
                 foreach (var tagDef in tagSet.TagDefinitions)
                 {
-                    bool isValidTag = false;
-
-                    foreach (var tag in element)
+                    if (tagDef.Name == tag.TagDefinitionName)
                     {
-                        if (tag.TagDefinitionName == tagDef.Name)
-                        {
-                            isValidTag = true;
-                        }
-                    }
-                    if (isValidTag == false)
-                    {
-                        yield return new Error()
-                        {
-                            Message = "Missing Tag: " + tagDef.Name + " [" + tagSet.Name + "]",
-                            Element = element,
-                            TagSet = tagSet
-                        };
+                        isValidElement = true;
                     }
                 }
-
-                // check for invalid tags in element
-
-                foreach (var tag in element)
+                if (isValidElement == false)
                 {
-                    bool isValidElement = false;
-
-                    foreach (var tagDef in tagSet.TagDefinitions)
+                    yield return new Error()
                     {
-                        if (tagDef.Name == tag.TagDefinitionName)
-                        {
-                            isValidElement = true;
-                        }
-                    }
-                    if (isValidElement == false)
-                    {
-                        yield return new Error()
-                        {
-                            Message = "Invalid Tag: " + tag.TagDefinitionName + " [" + tagSet.Name + "]",
-                            Element = element,
-                            TagSet = tagSet
-                        };
-                    }
+                        Message = "Invalid Tag: " + tag.TagDefinitionName + " [" + tagSet.Name + "]",
+                        Element = element,
+                        TagSet = tagSet
+                    };
                 }
             }
         }
@@ -157,7 +164,7 @@ namespace MicroStationTagExplorer
             return path.EndsWith(_dwgExt, _comparisonType) || path.EndsWith(_dgnExt, _comparisonType);
         }
 
-        private void AddFile(Project project, string path)
+        private void AddFile(string path)
         {
             if (IsSupportedFile(path))
             {
@@ -166,17 +173,15 @@ namespace MicroStationTagExplorer
                     Name = System.IO.Path.GetFileName(path),
                     Path = path
                 };
-                project.Files.Add(file);
+                _project.Files.Add(file);
             }
         }
 
         private void AddFiles(string[] fileNames)
         {
-            Project project = GetProject();
-
             foreach (var fileName in fileNames)
             {
-                AddFile(project, fileName);
+                AddFile(fileName);
             }
         }
 
@@ -196,8 +201,6 @@ namespace MicroStationTagExplorer
 
         private void AddPaths(string[] paths)
         {
-            Project project = GetProject();
-
             foreach (var path in paths)
             {
                 System.IO.FileAttributes attributes = System.IO.File.GetAttributes(path);
@@ -207,26 +210,33 @@ namespace MicroStationTagExplorer
                                                        .Where(s => IsSupportedFile(s));
                     foreach (var fileName in fileNames)
                     {
-                        AddFile(project, fileName);
+                        AddFile(fileName);
                     }
                 }
                 else
                 {
-                    AddFile(project, path);
+                    AddFile(path);
                 }
             }
         }
 
         private void NewProject()
         {
-            SetProject(new Project()
+            _project = new Project()
             {
+                Name = "project",
+                Path = "projet" + _xmlExt,
                 Files = new ObservableCollection<File>()
-            });
+            };
+
+            UpdateProject(_project);
+
+            this.DataContext = _project;
+
             GC.Collect();
             GC.WaitForPendingFinalizers();
         }
-        
+
         private void SerializeXmlSerializer(Project project, string fileName)
         {
             using (var writer = new System.IO.StreamWriter(fileName))
@@ -285,18 +295,23 @@ namespace MicroStationTagExplorer
             Project project = DeserializeXmlSerializer(fileName);
             if (project != null)
             {
-                foreach (var file in project.Files)
+                _project = project;
+                _project.Path = fileName;
+
+                foreach (var file in _project.Files)
                 {
                     file.Name = System.IO.Path.GetFileName(file.Path);
                 }
-                SetProject(project);
+
+                UpdateProject(_project);
+
+                this.DataContext = _project;
             }
         }
 
         private void SaveProject(string fileName)
         {
-            Project project = GetProject();
-            SerializeXmlSerializer(project, fileName);
+            SerializeXmlSerializer(_project, fileName);
         }
 
         private void OpenProject()
@@ -318,7 +333,7 @@ namespace MicroStationTagExplorer
             var dlg = new SaveFileDialog
             {
                 Filter = "Supported Files (*.xml)|*.xml|All Files (*.*)|*.*",
-                FileName = "project"
+                FileName = _project.Path
             };
             var result = dlg.ShowDialog(this);
             if (result == true)
@@ -330,6 +345,27 @@ namespace MicroStationTagExplorer
         private void Exit()
         {
             Close();
+        }
+
+        private void GetTags(Func<File, int, int, bool> updateStatus, IEnumerable<File> files)
+        {
+            int count = files.Count();
+            int index = 0;
+
+            foreach (var file in _project.Files)
+            {
+                index++;
+                if (updateStatus(file, index, count) == false)
+                    return;
+
+                using (var microstation = new MicrostationInterop(file.Path))
+                {
+                    microstation.SetNormalActiveModel();
+                    file.TagSets = microstation.GetTagSets();
+                    file.Tags = microstation.GetTags();
+                    ValidateFile(file);
+                }
+            }
         }
 
         private void GetTags()
@@ -344,38 +380,28 @@ namespace MicroStationTagExplorer
                 TokenSource = new CancellationTokenSource();
                 Token = TokenSource.Token;
 
-                Project project = GetProject();
+                Func<File, int, int, bool> updateStatus = (file, current, total) =>
+                 {
+                     if (Token.IsCancellationRequested)
+                     {
+                         Token.ThrowIfCancellationRequested();
+                         return false;
+                     }
+
+                     Dispatcher.Invoke(() =>
+                     {
+                         UpdateStatus("[" + current + "/" + total + "] " + System.IO.Path.GetFileName(file.Path));
+                     });
+
+                     return true;
+                 };
 
                 Task.Factory.StartNew(() =>
                 {
                     try
                     {
                         Token.ThrowIfCancellationRequested();
-
-                        int count = project.Files.Count;
-                        for (int i = 0; i < project.Files.Count; i++)
-                        {
-                            var file = project.Files[i];
-                            if (Token.IsCancellationRequested)
-                            {
-                                Token.ThrowIfCancellationRequested();
-                                return;
-                            }
-
-                            Dispatcher.Invoke(() =>
-                            {
-                                UpdateStatus("[" + i + "/" + count + "] " + System.IO.Path.GetFileName(file.Path));
-                            });
-
-                            using (var microstation = new MicrostationInterop(file.Path))
-                            {
-                                microstation.SetNormalActiveModel();
-
-                                file.TagSets = microstation.GetTagSets();
-                                file.Tags = microstation.GetTags();
-                            }
-                        }
-                        UpdateProject(project);
+                        GetTags(updateStatus, _project.Files);
                     }
                     catch (Exception ex)
                     {
@@ -451,12 +477,10 @@ namespace MicroStationTagExplorer
 
         private void ExportTags()
         {
-            Project project = GetProject();
-
             try
             {
                 object[,] values;
-                Tag[] tags = project.Files.SelectMany(f => f.Tags).ToArray();
+                Tag[] tags = _project.Files.SelectMany(f => f.Tags).ToArray();
                 ToValues(tags, out values);
                 using (var excel = new Excelnterop())
                 {
@@ -467,6 +491,18 @@ namespace MicroStationTagExplorer
             {
                 Debug.WriteLine(ex.Message);
                 Debug.WriteLine(ex.StackTrace);
+            }
+        }
+
+        private void DropFiles(string[] paths)
+        {
+            if (paths.Length == 1 && IsProject(paths[0]))
+            {
+                OpenProject(paths[0]);
+            }
+            else
+            {
+                AddPaths(paths);
             }
         }
 
@@ -538,14 +574,7 @@ namespace MicroStationTagExplorer
                     if (data != null && data is string[])
                     {
                         var paths = data as string[];
-                        if (paths.Length == 1 && IsProject(paths[0]))
-                        {
-                            OpenProject(paths[0]);
-                        }
-                        else
-                        {
-                            AddPaths(paths);
-                        }
+                        DropFiles(paths);
                     }
                 }
             }
