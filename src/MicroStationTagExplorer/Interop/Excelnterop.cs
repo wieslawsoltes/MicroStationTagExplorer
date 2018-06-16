@@ -22,31 +22,38 @@ namespace MicroStationTagExplorer
             _workbook = _application.Workbooks.Add();
         }
 
-        public void ExportTags(object[,] values, int rows, int columns)
+        private void Format(Excel.Range range, int nColumns)
         {
-            _worksheet = _workbook.Worksheets.Add();
-
-            Excel.Range start = _worksheet.Cells[1, 1];
-            Excel.Range end = _worksheet.Cells[rows, columns];
-            Excel.Range range = _worksheet.Range[start, end];
-
-            range.NumberFormat = "@";
-            range.Value = values;
-
             _worksheet.Rows["2:2"].Select();
             _application.ActiveWindow.SplitColumn = 0;
             _application.ActiveWindow.SplitRow = 1;
             _application.ActiveWindow.FreezePanes = true;
 
-            _worksheet.Range[_worksheet.Cells[1, 1], _worksheet.Cells[1, 1]].CurrentRegion.Select();
+            Excel.Range header = _worksheet.Range[_worksheet.Cells[1, 1], _worksheet.Cells[1, 1]];
+            header.CurrentRegion.Select();
             _application.Selection.AutoFilter();
 
-            _worksheet.Columns[1].Resize(Type.Missing, 6).Select();
-            _worksheet.Columns[1].Resize(Type.Missing, 6).EntireColumn.AutoFit();
+            Excel.Range columns = _worksheet.Columns[1].Resize(Type.Missing, nColumns);
+            columns.Select();
+            columns.EntireColumn.AutoFit();
 
             _worksheet.ListObjects.AddEx(Excel.XlListObjectSourceType.xlSrcRange, range, null, Excel.XlYesNoGuess.xlYes).Name = "Tags";
 
             _worksheet.Range["A1"].Select();
+        }
+
+        public void ExportTags(object[,] values, int nRows, int nColumns)
+        {
+            _worksheet = _workbook.Worksheets.Add();
+
+            Excel.Range start = _worksheet.Cells[1, 1];
+            Excel.Range end = _worksheet.Cells[nRows, nColumns];
+            Excel.Range range = _worksheet.Range[start, end];
+
+            range.NumberFormat = "@";
+            range.Value = values;
+
+            Format(range, nColumns);
         }
 
         public void Dispose()
