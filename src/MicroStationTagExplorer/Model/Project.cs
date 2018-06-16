@@ -10,6 +10,9 @@ namespace MicroStationTagExplorer
         [DataMember(Name = "Name"), XmlAttribute("Name")]
         public string Name { get; set; }
 
+        [IgnoreDataMember, XmlIgnore]
+        public string Path { get; set; }
+
         [DataMember(Name = "Files"), XmlArray("Files")]
         public ObservableCollection<File> Files { get; set; }
     }

@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Runtime.Serialization;
 using System.Xml.Serialization;
 
@@ -23,13 +21,13 @@ namespace MicroStationTagExplorer
         public ObservableCollection<Tag> Tags { get; set; }
 
         [IgnoreDataMember, XmlIgnore]
-        public IEnumerable<IGrouping<Int64, Tag>> ElementsByHostID { get; set; }
+        public ObservableCollection<Element<Int64>> ElementsByHostID { get; set; }
 
         [IgnoreDataMember, XmlIgnore]
-        public IEnumerable<IGrouping<string, Tag>> ElementsByTagSet { get; set; }
+        public ObservableCollection<Element<string>> ElementsByTagSet { get; set; }
 
         [IgnoreDataMember, XmlIgnore]
-        public IEnumerable<Error> Errors { get; set; }
+        public ObservableCollection<Error> Errors { get; set; }
 
         [IgnoreDataMember, XmlIgnore]
         public bool HasErrors { get; set; }

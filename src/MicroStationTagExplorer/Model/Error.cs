@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using System.Runtime.Serialization;
+﻿using System.Runtime.Serialization;
 using System.Xml.Serialization;
 
 namespace MicroStationTagExplorer
@@ -11,9 +10,12 @@ namespace MicroStationTagExplorer
         public string Message { get; set; }
 
         [IgnoreDataMember, XmlIgnore]
-        public IGrouping<string, Tag> Element { get; set; }
+        public Element Element { get; set; }
 
         [IgnoreDataMember, XmlIgnore]
         public TagSet TagSet { get; set; }
+
+        [IgnoreDataMember, XmlIgnore]
+        public File File { get; set; }
     }
 }
