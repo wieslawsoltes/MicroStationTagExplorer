@@ -17,6 +17,10 @@ namespace MicroStationTagExplorer
 {
     public partial class MainWindow : Window
     {
+        private static StringComparison _comparisonType = StringComparison.OrdinalIgnoreCase;
+        private static string _xmlExt = ".xml";
+        private static string _dgnExt = ".dgn";
+        private static string _dwgExt = ".dwg";
         private volatile bool IsRunning = false;
         private CancellationTokenSource TokenSource;
         private CancellationToken Token;
@@ -143,14 +147,37 @@ namespace MicroStationTagExplorer
             }
         }
 
+        private bool IsProject(string path)
+        {
+            return path.EndsWith(_xmlExt, _comparisonType);
+        }
+
+        private bool IsSupportedFile(string path)
+        {
+            return path.EndsWith(_dwgExt, _comparisonType) || path.EndsWith(_dgnExt, _comparisonType);
+        }
+
         private void AddFile(Project project, string path)
         {
-            var file = new File()
+            if (IsSupportedFile(path))
             {
-                Name = System.IO.Path.GetFileName(path),
-                Path = path
-            };
-            project.Files.Add(file);
+                var file = new File()
+                {
+                    Name = System.IO.Path.GetFileName(path),
+                    Path = path
+                };
+                project.Files.Add(file);
+            }
+        }
+
+        private void AddFiles(string[] fileNames)
+        {
+            Project project = GetProject();
+
+            foreach (var fileName in fileNames)
+            {
+                AddFile(project, fileName);
+            }
         }
 
         private void AddFiles()
@@ -163,12 +190,7 @@ namespace MicroStationTagExplorer
             var result = dlg.ShowDialog(this);
             if (result == true)
             {
-                Project project = GetProject();
-
-                foreach (var fileName in dlg.FileNames)
-                {
-                    AddFile(project, fileName);
-                }
+                AddFiles(dlg.FileNames);
             }
         }
 
@@ -182,7 +204,7 @@ namespace MicroStationTagExplorer
                 if (attributes.HasFlag(System.IO.FileAttributes.Directory))
                 {
                     var fileNames = System.IO.Directory.EnumerateFiles(path, "*.*", System.IO.SearchOption.AllDirectories)
-                                                       .Where(s => s.EndsWith(".dwg") || s.EndsWith(".dgn")); ;
+                                                       .Where(s => IsSupportedFile(s));
                     foreach (var fileName in fileNames)
                     {
                         AddFile(project, fileName);
@@ -190,10 +212,7 @@ namespace MicroStationTagExplorer
                 }
                 else
                 {
-                    if (path.EndsWith(".dwg") || path.EndsWith(".dgn"))
-                    {
-                        AddFile(project, path);
-                    }
+                    AddFile(project, path);
                 }
             }
         }
@@ -261,6 +280,25 @@ namespace MicroStationTagExplorer
             return project;
         }
 
+        private void OpenProject(string fileName)
+        {
+            Project project = DeserializeXmlSerializer(fileName);
+            if (project != null)
+            {
+                foreach (var file in project.Files)
+                {
+                    file.Name = System.IO.Path.GetFileName(file.Path);
+                }
+                SetProject(project);
+            }
+        }
+
+        private void SaveProject(string fileName)
+        {
+            Project project = GetProject();
+            SerializeXmlSerializer(project, fileName);
+        }
+
         private void OpenProject()
         {
             var dlg = new OpenFileDialog
@@ -271,15 +309,7 @@ namespace MicroStationTagExplorer
             var result = dlg.ShowDialog(this);
             if (result == true)
             {
-                Project project = DeserializeXmlSerializer(dlg.FileName);
-                if (project != null)
-                {
-                    foreach (var file in project.Files)
-                    {
-                        file.Name = System.IO.Path.GetFileName(file.Path);
-                    }
-                    SetProject(project);
-                }
+                OpenProject(dlg.FileName);
             }
         }
 
@@ -293,8 +323,7 @@ namespace MicroStationTagExplorer
             var result = dlg.ShowDialog(this);
             if (result == true)
             {
-                Project project = GetProject();
-                SerializeXmlSerializer(project, dlg.FileName);
+                SaveProject(dlg.FileName);
             }
         }
 
@@ -508,7 +537,15 @@ namespace MicroStationTagExplorer
                     var data = e.Data.GetData(DataFormats.FileDrop);
                     if (data != null && data is string[])
                     {
-                        AddPaths(data as string[]);
+                        var paths = data as string[];
+                        if (paths.Length == 1 && IsProject(paths[0]))
+                        {
+                            OpenProject(paths[0]);
+                        }
+                        else
+                        {
+                            AddPaths(paths);
+                        }
                     }
                 }
             }
