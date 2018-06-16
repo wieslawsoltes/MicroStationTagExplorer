@@ -25,6 +25,6 @@ namespace MicroStationTagExplorer
         public IEnumerable<IGrouping<string, Tag>> ElementsByTagSet { get; set; }
 
         [XmlIgnore]
-        public IEnumerable<string> Errors { get; set; }
+        public IEnumerable<Error> Errors { get; set; }
     }
 }

@@ -93,6 +93,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Model\Error.cs" />
     <Compile Include="Model\Project.cs" />
     <Compile Include="Model\File.cs" />
     <Compile Include="Model\Tag.cs" />

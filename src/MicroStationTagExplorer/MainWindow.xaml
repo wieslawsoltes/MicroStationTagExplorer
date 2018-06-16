@@ -126,16 +126,59 @@
                     </Grid>
                 </TabItem>
                 <TabItem Header="Errors">
-                    <!-- Errors -->
-                    <DataGrid x:Name="DataGridErrors" 
-                              DataContext="{Binding ElementName=DataGridFiles, Path=SelectedItem.Errors}" 
-                              ItemsSource="{Binding}" 
-                              AutoGenerateColumns="False" CanUserAddRows="False"
-                              Margin="3" Grid.Row="0">
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Header="Error" Binding="{Binding}"/>
-                        </DataGrid.Columns>
-                    </DataGrid>
+                    <Grid Grid.Column="2">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="8"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <!-- Errors -->
+                        <DataGrid x:Name="DataGridErrors" 
+                                  DataContext="{Binding ElementName=DataGridFiles, Path=SelectedItem.Errors}" 
+                                  ItemsSource="{Binding}" 
+                                  AutoGenerateColumns="False" CanUserAddRows="False"
+                                  Margin="3" Grid.Row="0">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Message" Binding="{Binding Message}"/>
+                                <DataGridTextColumn Header="Element" Binding="{Binding Element.Key}"/>
+                                <DataGridTextColumn Header="TagSet" Binding="{Binding TagSet.Name}"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        <GridSplitter ResizeDirection="Rows" Grid.Row="1" Background="Transparent" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
+                        <Grid Grid.Row="2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="8"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <!-- Element -->
+                            <DataGrid x:Name="DataGridErrorElement" 
+                                      DataContext="{Binding ElementName=DataGridErrors, Path=SelectedItem}" 
+                                      ItemsSource="{Binding Element}" 
+                                      AutoGenerateColumns="False" CanUserAddRows="False"
+                                      Margin="3" Grid.Column="0">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="TagSetName" Binding="{Binding TagSetName}"/>
+                                    <DataGridTextColumn Header="TagDefinitionName" Binding="{Binding TagDefinitionName}"/>
+                                    <DataGridTextColumn Header="Value" Binding="{Binding Value}"/>
+                                    <DataGridTextColumn Header="ID" Binding="{Binding ID}"/>
+                                    <DataGridTextColumn Header="HostID" Binding="{Binding HostID}"/>
+                                    <DataGridTextColumn Header="Path" Binding="{Binding Path}"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                            <GridSplitter ResizeDirection="Columns" Grid.Column="1" Background="Transparent" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
+                            <!-- TagDefinitions -->
+                            <DataGrid x:Name="DataGridErrorTagDefinitions" 
+                                      DataContext="{Binding ElementName=DataGridErrors, Path=SelectedItem}" 
+                                      ItemsSource="{Binding TagSet.TagDefinitions}" 
+                                      AutoGenerateColumns="False" CanUserAddRows="False"
+                                      Margin="3" Grid.Column="2">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Name" Binding="{Binding Name}"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </Grid>
+                    </Grid>
                 </TabItem>
             </TabControl>
         </Grid>

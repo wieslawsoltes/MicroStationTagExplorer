@@ -63,7 +63,7 @@ namespace MicroStationTagExplorer
             }
         }
 
-        private IEnumerable<string> ValidateTags(File file)
+        private IEnumerable<Error> ValidateTags(File file)
         {
             foreach (var element in file.ElementsByTagSet)
             {
@@ -73,7 +73,12 @@ namespace MicroStationTagExplorer
 
                 if (element.Count() != tagSet.TagDefinitions.Count)
                 {
-                    yield return "Missing tags from: " + tagSet.Name;
+                    yield return new Error()
+                    {
+                        Message = "Missing tags from: " + tagSet.Name,
+                        Element = element,
+                        TagSet = tagSet
+                    };
                 }
 
                 // check for missing tags from tag set
@@ -91,7 +96,12 @@ namespace MicroStationTagExplorer
                     }
                     if (isValidTag == false)
                     {
-                        yield return "Missing tag in element: " + tagDef.Name + ", from: " + tagSet.Name;
+                        yield return new Error()
+                        {
+                            Message = "Missing tag in element: " + tagDef.Name + ", from: " + tagSet.Name,
+                            Element = element,
+                            TagSet = tagSet
+                        };
                     }
                 }
 
@@ -110,7 +120,12 @@ namespace MicroStationTagExplorer
                     }
                     if (isValidElement == false)
                     {
-                        yield return "Invalid tag in element: " + tag.TagDefinitionName + ", from: " + tagSet.Name;
+                        yield return new Error()
+                        {
+                            Message = "Invalid tag in element: " + tag.TagDefinitionName + ", from: " + tagSet.Name,
+                            Element = element,
+                            TagSet = tagSet
+                        };
                     }
                 }
             }
