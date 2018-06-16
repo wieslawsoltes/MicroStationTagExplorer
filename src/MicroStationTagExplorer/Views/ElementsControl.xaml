@@ -13,11 +13,11 @@
             <ColumnDefinition Width="65*"/>
         </Grid.ColumnDefinitions>
         <DataGrid x:Name="DataGridElements" 
-                    DataContext="{Binding}" 
-                    ItemsSource="{Binding}" 
-                    AutoGenerateColumns="False" 
-                    CanUserAddRows="False" CanUserDeleteRows="False"
-                    Margin="3" Grid.Column="0">
+                  DataContext="{Binding}" 
+                  ItemsSource="{Binding}" 
+                  AutoGenerateColumns="False" 
+                  CanUserAddRows="False" CanUserDeleteRows="False"
+                  Margin="3" Grid.Column="0">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Key" Binding="{Binding Key}" IsReadOnly="True"/>
                 <DataGridCheckBoxColumn Header="HasErrors" Binding="{Binding HasErrors}" IsReadOnly="True"/>

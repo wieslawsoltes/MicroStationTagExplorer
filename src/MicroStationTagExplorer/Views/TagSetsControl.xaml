@@ -13,11 +13,11 @@
             <ColumnDefinition Width="40*"/>
         </Grid.ColumnDefinitions>
         <DataGrid x:Name="DataGridTagSets" 
-                    DataContext="{Binding}" 
-                    ItemsSource="{Binding}" 
-                    AutoGenerateColumns="False"
-                    CanUserAddRows="False" CanUserDeleteRows="False"
-                    Margin="3" Grid.Column="0">
+                  DataContext="{Binding}" 
+                  ItemsSource="{Binding}" 
+                  AutoGenerateColumns="False"
+                  CanUserAddRows="False" CanUserDeleteRows="False"
+                  Margin="3" Grid.Column="0">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True"/>
                 <DataGridTextColumn Header="File" Binding="{Binding File.Name}" IsReadOnly="True"/>
