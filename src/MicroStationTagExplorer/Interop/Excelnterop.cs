@@ -22,7 +22,7 @@ namespace MicroStationTagExplorer
             _workbook = _application.Workbooks.Add();
         }
 
-        private void Format(Excel.Range range, int nColumns)
+        private void Format(Excel.Range range, int nColumns, string tableName)
         {
             _worksheet.Rows["2:2"].Select();
             _application.ActiveWindow.SplitColumn = 0;
@@ -37,12 +37,12 @@ namespace MicroStationTagExplorer
             columns.Select();
             columns.EntireColumn.AutoFit();
 
-            _worksheet.ListObjects.AddEx(Excel.XlListObjectSourceType.xlSrcRange, range, null, Excel.XlYesNoGuess.xlYes).Name = "Tags";
+            _worksheet.ListObjects.AddEx(Excel.XlListObjectSourceType.xlSrcRange, range, null, Excel.XlYesNoGuess.xlYes).Name = tableName;
 
             _worksheet.Range["A1"].Select();
         }
 
-        public void ExportTags(object[,] values, int nRows, int nColumns)
+        public void ExportValues(object[,] values, int nRows, int nColumns, string tableName)
         {
             _worksheet = _workbook.Worksheets.Add();
 
@@ -51,7 +51,7 @@ namespace MicroStationTagExplorer
             range.NumberFormat = "@";
             range.Value = values;
 
-            Format(range, nColumns);
+            Format(range, nColumns, tableName);
         }
 
         public void Dispose()

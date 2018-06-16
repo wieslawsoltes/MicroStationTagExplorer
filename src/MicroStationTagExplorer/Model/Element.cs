@@ -8,6 +8,9 @@ namespace MicroStationTagExplorer
     public abstract class Element
     {
         [IgnoreDataMember, XmlIgnore]
+        public File File { get; set; }
+
+        [IgnoreDataMember, XmlIgnore]
         public ObservableCollection<Tag> Tags { get; set; }
 
         [IgnoreDataMember, XmlIgnore]
