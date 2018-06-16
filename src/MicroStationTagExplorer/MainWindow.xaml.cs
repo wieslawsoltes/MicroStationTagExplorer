@@ -45,7 +45,75 @@ namespace MicroStationTagExplorer
 
         private void SetProject(Project project)
         {
+            SetElements(project);
             DataGridFiles.DataContext = project;
+        }
+
+        private void SetElements(Project project)
+        {
+            foreach (var file in project.Files)
+            {
+                file.ElementsByHostID = file.Tags.GroupBy(t => t.HostID);
+
+                file.ElementsByTagSet = file.Tags.GroupBy(t => t.HostID)
+                                                 .Select(e => e.GroupBy(t => t.TagSetName))
+                                                 .SelectMany(e => e);
+
+                file.Errors = ValidateTags(file);
+            }
+        }
+
+        private IEnumerable<string> ValidateTags(File file)
+        {
+            foreach (var element in file.ElementsByTagSet)
+            {
+                var first = element.First();
+                bool isSameTagSet = element.All(e => e.TagSetName == first.TagSetName);
+                TagSet tagSet = file.TagSets.FirstOrDefault(ts => ts.Name == element.Key);
+
+                if (element.Count() != tagSet.TagDefinitions.Count)
+                {
+                    yield return "Missing tags from: " + tagSet.Name;
+                }
+
+                // check for missing tags from tag set
+
+                foreach (var tagDef in tagSet.TagDefinitions)
+                {
+                    bool isValidTag = false;
+
+                    foreach (var tag in element)
+                    {
+                        if (tag.TagDefinitionName == tagDef.Name)
+                        {
+                            isValidTag = true;
+                        }
+                    }
+                    if (isValidTag == false)
+                    {
+                        yield return "Missing tag in element: " + tagDef.Name + ", from: " + tagSet.Name;
+                    }
+                }
+
+                // check for invalid tags in element
+
+                foreach (var tag in element)
+                {
+                    bool isValidElement = false;
+
+                    foreach (var tagDef in tagSet.TagDefinitions)
+                    {
+                        if (tagDef.Name == tag.TagDefinitionName)
+                        {
+                            isValidElement = true;
+                        }
+                    }
+                    if (isValidElement == false)
+                    {
+                        yield return "Invalid tag in element: " + tag.TagDefinitionName + ", from: " + tagSet.Name;
+                    }
+                }
+            }
         }
 
         private void AddFiles()
@@ -201,6 +269,7 @@ namespace MicroStationTagExplorer
                                 file.Tags = microstation.GetTags();
                             }
                         }
+                        SetElements(project);
                     }
                     catch (Exception ex)
                     {
@@ -250,6 +319,7 @@ namespace MicroStationTagExplorer
 
         private void ImportTags()
         {
+            // TODO: Import tags from excel file.
         }
 
         private void ToValues(Tag[] tags, out object[,] values)
@@ -275,25 +345,22 @@ namespace MicroStationTagExplorer
 
         private void ExportTags()
         {
-            if (IsRunning == false)
-            {
-                Project project = GetProject();
+            Project project = GetProject();
 
-                try
+            try
+            {
+                object[,] values;
+                Tag[] tags = project.Files.SelectMany(f => f.Tags).ToArray();
+                ToValues(tags, out values);
+                using (var excel = new Excelnterop())
                 {
-                    object[,] values;
-                    Tag[] tags = project.Files.SelectMany(f => f.Tags).ToArray();
-                    ToValues(tags, out values);
-                    using (var excel = new Excelnterop())
-                    {
-                        excel.ExportTags(values, tags.Length + 1, 6);
-                    }
+                    excel.ExportTags(values, tags.Length + 1, 6);
                 }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine(ex.Message);
-                    Debug.WriteLine(ex.StackTrace);
-                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                Debug.WriteLine(ex.StackTrace);
             }
         }
 
@@ -312,69 +379,105 @@ namespace MicroStationTagExplorer
             {
                 if (e.Key == Key.L)
                 {
-                    AddFiles();
+                    if (IsRunning == false)
+                    {
+                        AddFiles();
+                    }
                 }
-                else if(e.Key == Key.N)
+                else if (e.Key == Key.N)
                 {
-                    NewProject();
+                    if (IsRunning == false)
+                    {
+                        NewProject();
+                    }
                 }
                 else if (e.Key == Key.O)
                 {
-                    OpenProject();
+                    if (IsRunning == false)
+                    {
+                        OpenProject();
+                    }
                 }
                 else if (e.Key == Key.S)
                 {
-                    SaveProject();
+                    if (IsRunning == false)
+                    {
+                        SaveProject();
+                    }
                 }
                 else if (e.Key == Key.I)
                 {
-                    ImportTags();
+                    if (IsRunning == false)
+                    {
+                        ImportTags();
+                    }
                 }
                 else if (e.Key == Key.E)
                 {
-                    ExportTags();
+                    if (IsRunning == false)
+                    {
+                        ExportTags();
+                    }
                 }
             }
         }
 
         private void Window_Drop(object sender, DragEventArgs e)
         {
-            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            if (IsRunning == false)
             {
-                var data = e.Data.GetData(DataFormats.FileDrop);
-                if (data != null && data is string[])
+                if (e.Data.GetDataPresent(DataFormats.FileDrop))
                 {
-                    AddPaths(data as string[]);
+                    var data = e.Data.GetData(DataFormats.FileDrop);
+                    if (data != null && data is string[])
+                    {
+                        AddPaths(data as string[]);
+                    }
                 }
             }
         }
 
         private void Window_DragEnter(object sender, DragEventArgs e)
         {
-            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            if (IsRunning == false)
             {
-                e.Effects = DragDropEffects.All;
+                if (e.Data.GetDataPresent(DataFormats.FileDrop))
+                {
+                    e.Effects = DragDropEffects.All;
+                }
             }
         }
 
         private void FileAddFiles_Click(object sender, RoutedEventArgs e)
         {
-            AddFiles();
+            if (IsRunning == false)
+            {
+                AddFiles();
+            }
         }
 
         private void FileNewProject_Click(object sender, RoutedEventArgs e)
         {
-            NewProject();
+            if (IsRunning == false)
+            {
+                NewProject();
+            }
         }
 
         private void FileOpenProject_Click(object sender, RoutedEventArgs e)
         {
-            OpenProject();
+            if (IsRunning == false)
+            {
+                OpenProject();
+            }
         }
 
         private void FileSaveProject_Click(object sender, RoutedEventArgs e)
         {
-            SaveProject();
+            if (IsRunning == false)
+            {
+                SaveProject();
+            }
         }
 
         private void FileExit_Click(object sender, RoutedEventArgs e)
@@ -389,12 +492,18 @@ namespace MicroStationTagExplorer
 
         private void TagsImport_Click(object sender, RoutedEventArgs e)
         {
-            ImportTags();
+            if (IsRunning == false)
+            {
+                ImportTags();
+            }
         }
 
         private void TagsExport_Click(object sender, RoutedEventArgs e)
         {
-            ExportTags();
+            if (IsRunning == false)
+            {
+                ExportTags();
+            }
         }
     }
 }
