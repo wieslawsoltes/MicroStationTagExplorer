@@ -4,7 +4,7 @@ using System.Xml.Serialization;
 
 namespace MicroStationTagExplorer
 {
-    [DataContract(IsReference = true, Name = "Error"), XmlRoot("Error")]
+    [DataContract(IsReference = false, Name = "Error"), XmlRoot("Error")]
     public class Error
     {
         [DataMember(Name = "Message"), XmlAttribute("Message")]
@@ -13,7 +13,7 @@ namespace MicroStationTagExplorer
         [IgnoreDataMember, XmlIgnore]
         public IGrouping<string, Tag> Element { get; set; }
 
-        [DataMember(Name = "TagSet"), XmlAttribute("TagSet")]
+        [IgnoreDataMember, XmlIgnore]
         public TagSet TagSet { get; set; }
     }
 }

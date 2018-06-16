@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Xml;
+using System.Xml.Serialization;
 using Microsoft.Win32;
 
 namespace MicroStationTagExplorer
@@ -47,22 +48,29 @@ namespace MicroStationTagExplorer
 
         private void SetProject(Project project)
         {
-            SetElements(project);
+            UpdateProject(project);
             DataGridFiles.DataContext = project;
         }
 
-        private void SetElements(Project project)
+        private void UpdateProject(Project project)
         {
             foreach (var file in project.Files)
             {
-                file.ElementsByHostID = file.Tags.GroupBy(t => t.HostID);
+                foreach (var tagSet in file.TagSets)
+                {
+                    tagSet.File = file;
+                }
 
+                foreach (var tag in file.Tags)
+                {
+                    tag.File = file;
+                }
+
+                file.ElementsByHostID = file.Tags.GroupBy(t => t.HostID);
                 file.ElementsByTagSet = file.Tags.GroupBy(t => t.HostID)
                                                  .Select(e => e.GroupBy(t => t.TagSetName))
                                                  .SelectMany(e => e);
-
                 file.Errors = ValidateTags(file);
-
                 file.HasErrors = file.Errors.Count() > 0;
             }
         }
@@ -199,6 +207,59 @@ namespace MicroStationTagExplorer
             GC.Collect();
             GC.WaitForPendingFinalizers();
         }
+        
+        private void SerializeXmlSerializer(Project project, string fileName)
+        {
+            using (var writer = new System.IO.StreamWriter(fileName))
+            {
+                var serializer = new XmlSerializer(typeof(Project));
+                serializer.Serialize(writer, project);
+            }
+        }
+
+        private Project DeserializeXmlSerializer(string fileName)
+        {
+            Project project = null;
+            using (var reader = new System.IO.StreamReader(fileName))
+            {
+                var serializer = new XmlSerializer(typeof(Project));
+                project = (Project)serializer.Deserialize(reader);
+            }
+            return project;
+        }
+
+        private void SerializeDataContract(Project project, string fileName)
+        {
+            using (var stream = new System.IO.StreamWriter(fileName))
+            {
+                var settings = new XmlWriterSettings()
+                {
+                    Indent = true,
+                    IndentChars = "    ",
+                    Encoding = Encoding.UTF8,
+                };
+                using (var writer = XmlWriter.Create(stream, settings))
+                {
+                    var serializer = new DataContractSerializer(typeof(Project), null, int.MaxValue, false, true, null);
+                    serializer.WriteObject(writer, project);
+                }
+            }
+        }
+
+        private Project DeserializeDataContract(string fileName)
+        {
+            Project project = null;
+            using (var stream = new System.IO.StreamReader(fileName))
+            {
+                var settings = new XmlReaderSettings();
+                using (var reader = XmlReader.Create(stream, settings))
+                {
+                    var serializer = new DataContractSerializer(typeof(Project), null, int.MaxValue, false, true, null);
+                    project = (Project)serializer.ReadObject(reader);
+                }
+            }
+            return project;
+        }
 
         private void OpenProject()
         {
@@ -210,21 +271,14 @@ namespace MicroStationTagExplorer
             var result = dlg.ShowDialog(this);
             if (result == true)
             {
-                using (var stream = new System.IO.StreamReader(dlg.FileName))
+                Project project = DeserializeXmlSerializer(dlg.FileName);
+                if (project != null)
                 {
-                    var settings = new XmlReaderSettings();
-                    using (var reader = XmlReader.Create(stream, settings))
+                    foreach (var file in project.Files)
                     {
-                        var serializer = new DataContractSerializer(typeof(Project), null, int.MaxValue, false, true, null);
-                        Project project = (Project)serializer.ReadObject(reader);
-
-                        foreach (var file in project.Files)
-                        {
-                            file.Name = System.IO.Path.GetFileName(file.Path);
-                        }
-
-                        SetProject(project);
+                        file.Name = System.IO.Path.GetFileName(file.Path);
                     }
+                    SetProject(project);
                 }
             }
         }
@@ -240,21 +294,7 @@ namespace MicroStationTagExplorer
             if (result == true)
             {
                 Project project = GetProject();
-
-                using (var stream = new System.IO.StreamWriter(dlg.FileName))
-                {
-                    var settings = new XmlWriterSettings()
-                    {
-                        Indent = true,
-                        IndentChars = "    ",
-                        Encoding = Encoding.UTF8,
-                    };
-                    using (var writer = XmlWriter.Create(stream, settings))
-                    {
-                        var serializer = new DataContractSerializer(typeof(Project), null, int.MaxValue, false, true, null);
-                        serializer.WriteObject(writer, project);
-                    }
-                }
+                SerializeXmlSerializer(project, dlg.FileName);
             }
         }
 
@@ -304,19 +344,9 @@ namespace MicroStationTagExplorer
 
                                 file.TagSets = microstation.GetTagSets();
                                 file.Tags = microstation.GetTags();
-                                
-                                foreach (var tagSet in file.TagSets)
-                                {
-                                    tagSet.File = file;
-                                }
-
-                                foreach (var tag in file.Tags)
-                                {
-                                    tag.File = file;
-                                }
                             }
                         }
-                        SetElements(project);
+                        UpdateProject(project);
                     }
                     catch (Exception ex)
                     {

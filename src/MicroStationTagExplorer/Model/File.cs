@@ -7,7 +7,7 @@ using System.Xml.Serialization;
 
 namespace MicroStationTagExplorer
 {
-    [DataContract(IsReference = true, Name = "File"), XmlRoot("File")]
+    [DataContract(IsReference = false, Name = "File"), XmlRoot("File")]
     public class File
     {
         [DataMember(Name = "Name"), XmlAttribute("Name")]

@@ -4,7 +4,7 @@ using System.Xml.Serialization;
 
 namespace MicroStationTagExplorer
 {
-    [DataContract(IsReference = true, Name = "Tag"), XmlRoot("Tag")]
+    [DataContract(IsReference = false, Name = "Tag"), XmlRoot("Tag")]
     public class Tag
     {
         [DataMember(Name = "TagSetName"), XmlAttribute("TagSetName")]
@@ -22,7 +22,7 @@ namespace MicroStationTagExplorer
         [DataMember(Name = "HostID"), XmlAttribute("HostID")]
         public Int64 HostID { get; set; }
 
-        [DataMember(Name = "File"), XmlAttribute("File")]
+        [IgnoreDataMember, XmlIgnore]
         public File File { get; set; }
     }
 }

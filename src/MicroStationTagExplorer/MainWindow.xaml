@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MicroStationTagExplorer"
         mc:Ignorable="d"
-        Title="MicroStation Tag Explorer" Height="650" Width="1000"
+        Title="MicroStation Tag Explorer" Height="660" Width="1200"
         WindowStartupLocation="CenterScreen" WindowState="Normal"
         UseLayoutRounding="True" TextOptions.TextFormattingMode="Display" SnapsToDevicePixels="True"
         PreviewKeyDown="Window_PreviewKeyDown"

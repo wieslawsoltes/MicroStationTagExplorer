@@ -4,7 +4,7 @@ using System.Xml.Serialization;
 
 namespace MicroStationTagExplorer
 {
-    [DataContract(IsReference = true, Name = "Project"), XmlRoot("Project")]
+    [DataContract(IsReference = false, Name = "Project"), XmlRoot("Project")]
     public class Project
     {
         [DataMember(Name = "Name"), XmlAttribute("Name")]
