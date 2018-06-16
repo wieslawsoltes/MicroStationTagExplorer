@@ -1,5 +1,19 @@
 # MicroStation Tag Explorer
 
+[![Build status](https://ci.appveyor.com/api/projects/status/xs9bnmy9urp9kinr/branch/master?svg=true)](https://ci.appveyor.com/project/wieslawsoltes/microstationtagexplorer/branch/master)
+
+MicroStation DGN and DWG file tag explorer.
+
+
+## Download
+
+| Download                                                                                                                                                                                                       |
+|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| [MicroStationTagExplorer.exe](https://ci.appveyor.com/api/projects/wieslawsoltes/microstationtagexplorer/artifacts/src/MicroStationTagExplorer/bin/AnyCPU/Release/MicroStationTagExplorer.exe?branch=master)   |
+| [MicroStationTagExplorer.zip](https://ci.appveyor.com/api/projects/wieslawsoltes/microstationtagexplorer/artifacts/src/MicroStationTagExplorer.zip?branch=master)                                              |
+| [Excel 2016.zip](https://ci.appveyor.com/api/projects/wieslawsoltes/microstationtagexplorer/artifacts/interop/Excel 2016.zip?branch=master)                                                                    |
+| [View V8i.zip](https://ci.appveyor.com/api/projects/wieslawsoltes/microstationtagexplorer/artifacts/interop/View V8i.zip?branch=master)                                                                        |
+
 ## Resources
 
 * [GitHub source code repository.](https://github.com/wieslawsoltes/MicroStationTagExplorer)
