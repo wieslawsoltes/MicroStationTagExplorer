@@ -111,6 +111,8 @@ namespace MicroStationTagExplorer
             {
                 Files = new ObservableCollection<File>()
             });
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
         }
 
         private void OpenProject()
