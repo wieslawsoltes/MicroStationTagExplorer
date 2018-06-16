@@ -9,13 +9,21 @@ namespace MicroStationTagExplorer
         private Excel.Workbook _workbook;
         private Excel.Worksheet _worksheet;
 
-        public void ExportTags(object[,] values, int rows, int columns)
+        public Excelnterop()
+        {
+            Initialize();
+        }
+
+        private void Initialize()
         {
             _application = ComUtilities.CreateObject<Excel.Application>("Excel.Application");
             _application.Visible = true;
             _application.ErrorCheckingOptions.NumberAsText = false;
-
             _workbook = _application.Workbooks.Add();
+        }
+
+        public void ExportTags(object[,] values, int rows, int columns)
+        {
             _worksheet = _workbook.Worksheets.Add();
 
             Excel.Range start = _worksheet.Cells[1, 1];
