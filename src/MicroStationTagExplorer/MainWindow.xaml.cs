@@ -350,7 +350,7 @@ namespace MicroStationTagExplorer
             Close();
         }
 
-        public IList<IList<T>> Split<T>(IList<T> list, int count)
+        private IList<IList<T>> Split<T>(IList<T> list, int count)
         {
             var chunks = new List<IList<T>>();
             var chunkCount = list.Count() / count;
