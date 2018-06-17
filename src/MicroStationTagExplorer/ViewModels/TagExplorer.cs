@@ -52,22 +52,22 @@ namespace MicroStationTagExplorer
             }
 
             var elementsByHostID = file.Tags.GroupBy(t => t.HostID)
-                                             .Select(g => new Element<Int64>()
-                                             {
-                                                 Key = g.Key,
-                                                 File = file,
-                                                 Tags = new ObservableCollection<Tag>(g)
-                                             });
+                                            .Select(g => new Element<Int64>()
+                                            {
+                                                Key = g.Key,
+                                                File = file,
+                                                Tags = new ObservableCollection<Tag>(g)
+                                            });
 
             var elementsByTagSet = file.Tags.GroupBy(t => t.HostID)
-                                             .Select(e => e.GroupBy(t => t.TagSetName))
-                                             .SelectMany(e => e)
-                                             .Select(g => new Element<string>()
-                                             {
-                                                 Key = g.Key,
-                                                 File = file,
-                                                 Tags = new ObservableCollection<Tag>(g)
-                                             });
+                                            .Select(e => e.GroupBy(t => t.TagSetName))
+                                            .SelectMany(e => e)
+                                            .Select(g => new Element<string>()
+                                            {
+                                                Key = g.Key,
+                                                File = file,
+                                                Tags = new ObservableCollection<Tag>(g)
+                                            });
 
             file.ElementsByHostID = new ObservableCollection<Element<Int64>>(elementsByHostID);
             file.ElementsByTagSet = new ObservableCollection<Element<string>>(elementsByTagSet);
