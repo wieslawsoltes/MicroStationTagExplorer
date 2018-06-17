@@ -429,10 +429,10 @@ namespace MicroStationTagExplorer
 
                 Func<File, int, bool> updateStatus = (file, id) =>
                 {
-                     if (Tokens[id].IsCancellationRequested)
-                     {
-                         return false;
-                     }
+                    if (Tokens[id].IsCancellationRequested)
+                    {
+                        return false;
+                    }
 
                     nCurrent++;
                     if (nPreviousCurrent < nCurrent)
@@ -445,7 +445,7 @@ namespace MicroStationTagExplorer
                     }
 
                     return true;
-                 };
+                };
 
                 bool bConnect = Workers > 1;
                 var partitions = Split(_project.Files, (int)Math.Ceiling(_project.Files.Count / (double)Workers));
