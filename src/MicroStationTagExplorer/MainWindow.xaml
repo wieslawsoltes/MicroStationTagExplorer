@@ -36,6 +36,16 @@
                 <Separator/>
                 <MenuItem x:Name="TagsExport" Header="_Export..." InputGestureText="Ctrl+E" Click="TagsExport_Click"/>
             </MenuItem>
+            <MenuItem x:Name="SettingsMenu" Header="_Settings">
+                <MenuItem>
+                    <MenuItem.Header>
+                        <DockPanel>
+                            <TextBlock Text="Workers:" DockPanel.Dock="Left" Margin="3"/>
+                            <TextBox x:Name="SettingsWorkers" Text="1" Width="50" Margin="3"/>
+                        </DockPanel>
+                    </MenuItem.Header>
+                </MenuItem>
+            </MenuItem>
         </Menu>
         <views:ProjectControl Grid.Row="1"/>
         <Grid Grid.Row="2">

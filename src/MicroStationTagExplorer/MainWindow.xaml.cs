@@ -22,8 +22,9 @@ namespace MicroStationTagExplorer
         private static string _dgnExt = ".dgn";
         private static string _dwgExt = ".dwg";
         private volatile bool IsRunning = false;
-        private CancellationTokenSource TokenSource;
-        private CancellationToken Token;
+        private int Workers = 1;
+        private List<CancellationTokenSource> TokenSources;
+        private List<CancellationToken> Tokens;
         private Project _project;
 
         public MainWindow()
@@ -349,82 +350,148 @@ namespace MicroStationTagExplorer
             Close();
         }
 
-        private void GetTags(Func<File, int, int, bool> updateStatus, IEnumerable<File> files)
+        public IList<IList<T>> Split<T>(IList<T> list, int count)
         {
-            int count = files.Count();
-            int index = 0;
+            var chunks = new List<IList<T>>();
+            var chunkCount = list.Count() / count;
 
-            foreach (var file in _project.Files)
+            if (list.Count % count > 0)
             {
-                index++;
-                if (updateStatus(file, index, count) == false)
-                    return;
+                chunkCount++;
+            }
 
-                using (var microstation = new MicrostationInterop(file.Path))
+            for (var i = 0; i < chunkCount; i++)
+            {
+                chunks.Add(list.Skip(i * count).Take(count).ToList());
+            }
+
+            return chunks;
+        }
+
+        private void GetTags(Func<File, int, bool> updateStatus, IEnumerable<File> files, int id, bool bConnect)
+        {
+            Debug.WriteLine("GetTags: " + id);
+
+            using (var microstation = new MicrostationInterop())
+            {
+                if (bConnect == true)
+                    microstation.ConnectApplication();
+                else
+                    microstation.CreateApplication();
+
+                foreach (var file in files)
                 {
+                    if (updateStatus(file, id) == false)
+                        break;
+
+                    microstation.Open(file.Path);
                     microstation.SetNormalActiveModel();
                     file.TagSets = microstation.GetTagSets();
                     file.Tags = microstation.GetTags();
+                    microstation.Close();
                     ValidateFile(file);
+                }
+
+                if (bConnect == true)
+                {
+                    microstation.Quit();
                 }
             }
         }
 
-        private void GetTags()
+        private async Task GetTags()
         {
             if (IsRunning == false)
             {
+                Workers = int.Parse(SettingsWorkers.Text);
+                if (Workers <= 0)
+                {
+                    Workers = 1;
+                }
+
                 IsRunning = true;
 
                 DisableWindow();
                 UpdateStatus("");
 
-                TokenSource = new CancellationTokenSource();
-                Token = TokenSource.Token;
+                TokenSources = new List<CancellationTokenSource>();
+                Tokens = new List<CancellationToken>();
 
-                Func<File, int, int, bool> updateStatus = (file, current, total) =>
-                 {
-                     if (Token.IsCancellationRequested)
+                for (int i = 0; i < Workers; i++)
+                {
+                    var tokenSource = new CancellationTokenSource();
+                    TokenSources.Add(tokenSource);
+                    Tokens.Add(tokenSource.Token);
+                }
+
+                int nPreviousCurrent = -1;
+                int nCurrent = 0;
+
+                Func<File, int, bool> updateStatus = (file, id) =>
+                {
+                     if (Tokens[id].IsCancellationRequested)
                      {
-                         Token.ThrowIfCancellationRequested();
                          return false;
                      }
 
-                     Dispatcher.Invoke(() =>
-                     {
-                         UpdateStatus("[" + current + "/" + total + "] " + System.IO.Path.GetFileName(file.Path));
-                     });
+                    nCurrent++;
+                    if (nPreviousCurrent < nCurrent)
+                    {
+                        Dispatcher.Invoke(() =>
+                        {
+                            UpdateStatus("[" + nCurrent + "/" + _project.Files.Count + "] ");
+                        });
+                        nPreviousCurrent = nCurrent;
+                    }
 
-                     return true;
+                    return true;
                  };
 
-                Task.Factory.StartNew(() =>
+                bool bConnect = Workers > 1;
+                var partitions = Split(_project.Files, (int)Math.Ceiling(_project.Files.Count / (double)Workers));
+                var tasks = new List<Task>();
+
+                for (int i = 0; i < Workers; i++)
                 {
-                    try
+                    int id = i;
+                    var task = Task.Factory.StartNew(() =>
                     {
-                        Token.ThrowIfCancellationRequested();
-                        GetTags(updateStatus, _project.Files);
-                    }
-                    catch (Exception ex)
-                    {
-                        Debug.WriteLine(ex.Message);
-                        Debug.WriteLine(ex.StackTrace);
-                    }
+                        try
+                        {
+                            Tokens[id].ThrowIfCancellationRequested();
+                            GetTags(updateStatus, partitions[id], id, bConnect);
+                        }
+                        catch (Exception ex)
+                        {
+                            Debug.WriteLine(ex.Message);
+                            Debug.WriteLine(ex.StackTrace);
+                        }
+                    }, Tokens[id]);
+                    tasks.Add(task);
+                }
 
-                    Dispatcher.Invoke(() =>
-                    {
-                        EnableWindow();
-                        UpdateStatus("");
-                    });
+                await Task.WhenAll(tasks);
 
-                    TokenSource.Dispose();
-                    IsRunning = false;
-                }, Token);
+                Dispatcher.Invoke(() =>
+                {
+                    EnableWindow();
+                    UpdateStatus("");
+                });
+
+                for (int i = 0; i < Workers; i++)
+                {
+                    TokenSources[i].Dispose();
+                }
+
+                IsRunning = false;
             }
             else
             {
-                TokenSource.Cancel();
-                TokenSource.Dispose();
+                for (int i = 0; i < Workers; i++)
+                {
+                    TokenSources[i].Cancel();
+                    TokenSources[i].Dispose();
+                }
                 EnableWindow();
                 UpdateStatus("");
             }
@@ -438,6 +505,7 @@ namespace MicroStationTagExplorer
         private void EnableWindow()
         {
             FileMenu.IsEnabled = true;
+            SettingsMenu.IsEnabled = true;
             TagsImport.IsEnabled = true;
             TagsExport.IsEnabled = true;
             TagsGet.Header = "_Get";
@@ -446,6 +514,7 @@ namespace MicroStationTagExplorer
         private void DisableWindow()
         {
             FileMenu.IsEnabled = false;
+            SettingsMenu.IsEnabled = false;
             TagsImport.IsEnabled = false;
             TagsExport.IsEnabled = false;
             TagsGet.Header = "S_top";
@@ -556,6 +625,9 @@ namespace MicroStationTagExplorer
 
                 using (var excel = new Excelnterop())
                 {
+                    excel.CreateApplication();
+                    excel.CreateWorkbook();
+
                     excel.ExportValues(tagValues, tags.Length + 1, 6, "Tags");
 
                     foreach (var sheet in sheets)
@@ -583,7 +655,7 @@ namespace MicroStationTagExplorer
             }
         }
 
-        private void Window_PreviewKeyDown(object sender, KeyEventArgs e)
+        private async void Window_PreviewKeyDown(object sender, KeyEventArgs e)
         {
             bool bNone = Keyboard.Modifiers == ModifierKeys.None;
             bool bControl = Keyboard.Modifiers == ModifierKeys.Control;
@@ -591,7 +663,7 @@ namespace MicroStationTagExplorer
             {
                 if (e.Key == Key.F5)
                 {
-                    GetTags();
+                    await GetTags();
                 }
             }
             else if (bControl)
@@ -705,9 +777,9 @@ namespace MicroStationTagExplorer
             Exit();
         }
 
-        private void TagsGet_Click(object sender, RoutedEventArgs e)
+        private async void TagsGet_Click(object sender, RoutedEventArgs e)
         {
-            GetTags();
+            await GetTags();
         }
 
         private void TagsImport_Click(object sender, RoutedEventArgs e)

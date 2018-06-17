@@ -8,6 +8,7 @@ namespace MicroStationTagExplorer
     internal class MicrostationInterop : IDisposable
     {
         private string _path;
+        private BCOM.ApplicationObjectConnector _connector;
         private BCOM.Application _application;
         private BCOM.DesignFile _designFile;
 
@@ -25,17 +26,29 @@ namespace MicroStationTagExplorer
             };
         }
 
-        public MicrostationInterop(string path)
+        public void CreateApplication()
         {
-            Initialize(path);
-        }
-
-        private void Initialize(string path)
-        {
-            _path = path;
             _application = ComUtilities.CreateObject<BCOM.Application>("MicroStationDGN.Application");
             _application.Visible = true;
+        }
+
+        public void ConnectApplication()
+        {
+            _connector = ComUtilities.CreateObject<BCOM.ApplicationObjectConnector>("MicroStationDGN.ApplicationObjectConnector");
+            _application = _connector.Application;
+            _application.Visible = true;
+        }
+
+        public void Open(string path)
+        {
+            _path = path;
             _designFile = _application.OpenDesignFile(_path);
+        }
+
+        public void Close()
+        {
+            _path = null;
+            _designFile.Close();
         }
 
         public void SetNormalActiveModel()
@@ -79,8 +92,7 @@ namespace MicroStationTagExplorer
         public ObservableCollection<Tag> GetTags()
         {
             var tags = new ObservableCollection<Tag>();
-
-            BCOM.ElementScanCriteria sc = ComUtilities.CreateObject<BCOM.ElementScanCriteria>("MicroStationDGN.ElementScanCriteria");
+            BCOM.ElementScanCriteria sc = _application.CreateObjectInMicroStation("MicroStationDGN.ElementScanCriteria");
             sc.ExcludeAllTypes();
             sc.IncludeType(BCOM.MsdElementType.msdElementTypeTag);
 
@@ -105,18 +117,24 @@ namespace MicroStationTagExplorer
             return tags;
         }
 
+        public void Quit()
+        {
+            if (_application != null)
+            {
+                _application.Quit();
+            }
+        }
+
         public void Dispose()
         {
             ComUtilities.ReleaseComObject(_designFile);
             _designFile = null;
 
-            //if (_application != null)
-            //{
-            //    _application.Quit();
-            //}
-
             ComUtilities.ReleaseComObject(_application);
             _application = null;
+
+            ComUtilities.ReleaseComObject(_connector);
+            _connector = null;
         }
     }
 }

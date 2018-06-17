@@ -9,16 +9,15 @@ namespace MicroStationTagExplorer
         private Excel.Workbook _workbook;
         private Excel.Worksheet _worksheet;
 
-        public Excelnterop()
-        {
-            Initialize();
-        }
-
-        private void Initialize()
+        public void CreateApplication()
         {
             _application = ComUtilities.CreateObject<Excel.Application>("Excel.Application");
             _application.Visible = true;
             _application.ErrorCheckingOptions.NumberAsText = false;
+        }
+
+        public void CreateWorkbook()
+        {
             _workbook = _application.Workbooks.Add();
         }
 
@@ -54,6 +53,14 @@ namespace MicroStationTagExplorer
             Format(range, nColumns, tableName);
         }
 
+        public void Quit()
+        {
+            if (_application != null)
+            {
+                _application.Quit();
+            }
+        }
+
         public void Dispose()
         {
             ComUtilities.ReleaseComObject(_worksheet);
@@ -61,11 +68,6 @@ namespace MicroStationTagExplorer
 
             ComUtilities.ReleaseComObject(_workbook);
             _workbook = null;
-
-            //if (_application != null)
-            //{
-            //    _application.Quit();
-            //}
 
             ComUtilities.ReleaseComObject(_application);
             _application = null;
