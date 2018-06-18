@@ -2,9 +2,9 @@
 
 namespace MicroStationTagExplorer.Views
 {
-    public partial class TagDefinitions : UserControl
+    public partial class TagDefinitionsControl : UserControl
     {
-        public TagDefinitions()
+        public TagDefinitionsControl()
         {
             InitializeComponent();
         }
