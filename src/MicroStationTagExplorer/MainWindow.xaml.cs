@@ -18,7 +18,7 @@ namespace MicroStationTagExplorer
             InitializeComponent();
             Explorer = new TagExplorer();
             NewProject();
-            SettingsWorkers.Text = Explorer.Workers.ToString();
+            SettingsWorkers.Text = Explorer.WorkersNum.ToString();
         }
 
         private void UpdateStatus(string message)
@@ -79,10 +79,27 @@ namespace MicroStationTagExplorer
         {
             if (Explorer.IsRunning == false)
             {
-                Explorer.Workers = int.Parse(SettingsWorkers.Text);
-                if (Explorer.Workers <= 0)
+                if (Explorer.Project.Files.Count <= 0)
+                    return;
+
+                Explorer.WorkersNum = int.Parse(SettingsWorkers.Text);
+                if (Explorer.WorkersNum <= 0)
                 {
-                    Explorer.Workers = 1;
+                    Explorer.WorkersNum = 1;
+                }
+
+                Explorer.ActiveWorkers.Clear();
+                foreach (var worker in Explorer.Workers)
+                {
+                    if (worker.IsEnabled)
+                    {
+                        Explorer.ActiveWorkers.Add(worker);
+                    }
+                }
+
+                if (Explorer.ActiveWorkers.Count > 0)
+                {
+                    Explorer.WorkersNum = Explorer.ActiveWorkers.Count;
                 }
 
                 Explorer.IsRunning = true;
@@ -93,7 +110,7 @@ namespace MicroStationTagExplorer
                 Explorer.TokenSources = new List<CancellationTokenSource>();
                 Explorer.Tokens = new List<CancellationToken>();
 
-                for (int i = 0; i < Explorer.Workers; i++)
+                for (int i = 0; i < Explorer.WorkersNum; i++)
                 {
                     var tokenSource = new CancellationTokenSource();
                     Explorer.TokenSources.Add(tokenSource);
@@ -123,12 +140,11 @@ namespace MicroStationTagExplorer
                     return true;
                 };
 
-                bool bConnect = Explorer.Workers > 1;
-                int count = (int)Math.Ceiling(Explorer.Project.Files.Count / (double)Explorer.Workers);
+                int count = (int)Math.Ceiling(Explorer.Project.Files.Count / (double)Explorer.WorkersNum);
                 var partitions = Explorer.Split(Explorer.Project.Files, count);
                 var tasks = new List<Task>();
 
-                for (int i = 0; i < Explorer.Workers; i++)
+                for (int i = 0; i < Explorer.WorkersNum; i++)
                 {
                     int id = i;
                     var task = Task.Factory.StartNew(() =>
@@ -136,7 +152,14 @@ namespace MicroStationTagExplorer
                         try
                         {
                             Explorer.Tokens[id].ThrowIfCancellationRequested();
-                            Explorer.GetTags(updateStatus, partitions[id], id, bConnect);
+                            if (Explorer.ActiveWorkers.Count > 0)
+                            {
+                                Explorer.GetTags(updateStatus, partitions[id], id, false, Explorer.ActiveWorkers[id]);
+                            }
+                            else
+                            {
+                                Explorer.GetTags(updateStatus, partitions[id], id, Explorer.WorkersNum > 1, null);
+                            }
                         }
                         catch (Exception ex)
                         {
@@ -155,7 +178,7 @@ namespace MicroStationTagExplorer
                     UpdateStatus("");
                 });
 
-                for (int i = 0; i < Explorer.Workers; i++)
+                for (int i = 0; i < Explorer.WorkersNum; i++)
                 {
                     Explorer.TokenSources[i].Dispose();
                 }
@@ -164,7 +187,7 @@ namespace MicroStationTagExplorer
             }
             else
             {
-                for (int i = 0; i < Explorer.Workers; i++)
+                for (int i = 0; i < Explorer.WorkersNum; i++)
                 {
                     Explorer.TokenSources[i].Cancel();
                     Explorer.TokenSources[i].Dispose();
@@ -210,6 +233,21 @@ namespace MicroStationTagExplorer
             else
             {
                 Explorer.AddPaths(paths);
+            }
+        }
+
+        private void GetWorkers()
+        {
+            try
+            {
+                Explorer.Workers.Clear();
+                Explorer.GetWorkers();
+                DataGridWorkers.DataContext = Explorer.Workers;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                Debug.WriteLine(ex.StackTrace);
             }
         }
 
@@ -290,6 +328,13 @@ namespace MicroStationTagExplorer
                     if (Explorer.IsRunning == false)
                     {
                         ExportTags();
+                    }
+                }
+                else if (e.Key == Key.W)
+                {
+                    if (Explorer.IsRunning == false)
+                    {
+                        GetWorkers();
                     }
                 }
             }
@@ -376,6 +421,14 @@ namespace MicroStationTagExplorer
             if (Explorer.IsRunning == false)
             {
                 ExportTags();
+            }
+        }
+
+        private void SettingsGetWorkers_Click(object sender, RoutedEventArgs e)
+        {
+            if (Explorer.IsRunning == false)
+            {
+                GetWorkers();
             }
         }
     }
