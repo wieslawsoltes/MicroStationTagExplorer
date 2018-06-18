@@ -57,7 +57,7 @@
                 <DataGrid x:Name="DataGridWorkers" 
 			              ItemsSource="{Binding}" 
 			              AutoGenerateColumns="False"
-			              CanUserAddRows="False" CanUserDeleteRows="False"
+			              CanUserAddRows="False" CanUserDeleteRows="True"
 			              Margin="3">
                     <DataGrid.Columns>
                         <DataGridCheckBoxColumn Header="IsEnabled" Binding="{Binding IsEnabled}"/>
