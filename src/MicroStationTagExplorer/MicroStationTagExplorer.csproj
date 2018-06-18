@@ -78,7 +78,9 @@
     <ApplicationDefinition Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
     </ApplicationDefinition>
+    <Compile Include="ViewModels\Sheet.cs" />
     <Compile Include="ViewModels\TagExplorer.cs" />
+    <Compile Include="ViewModels\Worker.cs" />
     <Compile Include="Views\ErrorsControl.xaml.cs">
       <DependentUpon>ErrorsControl.xaml</DependentUpon>
     </Compile>
@@ -88,8 +90,8 @@
     <Compile Include="Views\ProjectControl.xaml.cs">
       <DependentUpon>ProjectControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\TagDefinitions.xaml.cs">
-      <DependentUpon>TagDefinitions.xaml</DependentUpon>
+    <Compile Include="Views\TagDefinitionsControl.xaml.cs">
+      <DependentUpon>TagDefinitionsControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\TagsControl.xaml.cs">
       <DependentUpon>TagsControl.xaml</DependentUpon>
@@ -121,7 +123,7 @@
     <Page Include="Views\ProjectControl.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\TagDefinitions.xaml">
+    <Page Include="Views\TagDefinitionsControl.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\TagsControl.xaml">

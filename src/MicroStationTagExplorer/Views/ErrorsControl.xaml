@@ -34,7 +34,7 @@
             </Grid.ColumnDefinitions>
             <local:TagsControl DataContext="{Binding ElementName=DataGridErrors, Path=SelectedItem.Element.Tags}" Grid.Column="0"/>
             <GridSplitter ResizeDirection="Columns" Grid.Column="1" Background="Transparent" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
-            <local:TagDefinitions DataContext="{Binding ElementName=DataGridErrors, Path=SelectedItem.TagSet.TagDefinitions}" Grid.Column="2"/>
+            <local:TagDefinitionsControl DataContext="{Binding ElementName=DataGridErrors, Path=SelectedItem.TagSet.TagDefinitions}" Grid.Column="2"/>
         </Grid>
     </Grid>
 </UserControl>

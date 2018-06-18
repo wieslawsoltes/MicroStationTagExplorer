@@ -24,6 +24,6 @@
             </DataGrid.Columns>
         </DataGrid>
         <GridSplitter ResizeDirection="Columns" Grid.Column="1" Background="Transparent" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
-        <local:TagDefinitions DataContext="{Binding ElementName=DataGridTagSets, Path=SelectedItem.TagDefinitions}" Grid.Column="2"/>
+        <local:TagDefinitionsControl DataContext="{Binding ElementName=DataGridTagSets, Path=SelectedItem.TagDefinitions}" Grid.Column="2"/>
     </Grid>
 </UserControl>

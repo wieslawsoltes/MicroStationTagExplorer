@@ -37,6 +37,8 @@
                 <MenuItem x:Name="TagsExport" Header="_Export..." InputGestureText="Ctrl+E" Click="TagsExport_Click"/>
             </MenuItem>
             <MenuItem x:Name="SettingsMenu" Header="_Settings">
+                <MenuItem x:Name="SettingsGetWorkers" Header="_Get Workers" InputGestureText="Ctrl+W" Click="SettingsGetWorkers_Click"/>
+                <Separator/>
                 <MenuItem>
                     <MenuItem.Header>
                         <DockPanel>
@@ -47,7 +49,24 @@
                 </MenuItem>
             </MenuItem>
         </Menu>
-        <views:ProjectControl Grid.Row="1"/>
+        <TabControl Grid.Row="1">
+            <TabItem Header="Project">
+                <views:ProjectControl/>
+            </TabItem>
+            <TabItem Header="Workers">
+                <DataGrid x:Name="DataGridWorkers" 
+			              ItemsSource="{Binding}" 
+			              AutoGenerateColumns="False"
+			              CanUserAddRows="False" CanUserDeleteRows="False"
+			              Margin="3">
+                    <DataGrid.Columns>
+                        <DataGridCheckBoxColumn Header="IsEnabled" Binding="{Binding IsEnabled}"/>
+                        <DataGridTextColumn Header="Name" Binding="{Binding Application.Name}" IsReadOnly="True"/>
+                        <DataGridTextColumn Header="FullName" Binding="{Binding Application.FullName}" IsReadOnly="True"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </TabItem>
+        </TabControl>
         <Grid Grid.Row="2">
             <TextBox x:Name="TextBoxStatus" Text="" TextWrapping="NoWrap" IsReadOnly="True" Margin="3" BorderBrush="{x:Null}" BorderThickness="0"/>
         </Grid>

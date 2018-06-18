@@ -11,6 +11,7 @@ namespace MicroStationTagExplorer
         private BCOM.ApplicationObjectConnector _connector;
         private BCOM.Application _application;
         private BCOM.DesignFile _designFile;
+        private bool _isExternalApplication;
 
         private static Int64 ToInt64(BCOM.DLong value)
         {
@@ -30,6 +31,7 @@ namespace MicroStationTagExplorer
         {
             _application = ComUtilities.CreateObject<BCOM.Application>("MicroStationDGN.Application");
             _application.Visible = true;
+            _isExternalApplication = false;
         }
 
         public void ConnectApplication()
@@ -37,6 +39,17 @@ namespace MicroStationTagExplorer
             _connector = ComUtilities.CreateObject<BCOM.ApplicationObjectConnector>("MicroStationDGN.ApplicationObjectConnector");
             _application = _connector.Application;
             _application.Visible = true;
+            _isExternalApplication = false;
+        }
+
+        public void SetApplication(BCOM.Application application)
+        {
+            _application = application;
+            if (_application.ActiveDesignFile != null)
+            {
+                _application.ActiveDesignFile.Close();
+            }
+            _isExternalApplication = true;
         }
 
         public void Open(string path)
@@ -92,7 +105,7 @@ namespace MicroStationTagExplorer
         public ObservableCollection<Tag> GetTags()
         {
             var tags = new ObservableCollection<Tag>();
-            BCOM.ElementScanCriteria sc = _application.CreateObjectInMicroStation("MicroStationDGN.ElementScanCriteria");
+            BCOM.ElementScanCriteria sc = (BCOM.ElementScanCriteria)_application.CreateObjectInMicroStation("MicroStationDGN.ElementScanCriteria");
             sc.ExcludeAllTypes();
             sc.IncludeType(BCOM.MsdElementType.msdElementTypeTag);
 
@@ -130,8 +143,11 @@ namespace MicroStationTagExplorer
             ComUtilities.ReleaseComObject(_designFile);
             _designFile = null;
 
-            ComUtilities.ReleaseComObject(_application);
-            _application = null;
+            if (_isExternalApplication == false)
+            {
+                ComUtilities.ReleaseComObject(_application);
+                _application = null;
+            }
 
             ComUtilities.ReleaseComObject(_connector);
             _connector = null;

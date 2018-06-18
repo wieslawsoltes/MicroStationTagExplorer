@@ -7,19 +7,10 @@ using System.Text;
 using System.Threading;
 using System.Xml;
 using System.Xml.Serialization;
+using BCOM = MicroStationDGN;
 
 namespace MicroStationTagExplorer
 {
-    public class Sheet
-    {
-        public string Key;
-        public TagSet TagSet;
-        public Element<string>[] Elements;
-        public int nRows;
-        public int nColumns;
-        public object[,] Values;
-    }
-
     public class TagExplorer
     {
         private static StringComparison _comparisonType = StringComparison.OrdinalIgnoreCase;
@@ -30,13 +21,17 @@ namespace MicroStationTagExplorer
         public volatile bool IsRunning;
         public List<CancellationTokenSource> TokenSources { get; set; }
         public List<CancellationToken> Tokens { get; set; }
-        public int Workers { get; set; }
+        public int WorkersNum { get; set; }
+        public List<Worker> Workers { get; set; }
+        public List<Worker> ActiveWorkers { get; set; }
         public Project Project { get; set; }
 
         public TagExplorer()
         {
             IsRunning = false;
-            Workers = 1;
+            WorkersNum = 1;
+            Workers = new List<Worker>();
+            ActiveWorkers = new List<Worker>();
         }
 
         public void ValidateFile(File file)
@@ -323,14 +318,25 @@ namespace MicroStationTagExplorer
             return chunks;
         }
 
-        public void GetTags(Func<File, int, bool> updateStatus, IEnumerable<File> files, int id, bool bConnect)
+        public void GetTags(Func<File, int, bool> updateStatus, IEnumerable<File> files, int id, bool bConnect, Worker worker)
         {
             using (var microstation = new MicrostationInterop())
             {
-                if (bConnect == true)
-                    microstation.ConnectApplication();
+                if (worker == null)
+                {
+                    if (bConnect == true)
+                    {
+                        microstation.ConnectApplication();
+                    }
+                    else
+                    {
+                        microstation.CreateApplication();
+                    }
+                }
                 else
-                    microstation.CreateApplication();
+                {
+                    microstation.SetApplication(worker.Application);
+                }
 
                 foreach (var file in files)
                 {
@@ -452,6 +458,26 @@ namespace MicroStationTagExplorer
                 foreach (var sheet in sheets)
                 {
                     excel.ExportValues(sheet.Values, sheet.nRows, sheet.nColumns, sheet.TagSet.Name);
+                }
+            }
+        }
+
+        public void GetWorkers()
+        {
+            string[] progIDs = { "MicroStationDGN.Application" };
+            var results = ComUtilities.GetRunningCOMObjects(progIDs);
+            foreach (var result in results)
+            {
+                BCOM.Application application = result.RunningObject as BCOM.Application;
+                if (application != null)
+                {
+                    var worker = new Worker()
+                    {
+                        IsEnabled = true,
+                        Result = result,
+                        Application = application
+                    };
+                    Workers.Add(worker);
                 }
             }
         }
