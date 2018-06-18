@@ -28,7 +28,7 @@ namespace MicroStationTagExplorer
             _application.ActiveWindow.SplitRow = 1;
             _application.ActiveWindow.FreezePanes = true;
 
-            Excel.Range header = _worksheet.Range[_worksheet.Cells[1, 1], _worksheet.Cells[1, 1]];
+            Excel.Range header = (Excel.Range)_worksheet.Range[_worksheet.Cells[1, 1], _worksheet.Cells[1, 1]];
             header.CurrentRegion.Select();
             _application.Selection.AutoFilter();
 
@@ -43,9 +43,9 @@ namespace MicroStationTagExplorer
 
         public void ExportValues(object[,] values, int nRows, int nColumns, string tableName)
         {
-            _worksheet = _workbook.Worksheets.Add();
+            _worksheet = (Excel.Worksheet)_workbook.Worksheets.Add();
 
-            Excel.Range range = _worksheet.Range[_worksheet.Cells[1, 1], _worksheet.Cells[nRows, nColumns]];
+            Excel.Range range = (Excel.Range)_worksheet.Range[_worksheet.Cells[1, 1], _worksheet.Cells[nRows, nColumns]];
 
             range.NumberFormat = "@";
             range.Value = values;
