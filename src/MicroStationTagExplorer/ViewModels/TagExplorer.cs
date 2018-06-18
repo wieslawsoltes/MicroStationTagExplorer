@@ -220,7 +220,7 @@ namespace MicroStationTagExplorer
             Project = new Project()
             {
                 Name = "project",
-                Path = "projet" + _xmlExt,
+                Path = "project" + _xmlExt,
                 Files = new ObservableCollection<File>()
             };
 
