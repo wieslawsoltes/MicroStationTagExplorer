@@ -92,7 +92,7 @@ namespace MicroStationTagExplorer
         public ObservableCollection<Tag> GetTags()
         {
             var tags = new ObservableCollection<Tag>();
-            BCOM.ElementScanCriteria sc = _application.CreateObjectInMicroStation("MicroStationDGN.ElementScanCriteria");
+            BCOM.ElementScanCriteria sc = (BCOM.ElementScanCriteria)_application.CreateObjectInMicroStation("MicroStationDGN.ElementScanCriteria");
             sc.ExcludeAllTypes();
             sc.IncludeType(BCOM.MsdElementType.msdElementTypeTag);
 
