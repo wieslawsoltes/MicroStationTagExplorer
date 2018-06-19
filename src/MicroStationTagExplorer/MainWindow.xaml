@@ -54,17 +54,7 @@
                 <views:ProjectControl/>
             </TabItem>
             <TabItem Header="Workers">
-                <DataGrid x:Name="DataGridWorkers" 
-			              ItemsSource="{Binding}" 
-			              AutoGenerateColumns="False"
-			              CanUserAddRows="False" CanUserDeleteRows="True"
-			              Margin="3">
-                    <DataGrid.Columns>
-                        <DataGridCheckBoxColumn Header="IsEnabled" Binding="{Binding IsEnabled}"/>
-                        <DataGridTextColumn Header="Name" Binding="{Binding RunningObject.Name}" IsReadOnly="True"/>
-                        <DataGridTextColumn Header="FullName" Binding="{Binding RunningObject.FullName}" IsReadOnly="True"/>
-                    </DataGrid.Columns>
-                </DataGrid>
+                <views:WorkersControl x:Name="WorkersView"/>
             </TabItem>
         </TabControl>
         <Grid Grid.Row="2">
