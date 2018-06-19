@@ -16,7 +16,8 @@
                   DataContext="{Binding}" 
                   ItemsSource="{Binding}" 
                   AutoGenerateColumns="False"
-                  CanUserAddRows="False" CanUserDeleteRows="False"
+                  CanUserAddRows="False"
+                  CanUserDeleteRows="True"
                   Margin="3" Grid.Column="0">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True"/>

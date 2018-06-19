@@ -33,6 +33,22 @@ namespace MicroStationTagExplorer
             ActiveWorkers = new List<Worker>();
         }
 
+        public IEnumerable<Error> ValidateTags(File file)
+        {
+            foreach (var element in file.ElementsByTagSet)
+            {
+                var tagSet = file.TagSets.FirstOrDefault(ts => ts.Name == element.Key);
+                var errors = ValidateTags(element, tagSet);
+                element.Errors = new ObservableCollection<Error>(errors);
+                element.HasErrors = element.Errors.Count > 0;
+                foreach (var error in element.Errors)
+                {
+                    error.File = file;
+                    yield return error;
+                }
+            }
+        }
+
         public void ValidateFile(File file)
         {
             foreach (var tagSet in file.TagSets)
@@ -69,27 +85,95 @@ namespace MicroStationTagExplorer
             file.HasErrors = file.Errors.Count > 0;
         }
 
-        public void UpdateProject(Project project)
+        public void ToValues(IList<Tag> tags, out object[,] values)
+        {
+            values = new object[tags.Count + 1, 6];
+            values[0, 0] = "TagSetName";
+            values[0, 1] = "TagDefinitionName";
+            values[0, 2] = "Value";
+            values[0, 3] = "ID";
+            values[0, 4] = "HostID";
+            values[0, 5] = "Path";
+
+            for (int i = 0; i < tags.Count; i++)
+            {
+                values[i + 1, 0] = tags[i].TagSetName;
+                values[i + 1, 1] = tags[i].TagDefinitionName;
+                values[i + 1, 2] = tags[i].Value.ToString();
+                values[i + 1, 3] = tags[i].ID.ToString();
+                values[i + 1, 4] = tags[i].HostID.ToString();
+                values[i + 1, 5] = tags[i].File.Path;
+            }
+        }
+
+        public void ToValues(Sheet sheet)
+        {
+            int nTagDefinitions = sheet.TagSet.TagDefinitions.Count;
+
+            sheet.Rows = sheet.Elements.Count + 1;
+            sheet.Columns = (2 * nTagDefinitions) + 1;
+            sheet.Values = new object[sheet.Rows, sheet.Columns];
+
+            for (int i = 0; i < sheet.TagSet.TagDefinitions.Count; i++)
+            {
+                sheet.Values[0, i] = sheet.TagSet.TagDefinitions[i].Name;
+                sheet.Values[0, nTagDefinitions + i] = "ID_" + sheet.TagSet.TagDefinitions[i].Name;
+            }
+            sheet.Values[0, 2 * nTagDefinitions] = "Path";
+
+            for (int i = 0; i < sheet.Elements.Count; i++)
+            {
+                var element = sheet.Elements[i];
+                for (int j = 0; j < nTagDefinitions; j++)
+                {
+                    var tagDefinition = sheet.TagSet.TagDefinitions[j];
+                    foreach (var tag in element.Tags)
+                    {
+                        if (tag.TagDefinitionName == tagDefinition.Name)
+                        {
+                            sheet.Values[i + 1, j] = tag.Value;
+                            sheet.Values[i + 1, nTagDefinitions + j] = tag.ID.ToString();
+                            break;
+                        }
+                    }
+                }
+                sheet.Values[i + 1, 2 * nTagDefinitions] = element.File.Path;
+            }
+        }
+
+        public void ValidateProject(Project project)
         {
             foreach (var file in project.Files)
             {
                 ValidateFile(file);
             }
-        }
 
-        public IEnumerable<Error> ValidateTags(File file)
-        {
-            foreach (var element in file.ElementsByTagSet)
+            var tagSets = project.Files.SelectMany(f => f.TagSets);
+            project.TagSets = new ObservableCollection<TagSet>(tagSets);
+
+            var tags = project.Files.SelectMany(f => f.Tags);
+            project.Tags = new ObservableCollection<Tag>(tags);
+
+            object[,] tagValues;
+            ToValues(project.Tags, out tagValues);
+            project.TagValues = tagValues;
+
+            var sheets = project.Files.SelectMany(f => f.ElementsByTagSet)
+                                      .GroupBy(e => e.Key).Select(g =>
+                                      {
+                                          return new Sheet
+                                          {
+                                              Key = g.Key,
+                                              TagSet = tagSets.FirstOrDefault(ts => ts.Name == g.Key),
+                                              Elements = new ObservableCollection<Element<string>>(g)
+                                          };
+                                      });
+
+            project.Sheets = new ObservableCollection<Sheet>(sheets);
+
+            foreach (var sheet in project.Sheets)
             {
-                var tagSet = file.TagSets.FirstOrDefault(ts => ts.Name == element.Key);
-                var errors = ValidateTags(element, tagSet);
-                element.Errors = new ObservableCollection<Error>(errors);
-                element.HasErrors = element.Errors.Count > 0;
-                foreach (var error in element.Errors)
-                {
-                    error.File = file;
-                    yield return error;
-                }
+                ToValues(sheet);
             }
         }
 
@@ -218,7 +302,7 @@ namespace MicroStationTagExplorer
                 Files = new ObservableCollection<File>()
             };
 
-            UpdateProject(Project);
+            ValidateProject(Project);
 
             GC.Collect();
             GC.WaitForPendingFinalizers();
@@ -290,7 +374,7 @@ namespace MicroStationTagExplorer
                     file.Name = System.IO.Path.GetFileName(file.Path);
                 }
 
-                UpdateProject(Project);
+                ValidateProject(Project);
             }
         }
 
@@ -347,7 +431,6 @@ namespace MicroStationTagExplorer
                     file.TagSets = microstation.GetTagSets();
                     file.Tags = microstation.GetTags();
                     microstation.Close();
-                    ValidateFile(file);
                 }
 
                 if (bConnect == true)
@@ -357,106 +440,22 @@ namespace MicroStationTagExplorer
             }
         }
 
-        public void ToValues(Tag[] tags, out object[,] values)
-        {
-            values = new object[tags.Length + 1, 6];
-            values[0, 0] = "TagSetName";
-            values[0, 1] = "TagDefinitionName";
-            values[0, 2] = "Value";
-            values[0, 3] = "ID";
-            values[0, 4] = "HostID";
-            values[0, 5] = "Path";
-
-            for (int i = 0; i < tags.Length; i++)
-            {
-                values[i + 1, 0] = tags[i].TagSetName;
-                values[i + 1, 1] = tags[i].TagDefinitionName;
-                values[i + 1, 2] = tags[i].Value.ToString();
-                values[i + 1, 3] = tags[i].ID.ToString();
-                values[i + 1, 4] = tags[i].HostID.ToString();
-                values[i + 1, 5] = tags[i].File.Path;
-            }
-        }
-
-        public void ToValues(Sheet sheet)
-        {
-            int nTagDefinitions = sheet.TagSet.TagDefinitions.Count;
-
-            sheet.nRows = sheet.Elements.Length + 1;
-            sheet.nColumns = (2 * nTagDefinitions) + 1;
-            sheet.Values = new object[sheet.nRows, sheet.nColumns];
-
-            for (int i = 0; i < sheet.TagSet.TagDefinitions.Count; i++)
-            {
-                sheet.Values[0, i] = sheet.TagSet.TagDefinitions[i].Name;
-                sheet.Values[0, nTagDefinitions + i] = "ID_" + sheet.TagSet.TagDefinitions[i].Name;
-            }
-            sheet.Values[0, 2 * nTagDefinitions] = "Path";
-
-            for (int i = 0; i < sheet.Elements.Length; i++)
-            {
-                var element = sheet.Elements[i];
-                for (int j = 0; j < nTagDefinitions; j++)
-                {
-                    var tagDefinition = sheet.TagSet.TagDefinitions[j];
-                    foreach (var tag in element.Tags)
-                    {
-                        if (tag.TagDefinitionName == tagDefinition.Name)
-                        {
-                            sheet.Values[i + 1, j] = tag.Value;
-                            sheet.Values[i + 1, nTagDefinitions + j] = tag.ID.ToString();
-                            break;
-                        }
-                    }
-                }
-                sheet.Values[i + 1, 2 * nTagDefinitions] = element.File.Path;
-            }
-        }
-
         public void ImportTags()
         {
         }
 
         public void ExportTags()
         {
-            // create tags values
-
-            object[,] tagValues;
-            Tag[] tags = Project.Files.SelectMany(f => f.Tags).ToArray();
-            ToValues(tags, out tagValues);
-
-            // create elements values
-
-            TagSet[] tagSets = Project.Files.SelectMany(f => f.TagSets).ToArray();
-
-            Sheet[] sheets = Project.Files.SelectMany(f => f.ElementsByTagSet)
-                                          .GroupBy(e => e.Key).Select(g =>
-                                          {
-                                              return new Sheet
-                                              {
-                                                  Key = g.Key,
-                                                  TagSet = tagSets.FirstOrDefault(ts => ts.Name == g.Key),
-                                                  Elements = g.ToArray()
-                                              };
-                                          }).ToArray();
-
-            foreach (var sheet in sheets)
-            {
-                ToValues(sheet);
-            }
-
-            // create excel worksheets
-
             using (var excel = new Excelnterop())
             {
                 excel.CreateApplication();
                 excel.CreateWorkbook();
 
-                excel.ExportValues(tagValues, tags.Length + 1, 6, "Tags");
+                excel.ExportValues(Project.TagValues, Project.Tags.Count + 1, 6, "Tags");
 
-                foreach (var sheet in sheets)
+                foreach (var sheet in Project.Sheets)
                 {
-                    excel.ExportValues(sheet.Values, sheet.nRows, sheet.nColumns, sheet.TagSet.Name);
+                    excel.ExportValues(sheet.Values, sheet.Rows, sheet.Columns, sheet.TagSet.Name);
                 }
             }
         }

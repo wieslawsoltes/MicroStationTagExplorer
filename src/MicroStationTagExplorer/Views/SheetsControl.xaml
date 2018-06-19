@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="MicroStationTagExplorer.Views.ElementsControl"
+﻿<UserControl x:Class="MicroStationTagExplorer.Views.SheetsControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -6,13 +6,13 @@
              xmlns:local="clr-namespace:MicroStationTagExplorer.Views"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
+    <Grid Grid.Row="2">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="50*"/>
+            <ColumnDefinition Width="40*"/>
             <ColumnDefinition Width="8"/>
-            <ColumnDefinition Width="50*"/>
+            <ColumnDefinition Width="60*"/>
         </Grid.ColumnDefinitions>
-        <DataGrid x:Name="DataGridElements" 
+        <DataGrid x:Name="DataGridSheets" 
                   DataContext="{Binding}" 
                   ItemsSource="{Binding}" 
                   AutoGenerateColumns="False" 
@@ -21,17 +21,17 @@
                   Margin="3" Grid.Column="0">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Key" Binding="{Binding Key}" IsReadOnly="True"/>
-                <DataGridCheckBoxColumn Header="HasErrors" Binding="{Binding HasErrors}" IsReadOnly="True"/>
-                <DataGridTextColumn Header="File" Binding="{Binding File.Name}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Rows" Binding="{Binding Rows}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Columns" Binding="{Binding Columns}" IsReadOnly="True"/>
             </DataGrid.Columns>
         </DataGrid>
         <GridSplitter ResizeDirection="Columns" Grid.Column="1" Background="Transparent" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
         <TabControl Grid.Column="2">
-            <TabItem Header="Tags">
-                <local:TagsControl x:Name="TagsView" DataContext="{Binding ElementName=DataGridElements, Path=SelectedItem.Tags}"/>
+            <TabItem Header="Elements">
+                <local:ElementsControl x:Name="ElementsViewSheets" DataContext="{Binding ElementName=DataGridSheets, Path=SelectedItem.Elements}"/>
             </TabItem>
-            <TabItem Header="Errors">
-                <local:ErrorsControl x:Name="ErrorsView" DataContext="{Binding ElementName=DataGridElements, Path=SelectedItem.Errors}"/>
+            <TabItem Header="TagSet">
+                <local:TagDefinitionsControl x:Name="TagDefinitionsView" DataContext="{Binding ElementName=DataGridSheets, Path=SelectedItem.TagSet.TagDefinitions}"/>
             </TabItem>
         </TabControl>
     </Grid>

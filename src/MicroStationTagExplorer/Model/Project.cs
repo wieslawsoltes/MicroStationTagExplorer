@@ -15,5 +15,17 @@ namespace MicroStationTagExplorer
 
         [DataMember(Name = "Files"), XmlArray("Files")]
         public ObservableCollection<File> Files { get; set; }
+
+        [IgnoreDataMember, XmlIgnore]
+        public ObservableCollection<Tag> Tags { get; set; }
+
+        [IgnoreDataMember, XmlIgnore]
+        public object[,] TagValues { get; set; }
+
+        [IgnoreDataMember, XmlIgnore]
+        public ObservableCollection<TagSet> TagSets { get; set; }
+
+        [IgnoreDataMember, XmlIgnore]
+        public ObservableCollection<Sheet> Sheets { get; set; }
     }
 }

@@ -24,7 +24,8 @@
                               DataContext="{Binding Files}" 
                               ItemsSource="{Binding}" 
                               AutoGenerateColumns="False" 
-                              CanUserAddRows="False" CanUserDeleteRows="True"
+                              CanUserAddRows="False"
+                              CanUserDeleteRows="True"
                               Margin="3">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True"/>

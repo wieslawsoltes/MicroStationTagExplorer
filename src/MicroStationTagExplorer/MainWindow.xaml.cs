@@ -183,6 +183,8 @@ namespace MicroStationTagExplorer
                     Explorer.TokenSources[i].Dispose();
                 }
 
+                Explorer.ValidateProject(Explorer.Project);
+
                 Explorer.IsRunning = false;
             }
             else

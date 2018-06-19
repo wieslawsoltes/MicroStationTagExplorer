@@ -10,7 +10,8 @@
               DataContext="{Binding}" 
               ItemsSource="{Binding}" 
               AutoGenerateColumns="False"
-              CanUserAddRows="False" CanUserDeleteRows="False"
+              CanUserAddRows="False"
+              CanUserDeleteRows="False"
               Margin="3">
         <DataGrid.Columns>
             <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True"/>

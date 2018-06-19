@@ -93,6 +93,9 @@
     <Compile Include="Views\ProjectControl.xaml.cs">
       <DependentUpon>ProjectControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\SheetsControl.xaml.cs">
+      <DependentUpon>SheetsControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\TagDefinitionsControl.xaml.cs">
       <DependentUpon>TagDefinitionsControl.xaml</DependentUpon>
     </Compile>
@@ -101,6 +104,9 @@
     </Compile>
     <Compile Include="Views\TagSetsControl.xaml.cs">
       <DependentUpon>TagSetsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ValuesControl.xaml.cs">
+      <DependentUpon>ValuesControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\WorkersControl.xaml.cs">
       <DependentUpon>WorkersControl.xaml</DependentUpon>
@@ -132,6 +138,9 @@
     <Page Include="Views\ProjectControl.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\SheetsControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\TagDefinitionsControl.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -139,6 +148,9 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\TagSetsControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ValuesControl.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\WorkersControl.xaml">
