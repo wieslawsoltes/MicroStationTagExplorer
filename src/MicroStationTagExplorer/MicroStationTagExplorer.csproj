@@ -37,6 +37,9 @@
     <WarningLevel>4</WarningLevel>
     <LangVersion>5</LangVersion>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Interop.MicroStationDGN">
       <HintPath>..\..\interop\View V8i\Interop.MicroStationDGN.dll</HintPath>
@@ -179,6 +182,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="app.manifest" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
