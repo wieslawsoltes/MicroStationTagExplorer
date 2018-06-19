@@ -36,13 +36,13 @@
             <GridSplitter ResizeDirection="Columns" Grid.Column="1" Background="Transparent" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
             <TabControl Grid.Column="2">
                 <TabItem Header="Elements by TagSet">
-                    <local:ElementsControl DataContext="{Binding ElementName=DataGridFiles, Path=SelectedItem.ElementsByTagSet}"/>
+                    <local:ElementsControl x:Name="ElementsViewByTagSet" DataContext="{Binding ElementName=DataGridFiles, Path=SelectedItem.ElementsByTagSet}"/>
                 </TabItem>
                 <TabItem Header="Elements by HostID">
-                    <local:ElementsControl DataContext="{Binding ElementName=DataGridFiles, Path=SelectedItem.ElementsByHostID}"/>
+                    <local:ElementsControl x:Name="ElementsViewByHostID" DataContext="{Binding ElementName=DataGridFiles, Path=SelectedItem.ElementsByHostID}"/>
                 </TabItem>
                 <TabItem Header="Errors">
-                    <local:ErrorsControl DataContext="{Binding ElementName=DataGridFiles, Path=SelectedItem.Errors}"/>
+                    <local:ErrorsControl x:Name="ErrorsView" DataContext="{Binding ElementName=DataGridFiles, Path=SelectedItem.Errors}"/>
                 </TabItem>
             </TabControl>
         </Grid>
@@ -55,13 +55,13 @@
             </Grid.ColumnDefinitions>
             <TabControl Grid.Column="0">
                 <TabItem Header="Tags">
-                    <local:TagsControl DataContext="{Binding ElementName=DataGridFiles, Path=SelectedItem.Tags}"/>
+                    <local:TagsControl x:Name="TagsView" DataContext="{Binding ElementName=DataGridFiles, Path=SelectedItem.Tags}"/>
                 </TabItem>
             </TabControl>
             <GridSplitter ResizeDirection="Columns" Grid.Column="1" Background="Transparent" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
             <TabControl Grid.Column="2">
                 <TabItem Header="TagSets">
-                    <local:TagSetsControl DataContext="{Binding ElementName=DataGridFiles, Path=SelectedItem.TagSets}"/>
+                    <local:TagSetsControl x:Name="TagSetsView" DataContext="{Binding ElementName=DataGridFiles, Path=SelectedItem.TagSets}"/>
                 </TabItem>
             </TabControl>
         </Grid>

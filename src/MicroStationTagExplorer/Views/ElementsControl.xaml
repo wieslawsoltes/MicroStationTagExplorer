@@ -27,10 +27,10 @@
         <GridSplitter ResizeDirection="Columns" Grid.Column="1" Background="Transparent" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
         <TabControl Grid.Column="2">
             <TabItem Header="Tags">
-                <local:TagsControl DataContext="{Binding ElementName=DataGridElements, Path=SelectedItem.Tags}"/>
+                <local:TagsControl x:Name="TagsView" DataContext="{Binding ElementName=DataGridElements, Path=SelectedItem.Tags}"/>
             </TabItem>
             <TabItem Header="Errors">
-                <local:ErrorsControl DataContext="{Binding ElementName=DataGridElements, Path=SelectedItem.Errors}"/>
+                <local:ErrorsControl x:Name="ErrorsView" DataContext="{Binding ElementName=DataGridElements, Path=SelectedItem.Errors}"/>
             </TabItem>
         </TabControl>
     </Grid>

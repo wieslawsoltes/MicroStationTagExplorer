@@ -32,9 +32,9 @@
                 <ColumnDefinition Width="8"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <local:TagsControl DataContext="{Binding ElementName=DataGridErrors, Path=SelectedItem.Element.Tags}" Grid.Column="0"/>
+            <local:TagsControl x:Name="TagsView" DataContext="{Binding ElementName=DataGridErrors, Path=SelectedItem.Element.Tags}" Grid.Column="0"/>
             <GridSplitter ResizeDirection="Columns" Grid.Column="1" Background="Transparent" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
-            <local:TagDefinitionsControl DataContext="{Binding ElementName=DataGridErrors, Path=SelectedItem.TagSet.TagDefinitions}" Grid.Column="2"/>
+            <local:TagDefinitionsControl x:Name="TagDefinitionsView" DataContext="{Binding ElementName=DataGridErrors, Path=SelectedItem.TagSet.TagDefinitions}" Grid.Column="2"/>
         </Grid>
     </Grid>
 </UserControl>
