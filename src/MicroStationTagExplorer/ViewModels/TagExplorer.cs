@@ -33,6 +33,62 @@ namespace MicroStationTagExplorer
             ActiveWorkers = new List<Worker>();
         }
 
+        public void ToValues(IList<Tag> tags, out object[,] values)
+        {
+            values = new object[tags.Count + 1, 6];
+            values[0, 0] = "TagSetName";
+            values[0, 1] = "TagDefinitionName";
+            values[0, 2] = "Value";
+            values[0, 3] = "ID";
+            values[0, 4] = "HostID";
+            values[0, 5] = "Path";
+
+            for (int i = 0; i < tags.Count; i++)
+            {
+                values[i + 1, 0] = tags[i].TagSetName;
+                values[i + 1, 1] = tags[i].TagDefinitionName;
+                values[i + 1, 2] = tags[i].Value.ToString();
+                values[i + 1, 3] = tags[i].ID.ToString();
+                values[i + 1, 4] = tags[i].HostID.ToString();
+                values[i + 1, 5] = tags[i].File.Path;
+            }
+        }
+
+        public void ToValues(Sheet sheet)
+        {
+            int nTagDefinitions = sheet.TagSet.TagDefinitions.Count;
+
+            sheet.Rows = sheet.Elements.Count + 1;
+            sheet.Columns = (2 * nTagDefinitions) + 1;
+            sheet.Values = new object[sheet.Rows, sheet.Columns];
+
+            for (int i = 0; i < sheet.TagSet.TagDefinitions.Count; i++)
+            {
+                sheet.Values[0, i] = sheet.TagSet.TagDefinitions[i].Name;
+                sheet.Values[0, nTagDefinitions + i] = "ID_" + sheet.TagSet.TagDefinitions[i].Name;
+            }
+            sheet.Values[0, 2 * nTagDefinitions] = "Path";
+
+            for (int i = 0; i < sheet.Elements.Count; i++)
+            {
+                var element = sheet.Elements[i];
+                for (int j = 0; j < nTagDefinitions; j++)
+                {
+                    var tagDefinition = sheet.TagSet.TagDefinitions[j];
+                    foreach (var tag in element.Tags)
+                    {
+                        if (tag.TagDefinitionName == tagDefinition.Name)
+                        {
+                            sheet.Values[i + 1, j] = tag.Value;
+                            sheet.Values[i + 1, nTagDefinitions + j] = tag.ID.ToString();
+                            break;
+                        }
+                    }
+                }
+                sheet.Values[i + 1, 2 * nTagDefinitions] = element.File.Path;
+            }
+        }
+
         public IEnumerable<Error> ValidateTags(File file)
         {
             foreach (var element in file.ElementsByTagSet)
@@ -88,62 +144,6 @@ namespace MicroStationTagExplorer
             file.ElementsByTagSet = new ObservableCollection<Element<string>>(elementsByTagSet);
             file.Errors = new ObservableCollection<Error>(ValidateTags(file));
             file.HasErrors = file.Errors.Count > 0;
-        }
-
-        public void ToValues(IList<Tag> tags, out object[,] values)
-        {
-            values = new object[tags.Count + 1, 6];
-            values[0, 0] = "TagSetName";
-            values[0, 1] = "TagDefinitionName";
-            values[0, 2] = "Value";
-            values[0, 3] = "ID";
-            values[0, 4] = "HostID";
-            values[0, 5] = "Path";
-
-            for (int i = 0; i < tags.Count; i++)
-            {
-                values[i + 1, 0] = tags[i].TagSetName;
-                values[i + 1, 1] = tags[i].TagDefinitionName;
-                values[i + 1, 2] = tags[i].Value.ToString();
-                values[i + 1, 3] = tags[i].ID.ToString();
-                values[i + 1, 4] = tags[i].HostID.ToString();
-                values[i + 1, 5] = tags[i].File.Path;
-            }
-        }
-
-        public void ToValues(Sheet sheet)
-        {
-            int nTagDefinitions = sheet.TagSet.TagDefinitions.Count;
-
-            sheet.Rows = sheet.Elements.Count + 1;
-            sheet.Columns = (2 * nTagDefinitions) + 1;
-            sheet.Values = new object[sheet.Rows, sheet.Columns];
-
-            for (int i = 0; i < sheet.TagSet.TagDefinitions.Count; i++)
-            {
-                sheet.Values[0, i] = sheet.TagSet.TagDefinitions[i].Name;
-                sheet.Values[0, nTagDefinitions + i] = "ID_" + sheet.TagSet.TagDefinitions[i].Name;
-            }
-            sheet.Values[0, 2 * nTagDefinitions] = "Path";
-
-            for (int i = 0; i < sheet.Elements.Count; i++)
-            {
-                var element = sheet.Elements[i];
-                for (int j = 0; j < nTagDefinitions; j++)
-                {
-                    var tagDefinition = sheet.TagSet.TagDefinitions[j];
-                    foreach (var tag in element.Tags)
-                    {
-                        if (tag.TagDefinitionName == tagDefinition.Name)
-                        {
-                            sheet.Values[i + 1, j] = tag.Value;
-                            sheet.Values[i + 1, nTagDefinitions + j] = tag.ID.ToString();
-                            break;
-                        }
-                    }
-                }
-                sheet.Values[i + 1, 2 * nTagDefinitions] = element.File.Path;
-            }
         }
 
         public void ValidateProject(Project project)
