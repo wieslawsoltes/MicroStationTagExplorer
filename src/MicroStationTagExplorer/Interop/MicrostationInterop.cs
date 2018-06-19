@@ -127,6 +127,9 @@ namespace MicroStationTagExplorer
                 tags.Add(tag);
             }
 
+            ComUtilities.ReleaseComObject(sc);
+            sc = null;
+
             return tags;
         }
 
@@ -170,6 +173,9 @@ namespace MicroStationTagExplorer
                     }
                 }
             }
+
+            ComUtilities.ReleaseComObject(sc);
+            sc = null;
 
             return texts;
         }
