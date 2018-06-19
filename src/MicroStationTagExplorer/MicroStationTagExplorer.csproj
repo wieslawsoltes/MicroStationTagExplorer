@@ -79,9 +79,9 @@
       <Generator>MSBuild:Compile</Generator>
     </ApplicationDefinition>
     <Compile Include="Model\Text.cs" />
-    <Compile Include="ViewModels\Sheet.cs" />
+    <Compile Include="Model\Sheet.cs" />
     <Compile Include="ViewModels\TagExplorer.cs" />
-    <Compile Include="ViewModels\Worker.cs" />
+    <Compile Include="Model\Worker.cs" />
     <Compile Include="Views\ErrorsControl.xaml.cs">
       <DependentUpon>ErrorsControl.xaml</DependentUpon>
     </Compile>
