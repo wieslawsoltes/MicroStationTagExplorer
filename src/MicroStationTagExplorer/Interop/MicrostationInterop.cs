@@ -136,20 +136,39 @@ namespace MicroStationTagExplorer
             BCOM.ElementScanCriteria sc = (BCOM.ElementScanCriteria)_application.CreateObjectInMicroStation("MicroStationDGN.ElementScanCriteria");
             sc.ExcludeAllTypes();
             sc.IncludeType(BCOM.MsdElementType.msdElementTypeText);
+            sc.IncludeType(BCOM.MsdElementType.msdElementTypeTextNode);
 
             BCOM.ElementEnumerator ee = _application.ActiveModelReference.Scan(sc);
             Array elements = ee.BuildArrayFromContents();
 
             foreach (BCOM.Element element in elements)
             {
-                BCOM.TextElement te = element as BCOM.TextElement;
-
-                var text = new Text()
+                if (element is BCOM.TextElement)
                 {
-                    Value = te.Text,
-                    ID = ToInt64(te.ID),
-                };
-                texts.Add(text);
+                    BCOM.TextElement te = element as BCOM.TextElement;
+
+                    var text = new Text()
+                    {
+                        Value = te.Text,
+                        ID = ToInt64(te.ID),
+                    };
+                    texts.Add(text);
+                }
+                else if (element is BCOM.TextNodeElement)
+                {
+                    BCOM.TextNodeElement tn = element as BCOM.TextNodeElement;
+                    BCOM.ElementEnumerator en = tn.GetSubElements();
+                    while (en.MoveNext())
+                    {
+                        BCOM.TextElement te = en.Current.AsTextElement;
+                        var text = new Text()
+                        {
+                            Value = te.Text,
+                            ID = ToInt64(te.ID),
+                        };
+                        texts.Add(text);
+                    }
+                }
             }
 
             return texts;
