@@ -53,6 +53,9 @@
             <TabItem Header="Project">
                 <views:ProjectControl x:Name="ProjectView"/>
             </TabItem>
+            <TabItem Header="Export">
+                <views:ExportControl x:Name="ExportView"/>
+            </TabItem>
             <TabItem Header="Workers">
                 <views:WorkersControl x:Name="WorkersView"/>
             </TabItem>

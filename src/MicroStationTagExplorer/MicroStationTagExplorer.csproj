@@ -87,6 +87,9 @@
     <Compile Include="Views\ElementsControl.xaml.cs">
       <DependentUpon>ElementsControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\ExportControl.xaml.cs">
+      <DependentUpon>ExportControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\ProjectControl.xaml.cs">
       <DependentUpon>ProjectControl.xaml</DependentUpon>
     </Compile>
@@ -121,6 +124,9 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\ElementsControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ExportControl.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\ProjectControl.xaml">
