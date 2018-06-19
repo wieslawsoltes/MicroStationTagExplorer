@@ -99,6 +99,9 @@
     <Compile Include="Views\TagSetsControl.xaml.cs">
       <DependentUpon>TagSetsControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\WorkersControl.xaml.cs">
+      <DependentUpon>WorkersControl.xaml</DependentUpon>
+    </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -130,6 +133,9 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\TagSetsControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\WorkersControl.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
