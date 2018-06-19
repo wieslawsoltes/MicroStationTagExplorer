@@ -4,6 +4,7 @@ namespace MicroStationTagExplorer
 {
     public class Sheet
     {
+        public bool IsExported { get; set; }
         public string Key { get; set; }
         public TagSet TagSet { get; set; }
         public ObservableCollection<Element<string>> Elements { get; set; }

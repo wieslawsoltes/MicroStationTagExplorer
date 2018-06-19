@@ -163,6 +163,7 @@ namespace MicroStationTagExplorer
                                       {
                                           return new Sheet
                                           {
+                                              IsExported = true,
                                               Key = g.Key,
                                               TagSet = tagSets.FirstOrDefault(ts => ts.Name == g.Key),
                                               Elements = new ObservableCollection<Element<string>>(g)
@@ -451,11 +452,14 @@ namespace MicroStationTagExplorer
                 excel.CreateApplication();
                 excel.CreateWorkbook();
 
-                excel.ExportValues(Project.TagValues, Project.Tags.Count + 1, 6, "Tags");
+                //excel.ExportValues(Project.TagValues, Project.Tags.Count + 1, 6, "Tags");
 
                 foreach (var sheet in Project.Sheets)
                 {
-                    excel.ExportValues(sheet.Values, sheet.Rows, sheet.Columns, sheet.TagSet.Name);
+                    if (sheet.IsExported == true)
+                    {
+                        excel.ExportValues(sheet.Values, sheet.Rows, sheet.Columns, sheet.TagSet.Name);
+                    }
                 }
             }
         }

@@ -44,6 +44,7 @@ namespace MicroStationTagExplorer
         public void ExportValues(object[,] values, int nRows, int nColumns, string tableName)
         {
             _worksheet = (Excel.Worksheet)_workbook.Worksheets.Add();
+            _worksheet.Name = tableName;
 
             Excel.Range range = (Excel.Range)_worksheet.Range[_worksheet.Cells[1, 1], _worksheet.Cells[nRows, nColumns]];
 
