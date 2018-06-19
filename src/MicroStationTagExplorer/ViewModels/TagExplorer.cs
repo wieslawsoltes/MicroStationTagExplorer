@@ -7,7 +7,6 @@ using System.Text;
 using System.Threading;
 using System.Xml;
 using System.Xml.Serialization;
-using BCOM = MicroStationDGN;
 
 namespace MicroStationTagExplorer
 {
@@ -335,7 +334,7 @@ namespace MicroStationTagExplorer
                 }
                 else
                 {
-                    microstation.SetApplication(worker.Application);
+                    microstation.SetApplication(worker.RunningObject);
                 }
 
                 foreach (var file in files)
@@ -464,18 +463,19 @@ namespace MicroStationTagExplorer
 
         public void GetWorkers()
         {
-            string[] progIDs = { "MicroStationDGN.Application" };
-            var results = ComUtilities.GetRunningCOMObjects(progIDs);
-            foreach (var result in results)
+            string[] progIDs =
             {
-                BCOM.Application application = result.RunningObject as BCOM.Application;
-                if (application != null)
+                "MicroStationDGN.Application"
+            };
+            List<object> results = ComUtilities.GetRunningCOMObjects(progIDs);
+            if (results != null)
+            {
+                foreach (var result in results)
                 {
                     var worker = new Worker()
                     {
                         IsEnabled = true,
-                        Result = result,
-                        Application = application
+                        RunningObject = result
                     };
                     Workers.Add(worker);
                 }

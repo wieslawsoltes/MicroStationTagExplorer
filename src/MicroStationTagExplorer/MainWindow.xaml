@@ -61,8 +61,8 @@
 			              Margin="3">
                     <DataGrid.Columns>
                         <DataGridCheckBoxColumn Header="IsEnabled" Binding="{Binding IsEnabled}"/>
-                        <DataGridTextColumn Header="Name" Binding="{Binding Application.Name}" IsReadOnly="True"/>
-                        <DataGridTextColumn Header="FullName" Binding="{Binding Application.FullName}" IsReadOnly="True"/>
+                        <DataGridTextColumn Header="Name" Binding="{Binding RunningObject.Name}" IsReadOnly="True"/>
+                        <DataGridTextColumn Header="FullName" Binding="{Binding RunningObject.FullName}" IsReadOnly="True"/>
                     </DataGrid.Columns>
                 </DataGrid>
             </TabItem>

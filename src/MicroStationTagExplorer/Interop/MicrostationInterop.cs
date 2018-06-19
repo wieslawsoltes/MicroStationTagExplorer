@@ -42,9 +42,9 @@ namespace MicroStationTagExplorer
             _isExternalApplication = false;
         }
 
-        public void SetApplication(BCOM.Application application)
+        public void SetApplication(object application)
         {
-            _application = application;
+            _application = (BCOM.Application)application;
             if (_application.ActiveDesignFile != null)
             {
                 _application.ActiveDesignFile.Close();

@@ -6,13 +6,6 @@ using Microsoft.Win32;
 
 namespace MicroStationTagExplorer
 {
-    public class RunningObjectResult
-    {
-        public string GUID { get; set; }
-        public string DisplayName { get; set; }
-        public object RunningObject { get; set; }
-    }
-
     public static class ComUtilities
     {
         public static Type GetProgIDType(string progID)
@@ -138,14 +131,14 @@ namespace MicroStationTagExplorer
             return guids;
         }
 
-        public static List<RunningObjectResult> GetRunningCOMObjects(string[] progIDs)
+        public static List<object> GetRunningCOMObjects(string[] progIDs)
         {
             IRunningObjectTable runningObjectTable = null;
             IEnumMoniker enumMoniker = null;
 
             try
             {
-                List<RunningObjectResult> results = new List<RunningObjectResult>();
+                List<object> results = new List<object>();
                 List<string> guids = GetGUIDs(progIDs);
 
                 if (GetRunningObjectTable(0, out runningObjectTable) != 0 || runningObjectTable == null)
@@ -174,13 +167,7 @@ namespace MicroStationTagExplorer
                             runningObjectTable.GetObject(moniker[0], out runningObject);
                             if (runningObject != null)
                             {
-                                var result = new RunningObjectResult()
-                                {
-                                    GUID = guid,
-                                    DisplayName = displayName,
-                                    RunningObject = runningObject
-                                };
-                                results.Add(result);
+                                results.Add(runningObject);
                                 break;
                             }
                         }
