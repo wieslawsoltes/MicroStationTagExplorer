@@ -242,7 +242,7 @@ namespace MicroStationTagExplorer
             {
                 Explorer.Workers = new List<Worker>();
                 Explorer.GetWorkers();
-                DataGridWorkers.DataContext = Explorer.Workers;
+                WorkersView.DataGridWorkers.DataContext = Explorer.Workers;
             }
             catch (Exception ex)
             {
