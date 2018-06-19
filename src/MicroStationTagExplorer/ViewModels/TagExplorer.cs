@@ -12,10 +12,10 @@ namespace MicroStationTagExplorer
 {
     public class TagExplorer
     {
-        private static StringComparison _comparisonType = StringComparison.OrdinalIgnoreCase;
-        private static string _xmlExt = ".xml";
-        private static string _dgnExt = ".dgn";
-        private static string _dwgExt = ".dwg";
+        private static readonly StringComparison ComparisonType = StringComparison.OrdinalIgnoreCase;
+        private static readonly string XmlExt = ".xml";
+        private static readonly string DgnExt = ".dgn";
+        private static readonly string DwgExt = ".dwg";
 
         public volatile bool IsRunning;
         public List<CancellationTokenSource> TokenSources { get; set; }
@@ -244,12 +244,12 @@ namespace MicroStationTagExplorer
 
         public bool IsProject(string path)
         {
-            return path.EndsWith(_xmlExt, _comparisonType);
+            return path.EndsWith(XmlExt, ComparisonType);
         }
 
         public bool IsSupportedFile(string path)
         {
-            return path.EndsWith(_dwgExt, _comparisonType) || path.EndsWith(_dgnExt, _comparisonType);
+            return path.EndsWith(DwgExt, ComparisonType) || path.EndsWith(DgnExt, ComparisonType);
         }
 
         public void AddFile(string path)
@@ -299,7 +299,7 @@ namespace MicroStationTagExplorer
             Project = new Project()
             {
                 Name = "project",
-                Path = "project" + _xmlExt,
+                Path = "project" + XmlExt,
                 Files = new ObservableCollection<File>()
             };
 
