@@ -204,8 +204,8 @@ namespace MicroStationTagExplorer
 
         private void ResetDataImpl()
         {
-            var result = MessageBox.Show("Reset data?", "Warning", MessageBoxButton.YesNo, MessageBoxImage.Warning);
-            if (result == MessageBoxResult.OK)
+            var result = MessageBox.Show("Reset data?", "Warning", MessageBoxButton.YesNoCancel, MessageBoxImage.Warning);
+            if (result == MessageBoxResult.Yes)
             {
                 Explorer.ResetData();
                 DataContext = null;
