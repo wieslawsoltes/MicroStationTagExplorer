@@ -89,6 +89,21 @@ namespace MicroStationTagExplorer
             }
         }
 
+        public void ToValues(IList<Text> texts, out object[,] values)
+        {
+            values = new object[texts.Count + 1, 3];
+            values[0, 0] = "Value";
+            values[0, 1] = "ID";
+            values[0, 2] = "Path";
+
+            for (int i = 0; i < texts.Count; i++)
+            {
+                values[i + 1, 0] = texts[i].Value.ToString();
+                values[i + 1, 1] = texts[i].ID.ToString();
+                values[i + 1, 2] = texts[i].File.Path;
+            }
+        }
+
         public IEnumerable<Error> ValidateTags(File file)
         {
             foreach (var element in file.ElementsByTagSet)
@@ -159,9 +174,6 @@ namespace MicroStationTagExplorer
             var tags = project.Files.SelectMany(f => f.Tags);
             project.Tags = new ObservableCollection<Tag>(tags);
 
-            var texts = project.Files.SelectMany(f => f.Texts);
-            project.Texts = new ObservableCollection<Text>(texts);
-
             object[,] tagValues;
             ToValues(project.Tags, out tagValues);
             project.TagValues = tagValues;
@@ -184,6 +196,13 @@ namespace MicroStationTagExplorer
             {
                 ToValues(sheet);
             }
+
+            var texts = project.Files.SelectMany(f => f.Texts);
+            project.Texts = new ObservableCollection<Text>(texts);
+
+            object[,] textValues;
+            ToValues(project.Texts, out textValues);
+            project.TextValues = textValues;
         }
 
         public IEnumerable<Error> ValidateTags(Element element, TagSet tagSet)
@@ -410,7 +429,7 @@ namespace MicroStationTagExplorer
             return chunks;
         }
 
-        public void GetTags(Func<File, int, bool> updateStatus, IEnumerable<File> files, int id, bool bConnect, Worker worker)
+        public void GetData(Func<File, int, bool> updateStatus, IEnumerable<File> files, int id, bool bConnect, Worker worker)
         {
             using (var microstation = new MicrostationInterop())
             {
@@ -450,7 +469,45 @@ namespace MicroStationTagExplorer
             }
         }
 
+        public void ResetData(IEnumerable<File> files)
+        {
+            foreach (var file in files)
+            {
+                file.TagSets = null;
+                file.Tags = null;
+                file.Texts = null;
+                file.ElementsByHostID = null;
+                file.ElementsByTagSet = null;
+                file.Errors = null;
+                file.HasErrors = false;
+            }
+        }
+
+        public void ResetData(Project project)
+        {
+            project.TagSets = null;
+            project.Tags = null;
+            project.TagValues = null;
+            project.Sheets = null;
+            project.Texts = null;
+            project.TextValues = null;
+        }
+
+        public void ResetData()
+        {
+            ResetData(Project.Files);
+            ResetData(Project);
+        }
+
         public void ImportTags()
+        {
+        }
+
+        public void ImportElements()
+        {
+        }
+
+        public void ImportTexts()
         {
         }
 
@@ -460,8 +517,16 @@ namespace MicroStationTagExplorer
             {
                 excel.CreateApplication();
                 excel.CreateWorkbook();
+                excel.ExportValues(Project.TagValues, Project.Tags.Count + 1, 6, "Tags", "Tags");
+            }
+        }
 
-                //excel.ExportValues(Project.TagValues, Project.Tags.Count + 1, 6, "Tags");
+        public void ExportElements()
+        {
+            using (var excel = new Excelnterop())
+            {
+                excel.CreateApplication();
+                excel.CreateWorkbook();
 
                 foreach (var sheet in Project.Sheets)
                 {
@@ -470,6 +535,16 @@ namespace MicroStationTagExplorer
                         excel.ExportValues(sheet.Values, sheet.Rows, sheet.Columns, sheet.Name, sheet.TagSet.Name);
                     }
                 }
+            }
+        }
+
+        public void ExportTexts()
+        {
+            using (var excel = new Excelnterop())
+            {
+                excel.CreateApplication();
+                excel.CreateWorkbook();
+                excel.ExportValues(Project.TextValues, Project.Texts.Count + 1, 3, "Texts", "Texts");
             }
         }
 

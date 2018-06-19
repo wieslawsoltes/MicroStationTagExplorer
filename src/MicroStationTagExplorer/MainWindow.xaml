@@ -29,12 +29,24 @@
                 <Separator/>
                 <MenuItem x:Name="FileExit" Header="E_xit" InputGestureText="Alt+F4" Click="FileExit_Click"/>
             </MenuItem>
-            <MenuItem x:Name="TagsMenu" Header="_Tags">
-                <MenuItem x:Name="TagsGet" Header="_Get" InputGestureText="F5" Click="TagsGet_Click"/>
+            <MenuItem x:Name="DataMenu" Header="_Data">
+                <MenuItem x:Name="DataGet" Header="_Get" InputGestureText="F5" Click="DataGet_Click"/>
                 <Separator/>
-                <MenuItem x:Name="TagsImport" Header="_Import..." InputGestureText="Ctrl+I" Click="TagsImport_Click"/>
+                <MenuItem x:Name="DataReset" Header="_Reset" Click="DataReset_Click"/>
+            </MenuItem>
+            <MenuItem x:Name="ImportMenu" Header="_Import">
+                <MenuItem x:Name="ImportTags" Header="Import _Tags..." Click="ImportTags_Click"/>
                 <Separator/>
-                <MenuItem x:Name="TagsExport" Header="_Export..." InputGestureText="Ctrl+E" Click="TagsExport_Click"/>
+                <MenuItem x:Name="ImportElements" InputGestureText="Ctrl+I" Header="Import _Elements..." Click="ImportElements_Click"/>
+                <Separator/>
+                <MenuItem x:Name="ImportTexts" Header="Import Te_xts..." Click="ImportTexts_Click"/>
+            </MenuItem>
+            <MenuItem x:Name="ExportMenu" Header="_Export">
+                <MenuItem x:Name="ExportTags" Header="Export _Tags..." Click="ExportTags_Click"/>
+                <Separator/>
+                <MenuItem x:Name="ExportElements" InputGestureText="Ctrl+E" Header="Export _Elements..." Click="ExportElements_Click"/>
+                <Separator/>
+                <MenuItem x:Name="ExportTexts" Header="Export Te_xts..." Click="ExportTexts_Click"/>
             </MenuItem>
             <MenuItem x:Name="SettingsMenu" Header="_Settings">
                 <MenuItem x:Name="SettingsGetWorkers" Header="_Get Workers" InputGestureText="Ctrl+W" Click="SettingsGetWorkers_Click"/>

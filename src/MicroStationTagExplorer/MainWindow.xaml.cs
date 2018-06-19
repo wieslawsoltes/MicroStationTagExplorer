@@ -17,7 +17,7 @@ namespace MicroStationTagExplorer
         {
             InitializeComponent();
             Explorer = new TagExplorer();
-            NewProject();
+            NewProjectImpl();
             SettingsWorkers.Text = Explorer.WorkersNum.ToString();
         }
 
@@ -26,7 +26,7 @@ namespace MicroStationTagExplorer
             TextBoxStatus.Text = message;
         }
 
-        private void AddFiles()
+        private void AddFilesImpl()
         {
             var dlg = new OpenFileDialog
             {
@@ -40,13 +40,13 @@ namespace MicroStationTagExplorer
             }
         }
 
-        private void NewProject()
+        private void NewProjectImpl()
         {
             Explorer.NewProject();
             DataContext = Explorer.Project;
         }
 
-        private void OpenProject()
+        private void OpenProjectImpl()
         {
             var dlg = new OpenFileDialog
             {
@@ -61,7 +61,7 @@ namespace MicroStationTagExplorer
             }
         }
 
-        private void SaveProject()
+        private void SaveProjectImpl()
         {
             var dlg = new SaveFileDialog
             {
@@ -75,7 +75,7 @@ namespace MicroStationTagExplorer
             }
         }
 
-        private async Task GetTags()
+        private async Task GetDataImpl()
         {
             if (Explorer.IsRunning == false)
             {
@@ -154,11 +154,11 @@ namespace MicroStationTagExplorer
                             Explorer.Tokens[id].ThrowIfCancellationRequested();
                             if (Explorer.ActiveWorkers.Count > 0)
                             {
-                                Explorer.GetTags(updateStatus, partitions[id], id, false, Explorer.ActiveWorkers[id]);
+                                Explorer.GetData(updateStatus, partitions[id], id, false, Explorer.ActiveWorkers[id]);
                             }
                             else
                             {
-                                Explorer.GetTags(updateStatus, partitions[id], id, Explorer.WorkersNum > 1, null);
+                                Explorer.GetData(updateStatus, partitions[id], id, Explorer.WorkersNum > 1, null);
                             }
                         }
                         catch (Exception ex)
@@ -185,6 +185,9 @@ namespace MicroStationTagExplorer
 
                 Explorer.ValidateProject(Explorer.Project);
 
+                DataContext = null;
+                DataContext = Explorer.Project;
+
                 Explorer.IsRunning = false;
             }
             else
@@ -199,7 +202,18 @@ namespace MicroStationTagExplorer
             }
         }
 
-        private void ImportTags()
+        private void ResetDataImpl()
+        {
+            var result = MessageBox.Show("Reset data?", "Warning", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+            if (result == MessageBoxResult.OK)
+            {
+                Explorer.ResetData();
+                DataContext = null;
+                DataContext = Explorer.Project;
+            }
+        }
+
+        private void ImportTagsImpl()
         {
             try
             {
@@ -212,7 +226,33 @@ namespace MicroStationTagExplorer
             }
         }
 
-        private void ExportTags()
+        private void ImportElementsImpl()
+        {
+            try
+            {
+                Explorer.ImportElements();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                Debug.WriteLine(ex.StackTrace);
+            }
+        }
+
+        private void ImportTextsImpl()
+        {
+            try
+            {
+                Explorer.ImportTexts();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                Debug.WriteLine(ex.StackTrace);
+            }
+        }
+
+        private void ExportTagsImpl()
         {
             try
             {
@@ -225,7 +265,33 @@ namespace MicroStationTagExplorer
             }
         }
 
-        private void DropFiles(string[] paths)
+        private void ExportElementsImpl()
+        {
+            try
+            {
+                Explorer.ExportElements();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                Debug.WriteLine(ex.StackTrace);
+            }
+        }
+
+        private void ExportTextsImpl()
+        {
+            try
+            {
+                Explorer.ExportTexts();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                Debug.WriteLine(ex.StackTrace);
+            }
+        }
+
+        private void DropFilesImpl(string[] paths)
         {
             if (paths.Length == 1 && Explorer.IsProject(paths[0]))
             {
@@ -238,7 +304,7 @@ namespace MicroStationTagExplorer
             }
         }
 
-        private void GetWorkers()
+        private void GetWorkersImpl()
         {
             try
             {
@@ -253,7 +319,7 @@ namespace MicroStationTagExplorer
             }
         }
 
-        private void Exit()
+        private void ExitImpl()
         {
             Close();
         }
@@ -261,19 +327,21 @@ namespace MicroStationTagExplorer
         private void EnableWindow()
         {
             FileMenu.IsEnabled = true;
+            DataGet.Header = "_Get";
+            DataReset.IsEnabled = true;
+            ImportMenu.IsEnabled = true;
+            ExportMenu.IsEnabled = true;
             SettingsMenu.IsEnabled = true;
-            TagsImport.IsEnabled = true;
-            TagsExport.IsEnabled = true;
-            TagsGet.Header = "_Get";
         }
 
         private void DisableWindow()
         {
             FileMenu.IsEnabled = false;
+            DataGet.Header = "S_top";
+            DataReset.IsEnabled = false;
+            ImportMenu.IsEnabled = false;
+            ExportMenu.IsEnabled = false;
             SettingsMenu.IsEnabled = false;
-            TagsImport.IsEnabled = false;
-            TagsExport.IsEnabled = false;
-            TagsGet.Header = "S_top";
         }
 
         private async void Window_PreviewKeyDown(object sender, KeyEventArgs e)
@@ -284,7 +352,7 @@ namespace MicroStationTagExplorer
             {
                 if (e.Key == Key.F5)
                 {
-                    await GetTags();
+                    await GetDataImpl();
                 }
             }
             else if (bControl)
@@ -293,7 +361,7 @@ namespace MicroStationTagExplorer
                 {
                     if (Explorer.IsRunning == false)
                     {
-                        AddFiles();
+                        AddFilesImpl();
                     }
                 }
                 else if (e.Key == Key.N)
@@ -308,35 +376,35 @@ namespace MicroStationTagExplorer
                 {
                     if (Explorer.IsRunning == false)
                     {
-                        OpenProject();
+                        OpenProjectImpl();
                     }
                 }
                 else if (e.Key == Key.S)
                 {
                     if (Explorer.IsRunning == false)
                     {
-                        SaveProject();
+                        SaveProjectImpl();
                     }
                 }
                 else if (e.Key == Key.I)
                 {
                     if (Explorer.IsRunning == false)
                     {
-                        ImportTags();
+                        ImportTagsImpl();
                     }
                 }
                 else if (e.Key == Key.E)
                 {
                     if (Explorer.IsRunning == false)
                     {
-                        ExportTags();
+                        ExportTagsImpl();
                     }
                 }
                 else if (e.Key == Key.W)
                 {
                     if (Explorer.IsRunning == false)
                     {
-                        GetWorkers();
+                        GetWorkersImpl();
                     }
                 }
             }
@@ -351,7 +419,7 @@ namespace MicroStationTagExplorer
                     var data = e.Data.GetData(DataFormats.FileDrop);
                     if (data != null && data is string[])
                     {
-                        DropFiles(data as string[]);
+                        DropFilesImpl(data as string[]);
                     }
                 }
             }
@@ -372,7 +440,7 @@ namespace MicroStationTagExplorer
         {
             if (Explorer.IsRunning == false)
             {
-                AddFiles();
+                AddFilesImpl();
             }
         }
 
@@ -380,7 +448,7 @@ namespace MicroStationTagExplorer
         {
             if (Explorer.IsRunning == false)
             {
-                NewProject();
+                NewProjectImpl();
             }
         }
 
@@ -388,7 +456,7 @@ namespace MicroStationTagExplorer
         {
             if (Explorer.IsRunning == false)
             {
-                OpenProject();
+                OpenProjectImpl();
             }
         }
 
@@ -396,33 +464,72 @@ namespace MicroStationTagExplorer
         {
             if (Explorer.IsRunning == false)
             {
-                SaveProject();
+                SaveProjectImpl();
             }
         }
 
         private void FileExit_Click(object sender, RoutedEventArgs e)
         {
-            Exit();
+            ExitImpl();
         }
 
-        private async void TagsGet_Click(object sender, RoutedEventArgs e)
+        private async void DataGet_Click(object sender, RoutedEventArgs e)
         {
-            await GetTags();
+            await GetDataImpl();
         }
 
-        private void TagsImport_Click(object sender, RoutedEventArgs e)
+        private void DataReset_Click(object sender, RoutedEventArgs e)
         {
             if (Explorer.IsRunning == false)
             {
-                ImportTags();
+                ResetDataImpl();
+            }
+        }
+        private void ImportTags_Click(object sender, RoutedEventArgs e)
+        {
+            if (Explorer.IsRunning == false)
+            {
+                ImportTagsImpl();
             }
         }
 
-        private void TagsExport_Click(object sender, RoutedEventArgs e)
+        private void ImportElements_Click(object sender, RoutedEventArgs e)
         {
             if (Explorer.IsRunning == false)
             {
-                ExportTags();
+                ImportElementsImpl();
+            }
+        }
+
+        private void ImportTexts_Click(object sender, RoutedEventArgs e)
+        {
+            if (Explorer.IsRunning == false)
+            {
+                ImportTextsImpl();
+            }
+        }
+
+        private void ExportTags_Click(object sender, RoutedEventArgs e)
+        {
+            if (Explorer.IsRunning == false)
+            {
+                ExportTagsImpl();
+            }
+        }
+
+        private void ExportElements_Click(object sender, RoutedEventArgs e)
+        {
+            if (Explorer.IsRunning == false)
+            {
+                ExportElementsImpl();
+            }
+        }
+
+        private void ExportTexts_Click(object sender, RoutedEventArgs e)
+        {
+            if (Explorer.IsRunning == false)
+            {
+                ExportTextsImpl();
             }
         }
 
@@ -430,7 +537,7 @@ namespace MicroStationTagExplorer
         {
             if (Explorer.IsRunning == false)
             {
-                GetWorkers();
+                GetWorkersImpl();
             }
         }
     }

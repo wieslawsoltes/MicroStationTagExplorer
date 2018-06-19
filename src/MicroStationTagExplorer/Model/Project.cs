@@ -20,10 +20,13 @@ namespace MicroStationTagExplorer
         public ObservableCollection<Tag> Tags { get; set; }
 
         [IgnoreDataMember, XmlIgnore]
+        public object[,] TagValues { get; set; }
+
+        [IgnoreDataMember, XmlIgnore]
         public ObservableCollection<Text> Texts { get; set; }
 
         [IgnoreDataMember, XmlIgnore]
-        public object[,] TagValues { get; set; }
+        public object[,] TextValues { get; set; }
 
         [IgnoreDataMember, XmlIgnore]
         public ObservableCollection<TagSet> TagSets { get; set; }
