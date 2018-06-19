@@ -61,6 +61,11 @@ namespace MicroStationTagExplorer
                 tag.File = file;
             }
 
+            foreach (var text in file.Texts)
+            {
+                text.File = file;
+            }
+
             var elementsByHostID = file.Tags.GroupBy(t => t.HostID)
                                             .Select(g => new Element<Int64>()
                                             {
@@ -153,6 +158,9 @@ namespace MicroStationTagExplorer
 
             var tags = project.Files.SelectMany(f => f.Tags);
             project.Tags = new ObservableCollection<Tag>(tags);
+
+            var texts = project.Files.SelectMany(f => f.Texts);
+            project.Texts = new ObservableCollection<Text>(texts);
 
             object[,] tagValues;
             ToValues(project.Tags, out tagValues);
@@ -431,6 +439,7 @@ namespace MicroStationTagExplorer
                     microstation.SetNormalActiveModel();
                     file.TagSets = microstation.GetTagSets();
                     file.Tags = microstation.GetTags();
+                    file.Texts = microstation.GetTexts();
                     microstation.Close();
                 }
 

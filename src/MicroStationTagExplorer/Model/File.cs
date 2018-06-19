@@ -20,6 +20,9 @@ namespace MicroStationTagExplorer
         [DataMember(Name = "Tags"), XmlArray("Tags")]
         public ObservableCollection<Tag> Tags { get; set; }
 
+        [DataMember(Name = "Texts"), XmlArray("Texts")]
+        public ObservableCollection<Text> Texts { get; set; }
+
         [IgnoreDataMember, XmlIgnore]
         public ObservableCollection<Element<Int64>> ElementsByHostID { get; set; }
 

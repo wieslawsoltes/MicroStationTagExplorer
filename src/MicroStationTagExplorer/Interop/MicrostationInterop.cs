@@ -130,6 +130,31 @@ namespace MicroStationTagExplorer
             return tags;
         }
 
+        public ObservableCollection<Text> GetTexts()
+        {
+            var texts = new ObservableCollection<Text>();
+            BCOM.ElementScanCriteria sc = (BCOM.ElementScanCriteria)_application.CreateObjectInMicroStation("MicroStationDGN.ElementScanCriteria");
+            sc.ExcludeAllTypes();
+            sc.IncludeType(BCOM.MsdElementType.msdElementTypeText);
+
+            BCOM.ElementEnumerator ee = _application.ActiveModelReference.Scan(sc);
+            Array elements = ee.BuildArrayFromContents();
+
+            foreach (BCOM.Element element in elements)
+            {
+                BCOM.TextElement te = element as BCOM.TextElement;
+
+                var text = new Text()
+                {
+                    Value = te.Text,
+                    ID = ToInt64(te.ID),
+                };
+                texts.Add(text);
+            }
+
+            return texts;
+        }
+
         public void Quit()
         {
             if (_application != null)

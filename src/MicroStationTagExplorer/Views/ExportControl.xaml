@@ -16,5 +16,8 @@
         <TabItem Header="Tags">
             <local:TagsControl x:Name="TagsView" DataContext="{Binding Tags}"/>
         </TabItem>
+        <TabItem Header="Texts">
+            <local:TextsControl x:Name="TextsView" DataContext="{Binding Texts}"/>
+        </TabItem>
     </TabControl>
 </UserControl>

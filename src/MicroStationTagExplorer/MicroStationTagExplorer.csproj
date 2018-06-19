@@ -78,6 +78,7 @@
     <ApplicationDefinition Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
     </ApplicationDefinition>
+    <Compile Include="Model\Text.cs" />
     <Compile Include="ViewModels\Sheet.cs" />
     <Compile Include="ViewModels\TagExplorer.cs" />
     <Compile Include="ViewModels\Worker.cs" />
@@ -104,6 +105,9 @@
     </Compile>
     <Compile Include="Views\TagSetsControl.xaml.cs">
       <DependentUpon>TagSetsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\TextsControl.xaml.cs">
+      <DependentUpon>TextsControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ValuesControl.xaml.cs">
       <DependentUpon>ValuesControl.xaml</DependentUpon>
@@ -148,6 +152,9 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\TagSetsControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\TextsControl.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\ValuesControl.xaml">
