@@ -41,10 +41,10 @@ namespace MicroStationTagExplorer
             _worksheet.Range["A1"].Select();
         }
 
-        public void ExportValues(object[,] values, int nRows, int nColumns, string tableName)
+        public void ExportValues(object[,] values, int nRows, int nColumns, string sheetName, string tableName)
         {
             _worksheet = (Excel.Worksheet)_workbook.Worksheets.Add();
-            _worksheet.Name = tableName;
+            _worksheet.Name = sheetName;
 
             Excel.Range range = (Excel.Range)_worksheet.Range[_worksheet.Cells[1, 1], _worksheet.Cells[nRows, nColumns]];
 

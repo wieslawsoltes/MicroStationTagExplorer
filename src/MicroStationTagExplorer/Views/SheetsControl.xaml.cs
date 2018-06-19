@@ -9,15 +9,12 @@ namespace MicroStationTagExplorer.Views
             InitializeComponent();
         }
 
-        private void SetIsCheckedValue(bool value)
+        private void SetItemIsCheckedValue(object item, bool value)
         {
-            foreach (var item in DataGridSheets.ItemsSource)
+            if (item is Sheet)
             {
-                if (item is Sheet)
-                {
-                    Sheet sheet = item as Sheet;
-                    sheet.IsExported = value;
-                }
+                Sheet sheet = item as Sheet;
+                sheet.IsExported = value;
 
                 var content = DataGridSheets.Columns[0].GetCellContent(item);
                 if (content != null && content is CheckBox)
@@ -29,12 +26,34 @@ namespace MicroStationTagExplorer.Views
 
         private void ButtonSelectNone_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            SetIsCheckedValue(false);
+            foreach (var item in DataGridSheets.ItemsSource)
+            {
+                SetItemIsCheckedValue(item, false);
+            }
         }
 
         private void ButtonSelectAll_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            SetIsCheckedValue(true);
+            foreach (var item in DataGridSheets.ItemsSource)
+            {
+                SetItemIsCheckedValue(item, true);
+            }
+        }
+
+        private void ButtonDeselect_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            foreach (var item in DataGridSheets.SelectedItems)
+            {
+                SetItemIsCheckedValue(item, false);
+            }
+        }
+
+        private void ButtonSelect_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            foreach (var item in DataGridSheets.SelectedItems)
+            {
+                SetItemIsCheckedValue(item, true);
+            }
         }
     }
 }
