@@ -3,7 +3,7 @@ using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using System.Xml.Serialization;
 
-namespace MicroStationTagExplorer
+namespace MicroStationTagExplorer.Model
 {
     [DataContract(IsReference = false, Name = "File"), XmlRoot("File")]
     public class File

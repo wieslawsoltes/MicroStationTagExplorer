@@ -2,7 +2,7 @@
 using System.Runtime.Serialization;
 using System.Xml.Serialization;
 
-namespace MicroStationTagExplorer
+namespace MicroStationTagExplorer.Model
 {
     [DataContract(IsReference = false, Name = "Text"), XmlRoot("Text")]
     public class Text

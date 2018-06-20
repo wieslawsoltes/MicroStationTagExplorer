@@ -7,8 +7,10 @@ using System.Text;
 using System.Threading;
 using System.Xml;
 using System.Xml.Serialization;
+using MicroStationTagExplorer.Interop;
+using MicroStationTagExplorer.Model;
 
-namespace MicroStationTagExplorer
+namespace MicroStationTagExplorer.ViewModels
 {
     public class TagExplorer
     {

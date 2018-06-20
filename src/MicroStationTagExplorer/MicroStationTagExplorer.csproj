@@ -81,10 +81,18 @@
     <ApplicationDefinition Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
     </ApplicationDefinition>
-    <Compile Include="Model\Text.cs" />
+    <Compile Include="Model\Element.cs" />
+    <Compile Include="Model\ElementOfT.cs" />
+    <Compile Include="Model\Error.cs" />
+    <Compile Include="Model\File.cs" />
+    <Compile Include="Model\Project.cs" />
     <Compile Include="Model\Sheet.cs" />
-    <Compile Include="ViewModels\TagExplorer.cs" />
+    <Compile Include="Model\Tag.cs" />
+    <Compile Include="Model\TagDefinition.cs" />
+    <Compile Include="Model\TagSet.cs" />
+    <Compile Include="Model\Text.cs" />
     <Compile Include="Model\Worker.cs" />
+    <Compile Include="ViewModels\TagExplorer.cs" />
     <Compile Include="Views\ErrorsControl.xaml.cs">
       <DependentUpon>ErrorsControl.xaml</DependentUpon>
     </Compile>
@@ -168,14 +176,6 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Model\Element.cs" />
-    <Compile Include="Model\ElementOfT.cs" />
-    <Compile Include="Model\Error.cs" />
-    <Compile Include="Model\Project.cs" />
-    <Compile Include="Model\File.cs" />
-    <Compile Include="Model\Tag.cs" />
-    <Compile Include="Model\TagDefinition.cs" />
-    <Compile Include="Model\TagSet.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

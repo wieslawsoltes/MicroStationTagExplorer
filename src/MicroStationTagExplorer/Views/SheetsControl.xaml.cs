@@ -1,4 +1,5 @@
 ﻿using System.Windows.Controls;
+using MicroStationTagExplorer.Model;
 
 namespace MicroStationTagExplorer.Views
 {

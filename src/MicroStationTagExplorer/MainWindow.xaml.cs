@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using Microsoft.Win32;
+using MicroStationTagExplorer.Model;
+using MicroStationTagExplorer.ViewModels;
 
 namespace MicroStationTagExplorer
 {
