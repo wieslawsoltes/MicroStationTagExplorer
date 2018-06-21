@@ -2,7 +2,14 @@ version: '{build}'
 image: Visual Studio 2017
 configuration: Release
 platform: Any CPU
+assembly_info:
+  patch: true
+  file: '**\AssemblyInfo.*'
+  assembly_version: '{version}-build{build}'
+  assembly_file_version: '{version}-build{build}'
+  assembly_informational_version: '{version}-build{build}'
 build:
+  project: MicroStationTagExplorer.sln
   verbosity: minimal
 test: off
 artifacts:
