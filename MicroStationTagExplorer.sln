@@ -36,9 +36,14 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "props", "props", "{4040A339-594D-435E-BEEB-2E5E435BD5E9}"
 	ProjectSection(SolutionItems) = preProject
 		build\Base.props = build\Base.props
+		build\XUnit.props = build\XUnit.props
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "_build", "build\build\_build.csproj", "{07E23276-AB9E-4245-8869-A2B681AD602B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{2AC39F2C-836C-4164-AA27-3FACD19DE671}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MicroStationTagExplorer.UnitTests", "tests\MicroStationTagExplorer.UnitTests\MicroStationTagExplorer.UnitTests.csproj", "{E820A33A-50E5-4BE5-AFD9-3B61CB04068E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -54,6 +59,10 @@ Global
 		{07E23276-AB9E-4245-8869-A2B681AD602B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{07E23276-AB9E-4245-8869-A2B681AD602B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{07E23276-AB9E-4245-8869-A2B681AD602B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E820A33A-50E5-4BE5-AFD9-3B61CB04068E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E820A33A-50E5-4BE5-AFD9-3B61CB04068E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E820A33A-50E5-4BE5-AFD9-3B61CB04068E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E820A33A-50E5-4BE5-AFD9-3B61CB04068E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -64,6 +73,7 @@ Global
 		{4FAF7F3F-9388-4816-9F5E-9DCC36C1FE9B} = {9902A49C-859A-4D9A-9AF6-FB339F6111F6}
 		{4040A339-594D-435E-BEEB-2E5E435BD5E9} = {9902A49C-859A-4D9A-9AF6-FB339F6111F6}
 		{07E23276-AB9E-4245-8869-A2B681AD602B} = {9902A49C-859A-4D9A-9AF6-FB339F6111F6}
+		{E820A33A-50E5-4BE5-AFD9-3B61CB04068E} = {2AC39F2C-836C-4164-AA27-3FACD19DE671}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4E264536-B566-4146-96C3-B6A810B59EB8}
