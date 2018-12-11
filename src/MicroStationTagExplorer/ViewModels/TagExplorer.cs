@@ -21,10 +21,15 @@ namespace MicroStationTagExplorer.ViewModels
 
         public volatile bool IsRunning;
         public List<CancellationTokenSource> TokenSources { get; set; }
+
         public List<CancellationToken> Tokens { get; set; }
+
         public int WorkersNum { get; set; }
+
         public List<Worker> Workers { get; set; }
+
         public List<Worker> ActiveWorkers { get; set; }
+
         public Project Project { get; set; }
 
         public TagExplorer()
@@ -371,12 +376,13 @@ namespace MicroStationTagExplorer.ViewModels
                 using (var writer = XmlWriter.Create(stream, settings))
                 {
                     var serializer = new DataContractSerializer(
-                        type: typeof(Project), 
-                        knownTypes: default, 
-                        maxItemsInObjectGraph: int.MaxValue, 
-                        ignoreExtensionDataObject: false, 
-                        preserveObjectReferences: true, 
-                        dataContractSurrogate: default);
+                        typeof(Project),
+                        new DataContractSerializerSettings()
+                        {
+                            IgnoreExtensionDataObject = false,
+                            PreserveObjectReferences = true,
+                            MaxItemsInObjectGraph = int.MaxValue
+                        });
                     serializer.WriteObject(writer, project);
                 }
             }
@@ -391,12 +397,13 @@ namespace MicroStationTagExplorer.ViewModels
                 using (var reader = XmlReader.Create(stream, settings))
                 {
                     var serializer = new DataContractSerializer(
-                        type: typeof(Project), 
-                        knownTypes: default,
-                        maxItemsInObjectGraph: int.MaxValue,
-                        ignoreExtensionDataObject: false,
-                        preserveObjectReferences: true,
-                        dataContractSurrogate: default);
+                        typeof(Project),
+                        new DataContractSerializerSettings()
+                        {
+                            IgnoreExtensionDataObject = false,
+                            PreserveObjectReferences = true,
+                            MaxItemsInObjectGraph = int.MaxValue
+                        });
                     project = (Project)serializer.ReadObject(reader);
                 }
             }

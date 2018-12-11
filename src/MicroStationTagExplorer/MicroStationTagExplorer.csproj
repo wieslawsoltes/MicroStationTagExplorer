@@ -1,11 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp3.0;net452</TargetFrameworks>
+    <TargetFrameworks>netcoreapp3.0</TargetFrameworks>
     <OutputType>WinExe</OutputType>
     <UseWPF>True</UseWPF>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
-    <EnableDefaultCompileItems>True</EnableDefaultCompileItems>
     <TieredCompilation>True</TieredCompilation>
     <IsPackable>False</IsPackable>
     <LangVersion>8.0</LangVersion>
@@ -44,33 +43,13 @@
       <HintPath>..\..\interop\Excel 2016\Office.dll</HintPath>
     </Reference>
   </ItemGroup>
-  
+
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Runtime.Serialization" />
   </ItemGroup>
-  
-  <!--<ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.ServiceModel" />
-    <Reference Include="System.Xml" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xaml">
-      <RequiredTargetFramework>4.0</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="WindowsBase" />
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
-  </ItemGroup>-->
 
   <ItemGroup>
-    <None Include="App.config" />
     <None Include="app.manifest" />
   </ItemGroup>
 
