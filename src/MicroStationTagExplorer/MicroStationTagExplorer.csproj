@@ -20,6 +20,7 @@
 
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>BentleyB.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
