@@ -1,45 +1,28 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{59F5B5F5-2569-4263-9E94-D53DA097FCAD}</ProjectGuid>
+    <TargetFrameworks>netcoreapp3.0;net452</TargetFrameworks>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>MicroStationTagExplorer</RootNamespace>
-    <AssemblyName>MicroStationTagExplorer</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <WarningLevel>4</WarningLevel>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <UseWPF>True</UseWPF>
+    <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
+    <EnableDefaultCompileItems>True</EnableDefaultCompileItems>
+    <TieredCompilation>True</TieredCompilation>
+    <IsPackable>False</IsPackable>
+    <LangVersion>8.0</LangVersion>
+    <NullableReferenceTypes>False</NullableReferenceTypes>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\$(Platform)\$(Configuration)\</OutputPath>
-    <IntermediateOutputPath>obj\$(Platform)\$(Configuration)\</IntermediateOutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <LangVersion>5</LangVersion>
+
+  <PropertyGroup>
+    <Description>MicroStation DGN and DWG file tag explorer.</Description>
+    <PackageTags>microstation;bentley;cad;dwg;dgn;tag;excel;interop;explorer;wpf;xaml;editor;tags;import;export;drawing;validation;datagrid</PackageTags>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\$(Platform)\$(Configuration)\</OutputPath>
-    <IntermediateOutputPath>obj\$(Platform)\$(Configuration)\</IntermediateOutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <LangVersion>5</LangVersion>
-  </PropertyGroup>
+
+  <Import Project="..\..\build\Base.props" />
+
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
+
   <ItemGroup>
     <Reference Include="Interop.MicroStationDGN">
       <HintPath>..\..\interop\View V8i\Interop.MicroStationDGN.dll</HintPath>
@@ -60,6 +43,14 @@
       <EmbedInteropTypes>True</EmbedInteropTypes>
       <HintPath>..\..\interop\Excel 2016\Office.dll</HintPath>
     </Reference>
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Runtime.Serialization" />
+  </ItemGroup>
+  
+  <!--<ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Runtime.Serialization" />
@@ -76,113 +67,11 @@
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
-  </ItemGroup>
-  <ItemGroup>
-    <ApplicationDefinition Include="App.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </ApplicationDefinition>
-    <Compile Include="Model\Element.cs" />
-    <Compile Include="Model\ElementOfT.cs" />
-    <Compile Include="Model\Error.cs" />
-    <Compile Include="Model\File.cs" />
-    <Compile Include="Model\Project.cs" />
-    <Compile Include="Model\Sheet.cs" />
-    <Compile Include="Model\Tag.cs" />
-    <Compile Include="Model\TagDefinition.cs" />
-    <Compile Include="Model\TagSet.cs" />
-    <Compile Include="Model\Text.cs" />
-    <Compile Include="Model\Worker.cs" />
-    <Compile Include="ViewModels\TagExplorer.cs" />
-    <Compile Include="Views\ErrorsControl.xaml.cs">
-      <DependentUpon>ErrorsControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\ElementsControl.xaml.cs">
-      <DependentUpon>ElementsControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\ExportControl.xaml.cs">
-      <DependentUpon>ExportControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\ProjectControl.xaml.cs">
-      <DependentUpon>ProjectControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\SheetsControl.xaml.cs">
-      <DependentUpon>SheetsControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\TagDefinitionsControl.xaml.cs">
-      <DependentUpon>TagDefinitionsControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\TagsControl.xaml.cs">
-      <DependentUpon>TagsControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\TagSetsControl.xaml.cs">
-      <DependentUpon>TagSetsControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\TextsControl.xaml.cs">
-      <DependentUpon>TextsControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\ValuesControl.xaml.cs">
-      <DependentUpon>ValuesControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\WorkersControl.xaml.cs">
-      <DependentUpon>WorkersControl.xaml</DependentUpon>
-    </Compile>
-    <Page Include="MainWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="App.xaml.cs">
-      <DependentUpon>App.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Interop\Excelnterop.cs" />
-    <Compile Include="Interop\MicrostationInterop.cs" />
-    <Compile Include="Interop\ComUtilities.cs" />
-    <Compile Include="MainWindow.xaml.cs">
-      <DependentUpon>MainWindow.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Page Include="Views\ErrorsControl.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\ElementsControl.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\ExportControl.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\ProjectControl.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\SheetsControl.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\TagDefinitionsControl.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\TagsControl.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\TagSetsControl.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\TextsControl.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\ValuesControl.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\WorkersControl.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Properties\AssemblyInfo.cs">
-      <SubType>Code</SubType>
-    </Compile>
-  </ItemGroup>
+  </ItemGroup>-->
+
   <ItemGroup>
     <None Include="App.config" />
     <None Include="app.manifest" />
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+
 </Project>

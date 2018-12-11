@@ -370,7 +370,13 @@ namespace MicroStationTagExplorer.ViewModels
                 };
                 using (var writer = XmlWriter.Create(stream, settings))
                 {
-                    var serializer = new DataContractSerializer(typeof(Project), null, int.MaxValue, false, true, null);
+                    var serializer = new DataContractSerializer(
+                        type: typeof(Project), 
+                        knownTypes: default, 
+                        maxItemsInObjectGraph: int.MaxValue, 
+                        ignoreExtensionDataObject: false, 
+                        preserveObjectReferences: true, 
+                        dataContractSurrogate: default);
                     serializer.WriteObject(writer, project);
                 }
             }
@@ -384,7 +390,13 @@ namespace MicroStationTagExplorer.ViewModels
                 var settings = new XmlReaderSettings();
                 using (var reader = XmlReader.Create(stream, settings))
                 {
-                    var serializer = new DataContractSerializer(typeof(Project), null, int.MaxValue, false, true, null);
+                    var serializer = new DataContractSerializer(
+                        type: typeof(Project), 
+                        knownTypes: default,
+                        maxItemsInObjectGraph: int.MaxValue,
+                        ignoreExtensionDataObject: false,
+                        preserveObjectReferences: true,
+                        dataContractSurrogate: default);
                     project = (Project)serializer.ReadObject(reader);
                 }
             }
