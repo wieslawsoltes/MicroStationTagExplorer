@@ -1,6 +1,6 @@
 # MicroStation Tag Explorer
 
-[![Build status](https://dev.azure.com/wieslawsoltes/MicroStationTagExplorer/_apis/build/status/MicroStationTagExplorer)](https://dev.azure.com/wieslawsoltes/MicroStationTagExplorer/_build/latest?definitionId=-1)
+[![Build Status](https://dev.azure.com/wieslawsoltes/GitHub/_apis/build/status/Sources/MicroStationTagExplorer?branchName=master)](https://dev.azure.com/wieslawsoltes/GitHub/_build/latest?definitionId=62?branchName=master)
 
 MicroStation DGN and DWG file tag explorer.
 
