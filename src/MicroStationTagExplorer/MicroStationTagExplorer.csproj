@@ -7,8 +7,7 @@
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
     <TieredCompilation>True</TieredCompilation>
     <IsPackable>False</IsPackable>
-    <LangVersion>8.0</LangVersion>
-    <NullableReferenceTypes>False</NullableReferenceTypes>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
   <PropertyGroup>
