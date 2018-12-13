@@ -27,10 +27,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="app.manifest" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\MicroStationTagExplorer.Core\MicroStationTagExplorer.Core.csproj" />
   </ItemGroup>
 
