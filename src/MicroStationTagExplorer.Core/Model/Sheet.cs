@@ -1,6 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 
-namespace MicroStationTagExplorer.Model
+namespace MicroStationTagExplorer.Core.Model
 {
     public class Sheet
     {

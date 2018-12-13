@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using Microsoft.Win32;
-using MicroStationTagExplorer.Model;
-using MicroStationTagExplorer.ViewModels;
+using MicroStationTagExplorer.Core.Model;
+using MicroStationTagExplorer.Core.ViewModels;
 
 namespace MicroStationTagExplorer
 {
@@ -217,80 +217,32 @@ namespace MicroStationTagExplorer
 
         private void ImportTagsImpl()
         {
-            try
-            {
-                Explorer.ImportTags();
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex.Message);
-                Debug.WriteLine(ex.StackTrace);
-            }
+            Explorer.ImportTags();
         }
 
         private void ImportElementsImpl()
         {
-            try
-            {
-                Explorer.ImportElements();
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex.Message);
-                Debug.WriteLine(ex.StackTrace);
-            }
+            Explorer.ImportElements();
         }
 
         private void ImportTextsImpl()
         {
-            try
-            {
-                Explorer.ImportTexts();
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex.Message);
-                Debug.WriteLine(ex.StackTrace);
-            }
+            Explorer.ImportTexts();
         }
 
         private void ExportTagsImpl()
         {
-            try
-            {
-                Explorer.ExportTags();
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex.Message);
-                Debug.WriteLine(ex.StackTrace);
-            }
+            Explorer.ExportTags();
         }
 
         private void ExportElementsImpl()
         {
-            try
-            {
-                Explorer.ExportElements();
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex.Message);
-                Debug.WriteLine(ex.StackTrace);
-            }
+            Explorer.ExportElements();
         }
 
         private void ExportTextsImpl()
         {
-            try
-            {
-                Explorer.ExportTexts();
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex.Message);
-                Debug.WriteLine(ex.StackTrace);
-            }
+            Explorer.ExportTexts();
         }
 
         private void DropFilesImpl(string[] paths)
@@ -308,17 +260,9 @@ namespace MicroStationTagExplorer
 
         private void GetWorkersImpl()
         {
-            try
-            {
-                Explorer.Workers = new List<Worker>();
-                Explorer.GetWorkers();
-                WorkersView.DataGridWorkers.DataContext = Explorer.Workers;
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex.Message);
-                Debug.WriteLine(ex.StackTrace);
-            }
+            Explorer.Workers = new List<Worker>();
+            Explorer.GetWorkers();
+            WorkersView.DataGridWorkers.DataContext = Explorer.Workers;
         }
 
         private void ExitImpl()
@@ -346,84 +290,109 @@ namespace MicroStationTagExplorer
             SettingsMenu.IsEnabled = false;
         }
 
+        private void Error(Exception ex)
+        {
+            Debug.WriteLine(ex.Message);
+            Debug.WriteLine(ex.StackTrace);
+            MessageBox.Show(
+                ex.Message, 
+                "Error", 
+                MessageBoxButton.OK, 
+                MessageBoxImage.Error);
+        }
+
         private async void Window_PreviewKeyDown(object sender, KeyEventArgs e)
         {
-            bool bNone = Keyboard.Modifiers == ModifierKeys.None;
-            bool bControl = Keyboard.Modifiers == ModifierKeys.Control;
-            if (bNone)
+            try
             {
-                if (e.Key == Key.F5)
+                bool bNone = Keyboard.Modifiers == ModifierKeys.None;
+                bool bControl = Keyboard.Modifiers == ModifierKeys.Control;
+                if (bNone)
                 {
-                    await GetDataImpl();
+                    if (e.Key == Key.F5)
+                    {
+                        await GetDataImpl();
+                    }
+                }
+                else if (bControl)
+                {
+                    if (e.Key == Key.L)
+                    {
+                        if (Explorer.IsRunning == false)
+                        {
+                            AddFilesImpl();
+                        }
+                    }
+                    else if (e.Key == Key.N)
+                    {
+                        if (Explorer.IsRunning == false)
+                        {
+                            Explorer.NewProject();
+                            DataContext = Explorer.Project;
+                        }
+                    }
+                    else if (e.Key == Key.O)
+                    {
+                        if (Explorer.IsRunning == false)
+                        {
+                            OpenProjectImpl();
+                        }
+                    }
+                    else if (e.Key == Key.S)
+                    {
+                        if (Explorer.IsRunning == false)
+                        {
+                            SaveProjectImpl();
+                        }
+                    }
+                    else if (e.Key == Key.I)
+                    {
+                        if (Explorer.IsRunning == false)
+                        {
+                            ImportTagsImpl();
+                        }
+                    }
+                    else if (e.Key == Key.E)
+                    {
+                        if (Explorer.IsRunning == false)
+                        {
+                            ExportTagsImpl();
+                        }
+                    }
+                    else if (e.Key == Key.W)
+                    {
+                        if (Explorer.IsRunning == false)
+                        {
+                            GetWorkersImpl();
+                        }
+                    }
                 }
             }
-            else if (bControl)
+            catch (Exception ex)
             {
-                if (e.Key == Key.L)
-                {
-                    if (Explorer.IsRunning == false)
-                    {
-                        AddFilesImpl();
-                    }
-                }
-                else if (e.Key == Key.N)
-                {
-                    if (Explorer.IsRunning == false)
-                    {
-                        Explorer.NewProject();
-                        DataContext = Explorer.Project;
-                    }
-                }
-                else if (e.Key == Key.O)
-                {
-                    if (Explorer.IsRunning == false)
-                    {
-                        OpenProjectImpl();
-                    }
-                }
-                else if (e.Key == Key.S)
-                {
-                    if (Explorer.IsRunning == false)
-                    {
-                        SaveProjectImpl();
-                    }
-                }
-                else if (e.Key == Key.I)
-                {
-                    if (Explorer.IsRunning == false)
-                    {
-                        ImportTagsImpl();
-                    }
-                }
-                else if (e.Key == Key.E)
-                {
-                    if (Explorer.IsRunning == false)
-                    {
-                        ExportTagsImpl();
-                    }
-                }
-                else if (e.Key == Key.W)
-                {
-                    if (Explorer.IsRunning == false)
-                    {
-                        GetWorkersImpl();
-                    }
-                }
+                Error(ex);
             }
         }
 
         private void Window_Drop(object sender, DragEventArgs e)
         {
-            if (Explorer.IsRunning == false)
+            try
             {
-                if (e.Data.GetDataPresent(DataFormats.FileDrop))
+                if (Explorer.IsRunning == false)
                 {
-                    var data = e.Data.GetData(DataFormats.FileDrop);
-                    if (data != null && data is string[])
+                    if (e.Data.GetDataPresent(DataFormats.FileDrop))
                     {
-                        DropFilesImpl(data as string[]);
+                        var data = e.Data.GetData(DataFormats.FileDrop);
+                        if (data != null && data is string[])
+                        {
+                            DropFilesImpl(data as string[]);
+                        }
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+                Error(ex);
             }
         }
 
@@ -440,106 +409,205 @@ namespace MicroStationTagExplorer
 
         private void FileAddFiles_Click(object sender, RoutedEventArgs e)
         {
-            if (Explorer.IsRunning == false)
+            try
             {
-                AddFilesImpl();
+                if (Explorer.IsRunning == false)
+                {
+                    AddFilesImpl();
+                }
+            }
+            catch (Exception ex)
+            {
+                Error(ex);
             }
         }
 
         private void FileNewProject_Click(object sender, RoutedEventArgs e)
         {
-            if (Explorer.IsRunning == false)
+            try
             {
-                NewProjectImpl();
+                if (Explorer.IsRunning == false)
+                {
+                    NewProjectImpl();
+                }
+            }
+            catch (Exception ex)
+            {
+                Error(ex);
             }
         }
 
         private void FileOpenProject_Click(object sender, RoutedEventArgs e)
         {
-            if (Explorer.IsRunning == false)
+            try
             {
-                OpenProjectImpl();
+                if (Explorer.IsRunning == false)
+                {
+                    OpenProjectImpl();
+                }
+            }
+            catch (Exception ex)
+            {
+                Error(ex);
             }
         }
 
         private void FileSaveProject_Click(object sender, RoutedEventArgs e)
         {
-            if (Explorer.IsRunning == false)
+            try
             {
-                SaveProjectImpl();
+                if (Explorer.IsRunning == false)
+                {
+                    SaveProjectImpl();
+                }
+            }
+            catch (Exception ex)
+            {
+                Error(ex);
             }
         }
 
         private void FileExit_Click(object sender, RoutedEventArgs e)
         {
-            ExitImpl();
+            try
+            {
+                ExitImpl();
+            }
+            catch (Exception ex)
+            {
+                Error(ex);
+            }
         }
 
         private async void DataGet_Click(object sender, RoutedEventArgs e)
         {
-            await GetDataImpl();
+            try
+            {
+                await GetDataImpl();
+            }
+            catch (Exception ex)
+            {
+                Error(ex);
+            }
         }
 
         private void DataReset_Click(object sender, RoutedEventArgs e)
         {
-            if (Explorer.IsRunning == false)
+            try
             {
-                ResetDataImpl();
+                if (Explorer.IsRunning == false)
+                {
+                    ResetDataImpl();
+                }
+            }
+            catch (Exception ex)
+            {
+                Error(ex);
             }
         }
+
         private void ImportTags_Click(object sender, RoutedEventArgs e)
         {
-            if (Explorer.IsRunning == false)
+            try
             {
-                ImportTagsImpl();
+                if (Explorer.IsRunning == false)
+                {
+                    ImportTagsImpl();
+                }
+            }
+            catch (Exception ex)
+            {
+                Error(ex);
             }
         }
 
         private void ImportElements_Click(object sender, RoutedEventArgs e)
         {
-            if (Explorer.IsRunning == false)
+            try
             {
-                ImportElementsImpl();
+                if (Explorer.IsRunning == false)
+                {
+                    ImportElementsImpl();
+                }
+            }
+            catch (Exception ex)
+            {
+                Error(ex);
             }
         }
 
         private void ImportTexts_Click(object sender, RoutedEventArgs e)
         {
-            if (Explorer.IsRunning == false)
+            try
             {
-                ImportTextsImpl();
+                if (Explorer.IsRunning == false)
+                {
+                    ImportTextsImpl();
+                }
+            }
+            catch (Exception ex)
+            {
+                Error(ex);
             }
         }
 
         private void ExportTags_Click(object sender, RoutedEventArgs e)
         {
-            if (Explorer.IsRunning == false)
+            try
             {
-                ExportTagsImpl();
+                if (Explorer.IsRunning == false)
+                {
+                    ExportTagsImpl();
+                }
+            }
+            catch (Exception ex)
+            {
+                Error(ex);
             }
         }
 
         private void ExportElements_Click(object sender, RoutedEventArgs e)
         {
-            if (Explorer.IsRunning == false)
+            try
             {
-                ExportElementsImpl();
+                if (Explorer.IsRunning == false)
+                {
+                    ExportElementsImpl();
+                }
+            }
+            catch (Exception ex)
+            {
+                Error(ex);
             }
         }
 
         private void ExportTexts_Click(object sender, RoutedEventArgs e)
         {
-            if (Explorer.IsRunning == false)
+            try
             {
-                ExportTextsImpl();
+                if (Explorer.IsRunning == false)
+                {
+                    ExportTextsImpl();
+                }
+            }
+            catch (Exception ex)
+            {
+                Error(ex);
             }
         }
 
         private void SettingsGetWorkers_Click(object sender, RoutedEventArgs e)
         {
-            if (Explorer.IsRunning == false)
+            try
             {
-                GetWorkersImpl();
+                if (Explorer.IsRunning == false)
+                {
+                    GetWorkersImpl();
+                }
+            }
+            catch (Exception ex)
+            {
+                Error(ex);
             }
         }
     }

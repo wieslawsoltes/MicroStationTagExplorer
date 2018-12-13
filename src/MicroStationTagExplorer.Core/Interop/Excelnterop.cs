@@ -1,7 +1,7 @@
 ﻿using System;
 using Excel = Microsoft.Office.Interop.Excel;
 
-namespace MicroStationTagExplorer.Interop
+namespace MicroStationTagExplorer.Core.Interop
 {
     internal class Excelnterop : IDisposable
     {

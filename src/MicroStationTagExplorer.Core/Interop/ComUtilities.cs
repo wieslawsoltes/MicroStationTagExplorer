@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
 using Microsoft.Win32;
 
-namespace MicroStationTagExplorer.Interop
+namespace MicroStationTagExplorer.Core.Interop
 {
     public static class ComUtilities
     {

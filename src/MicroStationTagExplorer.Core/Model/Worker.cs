@@ -1,5 +1,5 @@
 ﻿
-namespace MicroStationTagExplorer.Model
+namespace MicroStationTagExplorer.Core.Model
 {
     public class Worker
     {
