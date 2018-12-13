@@ -15,8 +15,8 @@ namespace MicroStationTagExplorer.Core.ViewModels
     public class TagExplorer
     {
         private static readonly StringComparison ComparisonType = StringComparison.OrdinalIgnoreCase;
-        private static readonly string XmlExt = ".xml";
-        private static readonly string DgnExt = ".dgn";
+        private static readonly string s_xmlExt = ".xml";
+        private static readonly string s_dgnExt = ".dgn";
         private static readonly string DwgExt = ".dwg";
 
         public volatile bool IsRunning;
@@ -278,12 +278,12 @@ namespace MicroStationTagExplorer.Core.ViewModels
 
         public bool IsProject(string path)
         {
-            return path.EndsWith(XmlExt, ComparisonType);
+            return path.EndsWith(s_xmlExt, ComparisonType);
         }
 
         public bool IsSupportedFile(string path)
         {
-            return path.EndsWith(DwgExt, ComparisonType) || path.EndsWith(DgnExt, ComparisonType);
+            return path.EndsWith(DwgExt, ComparisonType) || path.EndsWith(s_dgnExt, ComparisonType);
         }
 
         public void AddFile(string path)
@@ -333,7 +333,7 @@ namespace MicroStationTagExplorer.Core.ViewModels
             Project = new Project()
             {
                 Name = "project",
-                Path = "project" + XmlExt,
+                Path = "project" + s_xmlExt,
                 Files = new ObservableCollection<File>()
             };
 
