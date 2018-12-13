@@ -9,7 +9,7 @@
   <Import Project="..\..\build\XUnit.props" />
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\MicroStationTagExplorer\MicroStationTagExplorer.csproj" />
+    <ProjectReference Include="..\..\src\MicroStationTagExplorer.Core\MicroStationTagExplorer.Core.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,0 +1,46 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <TargetFrameworks>netcoreapp3.0;net452</TargetFrameworks>
+    <OutputType>Library</OutputType>
+    <UseWPF>True</UseWPF>
+    <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
+    <IsPackable>False</IsPackable>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <Description>MicroStation DGN and DWG file tag explorer.</Description>
+    <PackageTags>microstation;bentley;cad;dwg;dgn;tag;excel;interop;explorer;wpf;xaml;editor;tags;import;export;drawing;validation;datagrid</PackageTags>
+  </PropertyGroup>
+
+  <Import Project="..\..\build\Base.props" />
+
+  <ItemGroup>
+    <Reference Include="Interop.MicroStationDGN">
+      <HintPath>..\..\interop\View V8i\Interop.MicroStationDGN.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>..\..\interop\Excel 2016\Microsoft.Office.Interop.Excel.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Vbe.Interop, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>..\..\interop\Excel 2016\Microsoft.Vbe.Interop.dll</HintPath>
+    </Reference>
+    <Reference Include="Office, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>..\..\interop\Excel 2016\Office.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Runtime.Serialization" />
+  </ItemGroup>
+
+</Project>
