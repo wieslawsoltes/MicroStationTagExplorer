@@ -27,10 +27,29 @@ namespace MicroStationTagExplorer.Core.Interop
             };
             sheets.Append(sheet);
 
-            // TODO:
+            var sheetData = worksheetPart.Worksheet.GetFirstChild<SheetData>();
+            WriteValues(sheetData, values, nRows, nColumns);
 
             workbookpart.Workbook.Save();
             spreadsheetDocument.Close();
+        }
+
+        public static void WriteValues(SheetData sheetData, object[,] values, int nRows, int nColumns)
+        {
+            for (int r = 0; r < nRows; r++)
+            {
+                Row row = new Row();
+                sheetData.Append(row);
+                Cell previous = null;
+                for (int c = 0; c < nColumns; c++)
+                {
+                    Cell cell = new Cell();
+                    row.InsertAfter(cell, previous);
+                    cell.CellValue = new CellValue(values[r, c].ToString());
+                    cell.DataType = new EnumValue<CellValues>(CellValues.String);
+                    previous = cell;
+                }
+            }
         }
     }
 }
