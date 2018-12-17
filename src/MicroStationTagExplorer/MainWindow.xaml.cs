@@ -215,34 +215,34 @@ namespace MicroStationTagExplorer
             }
         }
 
-        private void ImportTagsImpl()
+        private void ImportTagsExcelImpl()
         {
-            Explorer.ImportTags();
+            Explorer.ImportTagsExcel();
         }
 
-        private void ImportElementsImpl()
+        private void ImportElementsExcelImpl()
         {
-            Explorer.ImportElements();
+            Explorer.ImportElementsExcel();
         }
 
-        private void ImportTextsImpl()
+        private void ImportTextsExcelImpl()
         {
-            Explorer.ImportTexts();
+            Explorer.ImportTextsExcel();
         }
 
-        private void ExportTagsImpl()
+        private void ExportTagsExcelImpl()
         {
-            Explorer.ExportTags();
+            Explorer.ExportTagsExcel();
         }
 
-        private void ExportElementsImpl()
+        private void ExportElementsExcelImpl()
         {
-            Explorer.ExportElements();
+            Explorer.ExportElementsExcel();
         }
 
-        private void ExportTextsImpl()
+        private void ExportTextsExcelImpl()
         {
-            Explorer.ExportTexts();
+            Explorer.ExportTextsExcel();
         }
 
         private void DropFilesImpl(string[] paths)
@@ -349,14 +349,14 @@ namespace MicroStationTagExplorer
                     {
                         if (Explorer.IsRunning == false)
                         {
-                            ImportTagsImpl();
+                            ImportTagsExcelImpl();
                         }
                     }
                     else if (e.Key == Key.E)
                     {
                         if (Explorer.IsRunning == false)
                         {
-                            ExportTagsImpl();
+                            ExportTagsExcelImpl();
                         }
                     }
                     else if (e.Key == Key.W)
@@ -506,13 +506,13 @@ namespace MicroStationTagExplorer
             }
         }
 
-        private void ImportTags_Click(object sender, RoutedEventArgs e)
+        private void ImportTagsExcel_Click(object sender, RoutedEventArgs e)
         {
             try
             {
                 if (Explorer.IsRunning == false)
                 {
-                    ImportTagsImpl();
+                    ImportTagsExcelImpl();
                 }
             }
             catch (Exception ex)
@@ -521,13 +521,13 @@ namespace MicroStationTagExplorer
             }
         }
 
-        private void ImportElements_Click(object sender, RoutedEventArgs e)
+        private void ImportElementsExcel_Click(object sender, RoutedEventArgs e)
         {
             try
             {
                 if (Explorer.IsRunning == false)
                 {
-                    ImportElementsImpl();
+                    ImportElementsExcelImpl();
                 }
             }
             catch (Exception ex)
@@ -536,13 +536,13 @@ namespace MicroStationTagExplorer
             }
         }
 
-        private void ImportTexts_Click(object sender, RoutedEventArgs e)
+        private void ImportTextsExcel_Click(object sender, RoutedEventArgs e)
         {
             try
             {
                 if (Explorer.IsRunning == false)
                 {
-                    ImportTextsImpl();
+                    ImportTextsExcelImpl();
                 }
             }
             catch (Exception ex)
@@ -551,13 +551,13 @@ namespace MicroStationTagExplorer
             }
         }
 
-        private void ExportTags_Click(object sender, RoutedEventArgs e)
+        private void ExportTagsExcel_Click(object sender, RoutedEventArgs e)
         {
             try
             {
                 if (Explorer.IsRunning == false)
                 {
-                    ExportTagsImpl();
+                    ExportTagsExcelImpl();
                 }
             }
             catch (Exception ex)
@@ -566,13 +566,13 @@ namespace MicroStationTagExplorer
             }
         }
 
-        private void ExportElements_Click(object sender, RoutedEventArgs e)
+        private void ExportElementsExcel_Click(object sender, RoutedEventArgs e)
         {
             try
             {
                 if (Explorer.IsRunning == false)
                 {
-                    ExportElementsImpl();
+                    ExportElementsExcelImpl();
                 }
             }
             catch (Exception ex)
@@ -581,13 +581,13 @@ namespace MicroStationTagExplorer
             }
         }
 
-        private void ExportTexts_Click(object sender, RoutedEventArgs e)
+        private void ExportTextsExcel_Click(object sender, RoutedEventArgs e)
         {
             try
             {
                 if (Explorer.IsRunning == false)
                 {
-                    ExportTextsImpl();
+                    ExportTextsExcelImpl();
                 }
             }
             catch (Exception ex)

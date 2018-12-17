@@ -520,19 +520,19 @@ namespace MicroStationTagExplorer.Core.ViewModels
             ResetData(Project);
         }
 
-        public void ImportTags()
+        public void ImportTagsExcel()
         {
         }
 
-        public void ImportElements()
+        public void ImportElementsExcel()
         {
         }
 
-        public void ImportTexts()
+        public void ImportTextsExcel()
         {
         }
 
-        public void ExportTags()
+        public void ExportTagsExcel()
         {
             using (var excel = new Excelnterop())
             {
@@ -542,7 +542,7 @@ namespace MicroStationTagExplorer.Core.ViewModels
             }
         }
 
-        public void ExportElements()
+        public void ExportElementsExcel()
         {
             using (var excel = new Excelnterop())
             {
@@ -559,7 +559,7 @@ namespace MicroStationTagExplorer.Core.ViewModels
             }
         }
 
-        public void ExportTexts()
+        public void ExportTextsExcel()
         {
             using (var excel = new Excelnterop())
             {
