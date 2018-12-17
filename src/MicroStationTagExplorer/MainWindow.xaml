@@ -43,6 +43,7 @@
             </MenuItem>
             <MenuItem x:Name="ExportMenu" Header="_Export">
                 <MenuItem x:Name="ExportTagsExcel" Header="Export _Tags to Excel..." Click="ExportTagsExcel_Click"/>
+                <MenuItem x:Name="ExportTagsFile" Header="Export Tags to File..." Click="ExportTagsFile_Click"/>
                 <Separator/>
                 <MenuItem x:Name="ExportElementsExcel" InputGestureText="Ctrl+E" Header="Export _Elements to Excel..." Click="ExportElementsExcel_Click"/>
                 <Separator/>

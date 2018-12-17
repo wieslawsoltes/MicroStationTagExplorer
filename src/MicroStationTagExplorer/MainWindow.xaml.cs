@@ -235,6 +235,20 @@ namespace MicroStationTagExplorer
             Explorer.ExportTagsExcel();
         }
 
+        private void ExportTagsFileImpl()
+        {
+            var dlg = new SaveFileDialog
+            {
+                Filter = "Supported Files (*.xlsx)|*.xlsx|All Files (*.*)|*.*",
+                FileName = "Tags"
+            };
+            var result = dlg.ShowDialog(this);
+            if (result == true)
+            {
+                Explorer.ExportTagsFile(dlg.FileName);
+            }
+        }
+
         private void ExportElementsExcelImpl()
         {
             Explorer.ExportElementsExcel();
@@ -558,6 +572,21 @@ namespace MicroStationTagExplorer
                 if (Explorer.IsRunning == false)
                 {
                     ExportTagsExcelImpl();
+                }
+            }
+            catch (Exception ex)
+            {
+                Error(ex);
+            }
+        }
+
+        private void ExportTagsFile_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if (Explorer.IsRunning == false)
+                {
+                    ExportTagsFileImpl();
                 }
             }
             catch (Exception ex)
