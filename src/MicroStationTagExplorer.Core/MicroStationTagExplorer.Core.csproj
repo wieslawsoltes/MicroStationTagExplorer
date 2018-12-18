@@ -4,7 +4,6 @@
     <TargetFrameworks>net452;net461;netcoreapp3.0</TargetFrameworks>
     <OutputType>Library</OutputType>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
-    <IsPackable>False</IsPackable>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
