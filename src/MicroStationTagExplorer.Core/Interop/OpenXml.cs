@@ -30,6 +30,8 @@ namespace MicroStationTagExplorer.Core.Interop
             var sheetData = worksheetPart.Worksheet.GetFirstChild<SheetData>();
             WriteValues(sheetData, values, nRows, nColumns);
 
+
+
             workbookpart.Workbook.Save();
             spreadsheetDocument.Close();
         }
@@ -40,6 +42,7 @@ namespace MicroStationTagExplorer.Core.Interop
             {
                 Row row = new Row();
                 sheetData.Append(row);
+
                 Cell previous = null;
                 for (int c = 0; c < nColumns; c++)
                 {
