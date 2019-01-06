@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using MicroStationTagExplorer.Model;
+using MicroStationTagExplorer.Core.Model;
 using BCOM = MicroStationDGN;
 
-namespace MicroStationTagExplorer.Interop
+namespace MicroStationTagExplorer.Core.Interop
 {
     internal class MicrostationInterop : IDisposable
     {

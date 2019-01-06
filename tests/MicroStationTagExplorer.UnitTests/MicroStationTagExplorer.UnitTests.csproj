@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <TargetFrameworks>net452;net461;netcoreapp3.0</TargetFrameworks>
     <LangVersion>latest</LangVersion>
     <IsPackable>False</IsPackable>
   </PropertyGroup>
@@ -9,7 +9,7 @@
   <Import Project="..\..\build\XUnit.props" />
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\MicroStationTagExplorer\MicroStationTagExplorer.csproj" />
+    <ProjectReference Include="..\..\src\MicroStationTagExplorer.Core\MicroStationTagExplorer.Core.csproj" />
   </ItemGroup>
 
 </Project>

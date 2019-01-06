@@ -1,7 +1,7 @@
 ﻿using System.Runtime.Serialization;
 using System.Xml.Serialization;
 
-namespace MicroStationTagExplorer.Model
+namespace MicroStationTagExplorer.Core.Model
 {
     [DataContract(IsReference = false, Name = "Error"), XmlRoot("Error")]
     public class Error

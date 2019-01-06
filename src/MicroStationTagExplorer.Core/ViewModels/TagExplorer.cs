@@ -7,24 +7,29 @@ using System.Text;
 using System.Threading;
 using System.Xml;
 using System.Xml.Serialization;
-using MicroStationTagExplorer.Interop;
-using MicroStationTagExplorer.Model;
+using MicroStationTagExplorer.Core.Interop;
+using MicroStationTagExplorer.Core.Model;
 
-namespace MicroStationTagExplorer.ViewModels
+namespace MicroStationTagExplorer.Core.ViewModels
 {
     public class TagExplorer
     {
         private static readonly StringComparison ComparisonType = StringComparison.OrdinalIgnoreCase;
-        private static readonly string XmlExt = ".xml";
-        private static readonly string DgnExt = ".dgn";
+        private static readonly string s_xmlExt = ".xml";
+        private static readonly string s_dgnExt = ".dgn";
         private static readonly string DwgExt = ".dwg";
 
         public volatile bool IsRunning;
         public List<CancellationTokenSource> TokenSources { get; set; }
+
         public List<CancellationToken> Tokens { get; set; }
+
         public int WorkersNum { get; set; }
+
         public List<Worker> Workers { get; set; }
+
         public List<Worker> ActiveWorkers { get; set; }
+
         public Project Project { get; set; }
 
         public TagExplorer()
@@ -273,12 +278,12 @@ namespace MicroStationTagExplorer.ViewModels
 
         public bool IsProject(string path)
         {
-            return path.EndsWith(XmlExt, ComparisonType);
+            return path.EndsWith(s_xmlExt, ComparisonType);
         }
 
         public bool IsSupportedFile(string path)
         {
-            return path.EndsWith(DwgExt, ComparisonType) || path.EndsWith(DgnExt, ComparisonType);
+            return path.EndsWith(DwgExt, ComparisonType) || path.EndsWith(s_dgnExt, ComparisonType);
         }
 
         public void AddFile(string path)
@@ -328,7 +333,7 @@ namespace MicroStationTagExplorer.ViewModels
             Project = new Project()
             {
                 Name = "project",
-                Path = "project" + XmlExt,
+                Path = "project" + s_xmlExt,
                 Files = new ObservableCollection<File>()
             };
 
@@ -370,7 +375,14 @@ namespace MicroStationTagExplorer.ViewModels
                 };
                 using (var writer = XmlWriter.Create(stream, settings))
                 {
-                    var serializer = new DataContractSerializer(typeof(Project), null, int.MaxValue, false, true, null);
+                    var serializer = new DataContractSerializer(
+                        typeof(Project),
+                        new DataContractSerializerSettings()
+                        {
+                            IgnoreExtensionDataObject = false,
+                            PreserveObjectReferences = true,
+                            MaxItemsInObjectGraph = int.MaxValue
+                        });
                     serializer.WriteObject(writer, project);
                 }
             }
@@ -384,7 +396,14 @@ namespace MicroStationTagExplorer.ViewModels
                 var settings = new XmlReaderSettings();
                 using (var reader = XmlReader.Create(stream, settings))
                 {
-                    var serializer = new DataContractSerializer(typeof(Project), null, int.MaxValue, false, true, null);
+                    var serializer = new DataContractSerializer(
+                        typeof(Project),
+                        new DataContractSerializerSettings()
+                        {
+                            IgnoreExtensionDataObject = false,
+                            PreserveObjectReferences = true,
+                            MaxItemsInObjectGraph = int.MaxValue
+                        });
                     project = (Project)serializer.ReadObject(reader);
                 }
             }
@@ -501,19 +520,24 @@ namespace MicroStationTagExplorer.ViewModels
             ResetData(Project);
         }
 
-        public void ImportTags()
+        public void ImportTagsExcel()
         {
         }
 
-        public void ImportElements()
+        public void ImportElementsExcel()
         {
         }
 
-        public void ImportTexts()
+        public void ImportTextsExcel()
         {
         }
 
-        public void ExportTags()
+        public void ExportTagsFile(string fileName)
+        {
+            OpenXml.ExportValues(fileName, Project.TagValues, (uint)Project.Tags.Count + 1U, 6U, "Tags", "Tags");
+        }
+
+        public void ExportTagsExcel()
         {
             using (var excel = new Excelnterop())
             {
@@ -523,7 +547,7 @@ namespace MicroStationTagExplorer.ViewModels
             }
         }
 
-        public void ExportElements()
+        public void ExportElementsExcel()
         {
             using (var excel = new Excelnterop())
             {
@@ -540,7 +564,7 @@ namespace MicroStationTagExplorer.ViewModels
             }
         }
 
-        public void ExportTexts()
+        public void ExportTextsExcel()
         {
             using (var excel = new Excelnterop())
             {

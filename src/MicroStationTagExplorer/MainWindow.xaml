@@ -35,18 +35,19 @@
                 <MenuItem x:Name="DataReset" Header="_Reset" Click="DataReset_Click"/>
             </MenuItem>
             <MenuItem x:Name="ImportMenu" Header="_Import">
-                <MenuItem x:Name="ImportTags" Header="Import _Tags..." Click="ImportTags_Click"/>
+                <MenuItem x:Name="ImportTagsExcel" Header="Import _Tags from Excel..." Click="ImportTagsExcel_Click"/>
                 <Separator/>
-                <MenuItem x:Name="ImportElements" InputGestureText="Ctrl+I" Header="Import _Elements..." Click="ImportElements_Click"/>
+                <MenuItem x:Name="ImportElementsExcel" InputGestureText="Ctrl+I" Header="Import _Elements from Excel..." Click="ImportElementsExcel_Click"/>
                 <Separator/>
-                <MenuItem x:Name="ImportTexts" Header="Import Te_xts..." Click="ImportTexts_Click"/>
+                <MenuItem x:Name="ImportTextsExcel" Header="Import Te_xts from Excel..." Click="ImportTextsExcel_Click"/>
             </MenuItem>
             <MenuItem x:Name="ExportMenu" Header="_Export">
-                <MenuItem x:Name="ExportTags" Header="Export _Tags..." Click="ExportTags_Click"/>
+                <MenuItem x:Name="ExportTagsExcel" Header="Export _Tags to Excel..." Click="ExportTagsExcel_Click"/>
+                <MenuItem x:Name="ExportTagsFile" Header="Export Tags to File..." Click="ExportTagsFile_Click"/>
                 <Separator/>
-                <MenuItem x:Name="ExportElements" InputGestureText="Ctrl+E" Header="Export _Elements..." Click="ExportElements_Click"/>
+                <MenuItem x:Name="ExportElementsExcel" InputGestureText="Ctrl+E" Header="Export _Elements to Excel..." Click="ExportElementsExcel_Click"/>
                 <Separator/>
-                <MenuItem x:Name="ExportTexts" Header="Export Te_xts..." Click="ExportTexts_Click"/>
+                <MenuItem x:Name="ExportTextsExcel" Header="Export Te_xts to Excel..." Click="ExportTextsExcel_Click"/>
             </MenuItem>
             <MenuItem x:Name="SettingsMenu" Header="_Settings">
                 <MenuItem x:Name="SettingsGetWorkers" Header="_Get Workers" InputGestureText="Ctrl+W" Click="SettingsGetWorkers_Click"/>
