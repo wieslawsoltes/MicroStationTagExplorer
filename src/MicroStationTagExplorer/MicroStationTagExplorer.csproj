@@ -22,6 +22,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Runtime.Serialization" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\MicroStationTagExplorer.Core\MicroStationTagExplorer.Core.csproj" />
   </ItemGroup>
 
