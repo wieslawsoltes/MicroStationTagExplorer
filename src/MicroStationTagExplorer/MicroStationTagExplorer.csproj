@@ -12,6 +12,7 @@
 
   <PropertyGroup>
     <Description>MicroStation DGN and DWG file tag explorer.</Description>
+    <PackageTags>microstation;bentley;cad;dwg;dgn;tag;excel;interop;explorer;wpf;xaml;editor;tags;import;export;drawing;validation;datagrid</PackageTags>
   </PropertyGroup>
 
   <Import Project="..\..\build\Base.props" />
@@ -20,9 +21,37 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <ApplicationIcon>BentleyB.ico</ApplicationIcon>
   </PropertyGroup>
-
+  
   <ItemGroup>
-    <ProjectReference Include="..\MicroStationTagExplorer.Core\MicroStationTagExplorer.Core.csproj" />
+    <Reference Include="Interop.MicroStationDGN">
+      <HintPath>..\..\interop\View V8i\Interop.MicroStationDGN.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>..\..\interop\Excel 2016\Microsoft.Office.Interop.Excel.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Vbe.Interop, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>..\..\interop\Excel 2016\Microsoft.Vbe.Interop.dll</HintPath>
+    </Reference>
+    <Reference Include="Office, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>..\..\interop\Excel 2016\Office.dll</HintPath>
+    </Reference>
   </ItemGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="DocumentFormat.OpenXml" Version="2.9.1" />
+    <PackageReference Include="Microsoft.CSharp" Version="4.5.0" />
+    <PackageReference Include="System.Runtime.Serialization.Primitives" Version="4.3.0" />
+  </ItemGroup>
+
+  <!--<ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.0'">
+    <PackageReference Include="Microsoft.Win32.Registry" Version="4.5.0" />
+  </ItemGroup>-->
 
 </Project>
