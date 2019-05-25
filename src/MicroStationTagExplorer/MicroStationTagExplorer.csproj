@@ -11,6 +11,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
+    <PackageId>MicroStationTagExplorer</PackageId>
     <Description>MicroStation DGN and DWG file tag explorer.</Description>
     <PackageTags>microstation;bentley;cad;dwg;dgn;tag;excel;interop;explorer;wpf;xaml;editor;tags;import;export;drawing;validation;datagrid</PackageTags>
   </PropertyGroup>
