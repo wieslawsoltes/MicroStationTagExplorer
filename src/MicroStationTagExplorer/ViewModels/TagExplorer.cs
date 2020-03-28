@@ -534,7 +534,10 @@ namespace MicroStationTagExplorer.Core.ViewModels
 
         public void ExportTagsFile(string fileName)
         {
-            OpenXml.ExportValues(fileName, Project.TagValues, (uint)Project.Tags.Count + 1U, 6U, "Tags", "Tags");
+            using (var stream = System.IO.File.Create(fileName))
+            {
+                OpenXml.ExportValues(stream, Project.TagValues, (uint)Project.Tags.Count + 1U, 6U, "Tags", "Tags");
+            }
         }
 
         public void ExportTagsExcel()
