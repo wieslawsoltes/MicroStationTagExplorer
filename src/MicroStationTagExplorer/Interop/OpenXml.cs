@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
@@ -25,9 +26,9 @@ namespace MicroStationTagExplorer.Core.Interop
             return ToRange(startColumn) + startRow.ToString() + ":" + ToRange(endColumn) + endRow.ToString();
         }
 
-        public static void ExportValues(string path, object[,] values, uint nRows, uint nColumns, string sheetName, string tableName)
+        public static void ExportValues(Stream stream, object[,] values, uint nRows, uint nColumns, string sheetName, string tableName)
         {
-            var spreadsheetDocument = SpreadsheetDocument.Create(path, SpreadsheetDocumentType.Workbook);
+            var spreadsheetDocument = SpreadsheetDocument.Create(stream, SpreadsheetDocumentType.Workbook);
 
             var workbookpart = spreadsheetDocument.AddWorkbookPart();
             workbookpart.Workbook = new Workbook();
