@@ -10,4 +10,4 @@ MicroStation DGN and DWG file tag explorer.
 
 ## License
 
-MicroStation Tag Explorer is licensed under the [GPL license](LICENSE.TXT).
+MicroStation Tag Explorer is licensed under the [MIT license](LICENSE.TXT).
